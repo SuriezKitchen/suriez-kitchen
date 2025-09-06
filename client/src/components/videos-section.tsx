@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useYouTube } from '@/hooks/use-youtube';
 
 export default function VideosSection() {
-  const sectionRef = useRef<HTMLSection>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const { videos, isLoading, error } = useYouTube();
 
   useEffect(() => {
@@ -151,14 +152,22 @@ export default function VideosSection() {
         </div>
         
         <div className="text-center mt-12">
-          <button 
-            className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-lg font-medium transition-colors"
-            onClick={() => window.open('https://youtube.com/@chefisabellacooks', '_blank')}
-            data-testid="button-subscribe-youtube"
-          >
-            <i className="fab fa-youtube mr-2"></i>
-            Subscribe to My Channel
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/videos">
+              <button className="btn-primary px-8 py-4 text-white font-medium rounded-lg" data-testid="button-view-all-videos">
+                <i className="fas fa-video mr-2"></i>
+                View All Videos
+              </button>
+            </Link>
+            <button 
+              className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-lg font-medium transition-colors"
+              onClick={() => window.open('https://youtube.com/@chefisabellacooks', '_blank')}
+              data-testid="button-subscribe-youtube"
+            >
+              <i className="fab fa-youtube mr-2"></i>
+              Subscribe to My Channel
+            </button>
+          </div>
         </div>
       </div>
     </section>

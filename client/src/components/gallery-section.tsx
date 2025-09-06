@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
+import { Link } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Dish } from '@shared/schema';
@@ -104,10 +105,12 @@ export default function GallerySection() {
         </div>
         
         <div className="text-center mt-12">
-          <button className="btn-primary px-8 py-4 text-white font-medium rounded-lg" data-testid="button-view-full-gallery">
-            View Full Gallery
-            <i className="fas fa-arrow-right ml-2"></i>
-          </button>
+          <Link href="/gallery">
+            <button className="btn-primary px-8 py-4 text-white font-medium rounded-lg" data-testid="button-view-full-gallery">
+              View Full Gallery
+              <i className="fas fa-arrow-right ml-2"></i>
+            </button>
+          </Link>
         </div>
       </div>
     </section>
