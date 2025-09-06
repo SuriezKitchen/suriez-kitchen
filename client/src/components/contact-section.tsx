@@ -7,7 +7,7 @@ export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   const { data: socialLinks } = useQuery<SocialLink[]>({
-    queryKey: ['/api/social-links'],
+    queryKey: ['api', 'social-links'],
   });
 
   useEffect(() => {

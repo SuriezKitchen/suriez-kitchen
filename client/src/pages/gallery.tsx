@@ -13,7 +13,7 @@ export default function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const { data: dishes, isLoading } = useQuery<Dish[]>({
-    queryKey: ['/api/dishes'],
+    queryKey: ['api', 'dishes'],
   });
 
   useEffect(() => {

@@ -9,7 +9,7 @@ export default function GallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   const { data: dishes, isLoading } = useQuery<Dish[]>({
-    queryKey: ['/api/dishes'],
+    queryKey: ['api', 'dishes'],
   });
 
   useEffect(() => {

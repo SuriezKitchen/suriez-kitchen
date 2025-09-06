@@ -13,7 +13,7 @@ interface YouTubeVideo {
 
 export function useYouTube() {
   const { data: videos, isLoading, error } = useQuery<YouTubeVideo[]>({
-    queryKey: ['/api/youtube/videos'],
+    queryKey: ['api', 'youtube', 'videos'],
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
   });
