@@ -1,25 +1,18 @@
-import { drizzle } from "drizzle-orm/d1";
-import { socialLinks } from "@shared/schema";
-import { eq } from "drizzle-orm";
-
 export const onRequest: PagesFunction<{ DB: D1Database }> = async (context) => {
-  const db = drizzle(context.env.DB);
-
   try {
-    const links = await db
-      .select()
-      .from(socialLinks)
-      .where(eq(socialLinks.isActive, true));
-    return new Response(JSON.stringify(links), {
+    // Simple SQL query without Drizzle ORM
+    const result = await context.env.DB.prepare(
+      "SELECT * FROM social_links WHERE is_active = 1"
+    ).all();
+    
+    return new Response(JSON.stringify(result.results), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(
-      JSON.stringify({ message: "Failed to fetch social links" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    console.error("Error fetching social links:", error);
+    return new Response(JSON.stringify({ message: "Failed to fetch social links" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
