@@ -88,12 +88,12 @@ export default function GallerySection() {
               className="scroll-reveal group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <Card className="bg-card overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="relative overflow-hidden">
+              <Card className="bg-card overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-96 flex flex-col">
+                <div className="relative overflow-hidden flex-shrink-0">
                   <img
                     src={dish.imageUrl}
                     alt={dish.title}
-                    className="w-full h-64 object-cover image-hover"
+                    className="w-full h-48 object-cover image-hover"
                     data-testid={`dish-image-${dish.id}`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
@@ -105,7 +105,7 @@ export default function GallerySection() {
                     </div>
                   </div>
                 </div>
-                <CardContent className="p-6">
+                <CardContent className="p-6 flex-1 flex flex-col">
                   <h3
                     className="font-serif text-xl font-semibold mb-2"
                     data-testid={`dish-title-${dish.id}`}
@@ -113,7 +113,7 @@ export default function GallerySection() {
                     {dish.title}
                   </h3>
                   <p
-                    className="text-muted-foreground"
+                    className="text-muted-foreground flex-1"
                     data-testid={`dish-description-${dish.id}`}
                   >
                     {dish.description}

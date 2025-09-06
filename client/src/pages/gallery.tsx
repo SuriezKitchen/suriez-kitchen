@@ -156,12 +156,12 @@ export default function Gallery() {
                 className="scroll-reveal group"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                  <div className="relative overflow-hidden">
+                <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 h-[500px] flex flex-col">
+                  <div className="relative overflow-hidden flex-shrink-0">
                     <img
                       src={dish.imageUrl}
                       alt={dish.title}
-                      className="w-full h-72 object-cover image-hover"
+                      className="w-full h-56 object-cover image-hover"
                       data-testid={`gallery-dish-image-${dish.id}`}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -180,7 +180,7 @@ export default function Gallery() {
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 flex-1 flex flex-col">
                     <h3
                       className="font-serif text-xl font-semibold mb-3"
                       data-testid={`gallery-dish-title-${dish.id}`}
@@ -188,12 +188,12 @@ export default function Gallery() {
                       {dish.title}
                     </h3>
                     <p
-                      className="text-muted-foreground leading-relaxed"
+                      className="text-muted-foreground leading-relaxed flex-1"
                       data-testid={`gallery-dish-description-${dish.id}`}
                     >
                       {dish.description}
                     </p>
-                    <div className="mt-4 pt-4 border-t border-border">
+                    <div className="mt-4 pt-4 border-t border-border flex-shrink-0">
                       <div className="flex items-center justify-between text-sm text-muted-foreground">
                         <span className="flex items-center">
                           <i className="fas fa-utensils mr-2"></i>
