@@ -1,6 +1,6 @@
 # Overview
 
-This is a chef's portfolio website showcasing Chef Isabella's culinary journey through gourmet dishes and YouTube vlogs. The application serves as a digital showcase featuring a gallery of culinary creations, embedded YouTube videos, an about section, and social media integration. Built as a full-stack web application with a React frontend and Express backend, it demonstrates modern web development practices with a focus on visual appeal and user experience.
+This is a chef's portfolio website showcasing Suriez Kitchen's culinary journey through gourmet dishes and YouTube vlogs. The application serves as a digital showcase featuring a gallery of culinary creations, embedded YouTube videos, an about section, and social media integration. Built as a full-stack web application with a React frontend and Express backend, it demonstrates modern web development practices with a focus on visual appeal and user experience.
 
 # User Preferences
 

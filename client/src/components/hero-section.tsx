@@ -34,7 +34,7 @@ export default function HeroSection() {
           <span className="block text-secondary">Meets Passion</span>
         </h1>
         <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed" data-testid="hero-description">
-          Join Chef Isabella on a journey through flavors, techniques, and the stories behind every dish. 
+          Join Suriez Kitchen on a journey through flavors, techniques, and the stories behind every dish. 
           From gourmet creations to behind-the-scenes vlogs.
         </p>
         

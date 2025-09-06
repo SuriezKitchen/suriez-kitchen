@@ -38,7 +38,7 @@ export default function AboutSection() {
               <div className="relative">
                 <img 
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=1000"
-                  alt="Chef Isabella portrait"
+                  alt="Suriez Kitchen portrait"
                   className="rounded-2xl shadow-2xl w-full"
                   data-testid="chef-portrait"
                 />
@@ -53,7 +53,7 @@ export default function AboutSection() {
             
             <div className="scroll-reveal">
               <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6" data-testid="about-title">
-                Meet Chef Isabella
+                Meet Suriez Kitchen
               </h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed" data-testid="about-paragraph-1">
                 From a small-town kitchen to culinary school and beyond, my journey has been fueled by an insatiable passion for creating memorable dining experiences. Each dish I craft tells a story of tradition, innovation, and the pure joy of sharing exceptional food.

@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="font-serif text-2xl font-bold mb-4 text-primary" data-testid="footer-brand">
-              Chef Isabella
+              Suriez Kitchen
             </h3>
             <p className="text-gray-300 leading-relaxed" data-testid="footer-description">
               Crafting culinary experiences that celebrate flavor, technique, and the joy of sharing exceptional food.
@@ -96,7 +96,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-400" data-testid="footer-copyright">
-            © 2024 Chef Isabella. Made with <i className="fas fa-heart text-primary"></i> for the love of cooking.
+            © 2024 Suriez Kitchen. Made with <i className="fas fa-heart text-primary"></i> for the love of cooking.
           </p>
         </div>
       </div>

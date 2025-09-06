@@ -44,7 +44,7 @@ export default function Navigation() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="font-serif text-2xl font-bold text-primary" data-testid="brand-logo">
-            Chef Isabella
+            Suriez Kitchen
           </div>
           
           {/* Desktop Navigation */}
