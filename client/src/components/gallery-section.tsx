@@ -106,10 +106,10 @@ export default function GallerySection() {
         
         <div className="text-center mt-12">
           <Link href="/gallery">
-            <button className="btn-primary px-8 py-4 text-white font-medium rounded-lg" data-testid="button-view-full-gallery">
+            <span className="btn-primary px-8 py-4 text-white font-medium rounded-lg inline-block cursor-pointer" data-testid="button-view-full-gallery">
               View Full Gallery
               <i className="fas fa-arrow-right ml-2"></i>
-            </button>
+            </span>
           </Link>
         </div>
       </div>

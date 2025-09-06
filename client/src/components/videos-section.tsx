@@ -154,10 +154,10 @@ export default function VideosSection() {
         <div className="text-center mt-12">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/videos">
-              <button className="btn-primary px-8 py-4 text-white font-medium rounded-lg" data-testid="button-view-all-videos">
+              <span className="btn-primary px-8 py-4 text-white font-medium rounded-lg inline-block cursor-pointer" data-testid="button-view-all-videos">
                 <i className="fas fa-video mr-2"></i>
                 View All Videos
-              </button>
+              </span>
             </Link>
             <button 
               className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-lg font-medium transition-colors"
