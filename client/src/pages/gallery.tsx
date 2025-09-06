@@ -1,34 +1,34 @@
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'wouter';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import Navigation from '@/components/navigation';
-import Footer from '@/components/footer';
-import type { Dish } from '@shared/schema';
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "wouter";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
+import type { Dish } from "@shared/schema";
 
 export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const { data: dishes, isLoading } = useQuery<Dish[]>({
-    queryKey: ['api', 'dishes'],
+    queryKey: ["api", "dishes"],
   });
 
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px',
+      rootMargin: "0px 0px -100px 0px",
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const reveals = entry.target.querySelectorAll('.scroll-reveal');
+          const reveals = entry.target.querySelectorAll(".scroll-reveal");
           reveals.forEach((reveal, index) => {
             setTimeout(() => {
-              reveal.classList.add('revealed');
+              reveal.classList.add("revealed");
             }, index * 50);
           });
         }
@@ -42,10 +42,20 @@ export default function Gallery() {
     return () => observer.disconnect();
   }, []);
 
-  const categories = dishes ? ['all', ...Array.from(new Set(dishes.map(dish => dish.category.toLowerCase())))] : ['all'];
-  const filteredDishes = dishes?.filter(dish => 
-    selectedCategory === 'all' || dish.category.toLowerCase() === selectedCategory
-  ) || [];
+  const categories = dishes
+    ? [
+        "all",
+        ...Array.from(
+          new Set(dishes.map((dish) => dish.category.toLowerCase()))
+        ),
+      ]
+    : ["all"];
+  const filteredDishes =
+    dishes?.filter(
+      (dish) =>
+        selectedCategory === "all" ||
+        dish.category.toLowerCase() === selectedCategory
+    ) || [];
 
   if (isLoading) {
     return (
@@ -84,22 +94,33 @@ export default function Gallery() {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
       <main className="pt-24 pb-20" ref={sectionRef}>
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-16 scroll-reveal">
-            <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-6" data-testid="gallery-page-title">
+            <h1
+              className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-6"
+              data-testid="gallery-page-title"
+            >
               Culinary Gallery
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8" data-testid="gallery-page-description">
-              A collection of my culinary creations, each telling a unique story of flavor, technique, and artistry.
-              Explore the passion and creativity behind every dish.
+            <p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8"
+              data-testid="gallery-page-description"
+            >
+              A collection of my culinary creations, each telling a unique story
+              of flavor, technique, and artistry. Explore the passion and
+              creativity behind every dish.
             </p>
-            
+
             {/* Back to Home Link */}
             <Link href="/">
-              <Button variant="outline" className="mb-8" data-testid="back-to-home">
+              <Button
+                variant="outline"
+                className="mb-8"
+                data-testid="back-to-home"
+              >
                 <i className="fas fa-arrow-left mr-2"></i>
                 Back to Home
               </Button>
@@ -112,9 +133,13 @@ export default function Gallery() {
               {categories.map((category) => (
                 <Button
                   key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                  variant={
+                    selectedCategory === category ? "default" : "outline"
+                  }
                   onClick={() => setSelectedCategory(category)}
-                  className={`capitalize ${selectedCategory === category ? 'btn-primary' : ''}`}
+                  className={`capitalize ${
+                    selectedCategory === category ? "btn-primary" : ""
+                  }`}
                   data-testid={`category-filter-${category}`}
                 >
                   {category}
@@ -126,10 +151,14 @@ export default function Gallery() {
           {/* Gallery Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredDishes.map((dish, index) => (
-              <div key={dish.id} className="scroll-reveal group" style={{ animationDelay: `${index * 0.05}s` }}>
+              <div
+                key={dish.id}
+                className="scroll-reveal group"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
                 <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                   <div className="relative overflow-hidden">
-                    <img 
+                    <img
                       src={dish.imageUrl}
                       alt={dish.title}
                       className="w-full h-72 object-cover image-hover"
@@ -142,17 +171,26 @@ export default function Gallery() {
                             {dish.category}
                           </span>
                           <button className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-colors">
-                            <i className="fas fa-heart text-lg" data-testid={`gallery-dish-heart-${dish.id}`}></i>
+                            <i
+                              className="fas fa-heart text-lg"
+                              data-testid={`gallery-dish-heart-${dish.id}`}
+                            ></i>
                           </button>
                         </div>
                       </div>
                     </div>
                   </div>
                   <CardContent className="p-6">
-                    <h3 className="font-serif text-xl font-semibold mb-3" data-testid={`gallery-dish-title-${dish.id}`}>
+                    <h3
+                      className="font-serif text-xl font-semibold mb-3"
+                      data-testid={`gallery-dish-title-${dish.id}`}
+                    >
                       {dish.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed" data-testid={`gallery-dish-description-${dish.id}`}>
+                    <p
+                      className="text-muted-foreground leading-relaxed"
+                      data-testid={`gallery-dish-description-${dish.id}`}
+                    >
                       {dish.description}
                     </p>
                     <div className="mt-4 pt-4 border-t border-border">
@@ -178,9 +216,12 @@ export default function Gallery() {
             <div className="text-center py-20">
               <div className="bg-card rounded-xl p-12 max-w-md mx-auto">
                 <i className="fas fa-utensils text-6xl text-muted-foreground mb-6"></i>
-                <h3 className="font-serif text-2xl font-semibold mb-4">No Dishes Found</h3>
+                <h3 className="font-serif text-2xl font-semibold mb-4">
+                  No Dishes Found
+                </h3>
                 <p className="text-muted-foreground">
-                  No dishes match the selected category. Try selecting a different category.
+                  No dishes match the selected category. Try selecting a
+                  different category.
                 </p>
               </div>
             </div>
@@ -192,15 +233,21 @@ export default function Gallery() {
               <div className="bg-card rounded-xl p-8 max-w-2xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">{dishes.length}</div>
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      {dishes.length}
+                    </div>
                     <div className="text-muted-foreground">Total Creations</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">{categories.length - 1}</div>
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      {categories.length - 1}
+                    </div>
                     <div className="text-muted-foreground">Categories</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-2">100%</div>
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      100%
+                    </div>
                     <div className="text-muted-foreground">Made with Love</div>
                   </div>
                 </div>

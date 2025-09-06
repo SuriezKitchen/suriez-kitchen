@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface YouTubeVideo {
   youtubeId: string;
@@ -12,8 +12,12 @@ interface YouTubeVideo {
 }
 
 export function useYouTube() {
-  const { data: videos, isLoading, error } = useQuery<YouTubeVideo[]>({
-    queryKey: ['api', 'youtube', 'videos'],
+  const {
+    data: videos,
+    isLoading,
+    error,
+  } = useQuery<YouTubeVideo[]>({
+    queryKey: ["api", "youtube", "videos"],
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
   });
@@ -32,7 +36,7 @@ export function useYouTubePlayer(videoId: string) {
   useEffect(() => {
     // Load YouTube IFrame Player API
     if (!window.YT) {
-      const tag = document.createElement('script');
+      const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.head.appendChild(tag);
 
@@ -45,8 +49,8 @@ export function useYouTubePlayer(videoId: string) {
 
     function initializePlayer() {
       const newPlayer = new window.YT.Player(`youtube-player-${videoId}`, {
-        height: '315',
-        width: '560',
+        height: "315",
+        width: "560",
         videoId: videoId,
         playerVars: {
           autoplay: 0,
