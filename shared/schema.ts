@@ -1,35 +1,45 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, blob } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const dishes = pgTable("dishes", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const dishes = sqliteTable("dishes", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
 });
 
-export const videos = pgTable("videos", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const videos = sqliteTable("videos", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   youtubeId: text("youtube_id").notNull().unique(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   thumbnailUrl: text("thumbnail_url").notNull(),
   viewCount: integer("view_count").default(0),
   likeCount: integer("like_count").default(0),
-  publishedAt: timestamp("published_at").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  publishedAt: integer("published_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
 });
 
-export const socialLinks = pgTable("social_links", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const socialLinks = sqliteTable("social_links", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   platform: text("platform").notNull(),
   url: text("url").notNull(),
   username: text("username"),
-  isActive: boolean("is_active").default(true),
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
 });
 
 export const insertDishSchema = createInsertSchema(dishes).omit({
