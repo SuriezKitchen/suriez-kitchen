@@ -26,24 +26,15 @@ export default function HeroSection() {
         muted
         loop
         playsInline
-        preload="auto"
-        crossOrigin="anonymous"
+        preload="metadata"
       >
-        {/* Culinary source 1 (Coverr) */}
+        {/* Carrot video - Primary source */}
         <source
-          src="https://cdn.coverr.co/videos/coverr-preparing-food-in-a-restaurant-kitchen-3175/1080p.mp4"
+          src="https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4"
           type="video/mp4"
         />
-        {/* Culinary source 2 (Pexels) */}
-        <source
-          src="https://videos.pexels.com/video-files/2796411/2796411-uhd_2560_1440_25fps.mp4"
-          type="video/mp4"
-        />
-        {/* Reliable fallback (MDN Big Buck Bunny sample) */}
-        <source
-          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-          type="video/mp4"
-        />
+        {/* Fallback message */}
+        Your browser does not support the video tag.
       </video>
 
       {/* Overlay */}
