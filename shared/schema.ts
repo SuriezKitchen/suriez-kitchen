@@ -32,6 +32,19 @@ export const videos = sqliteTable("videos", {
     .notNull(),
 });
 
+export const categories = sqliteTable("categories", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  color: text("color").default("#3B82F6"), // Default blue color
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
 export const socialLinks = sqliteTable("social_links", {
   id: text("id")
     .primaryKey()
@@ -52,6 +65,11 @@ export const insertVideoSchema = createInsertSchema(videos).omit({
   createdAt: true,
 });
 
+export const insertCategorySchema = createInsertSchema(categories).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertSocialLinkSchema = createInsertSchema(socialLinks).omit({
   id: true,
 });
@@ -61,6 +79,9 @@ export type Dish = typeof dishes.$inferSelect;
 
 export type InsertVideo = z.infer<typeof insertVideoSchema>;
 export type Video = typeof videos.$inferSelect;
+
+export type InsertCategory = z.infer<typeof insertCategorySchema>;
+export type Category = typeof categories.$inferSelect;
 
 export type InsertSocialLink = z.infer<typeof insertSocialLinkSchema>;
 export type SocialLink = typeof socialLinks.$inferSelect;

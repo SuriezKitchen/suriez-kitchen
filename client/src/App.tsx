@@ -6,14 +6,22 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import Gallery from "@/pages/gallery";
 import Videos from "@/pages/videos";
+import AdminLogin from "@/pages/admin-login";
+import AdminDashboard from "@/pages/admin";
+import AdminDishes from "@/pages/admin-dishes";
+import AdminCategories from "@/pages/admin-categories";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home}/>
-      <Route path="/gallery" component={Gallery}/>
-      <Route path="/videos" component={Videos}/>
+      <Route path="/" component={Home} />
+      <Route path="/gallery" component={Gallery} />
+      <Route path="/videos" component={Videos} />
+      <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/dishes" component={AdminDishes} />
+      <Route path="/admin/categories" component={AdminCategories} />
       <Route component={NotFound} />
     </Switch>
   );

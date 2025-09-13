@@ -82,7 +82,7 @@ export default function ContactSection() {
                     className="text-muted-foreground"
                     data-testid="contact-email"
                   >
-                    chef.isabella@example.com
+                    sureiyah__@example.com
                   </p>
                 </CardContent>
               </Card>
@@ -132,9 +132,7 @@ export default function ContactSection() {
                       <h3 className="font-serif text-xl font-semibold mb-2">
                         YouTube
                       </h3>
-                      <p className="text-muted-foreground">
-                        @ChefIsabellaCooks
-                      </p>
+                      <p className="text-muted-foreground">@Sureiyahsaid</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -151,7 +149,7 @@ export default function ContactSection() {
                       <h3 className="font-serif text-xl font-semibold mb-2">
                         Instagram
                       </h3>
-                      <p className="text-muted-foreground">@chef.isabella</p>
+                      <p className="text-muted-foreground">@sureiyah__</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -162,7 +160,7 @@ export default function ContactSection() {
           <div className="scroll-reveal">
             <div className="flex flex-wrap justify-center gap-4">
               <a
-                href="https://youtube.com/@chefisabellacooks"
+                href="https://youtube.com/@Sureiyahsaid"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
@@ -171,7 +169,7 @@ export default function ContactSection() {
                 <i className="fab fa-youtube text-xl"></i>
               </a>
               <a
-                href="https://instagram.com/chef.isabella"
+                href="https://instagram.com/sureiyah__"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"

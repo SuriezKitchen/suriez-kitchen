@@ -7,10 +7,15 @@ import type { Dish } from "@shared/schema";
 
 export default function GallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
 
   const { data: dishes, isLoading } = useQuery<Dish[]>({
     queryKey: ["api", "dishes"],
   });
+
+  // Compute dishes early so hooks below can depend on them
+  const visibleDishes = (dishes || []).slice(0, 10);
+  const loopDishes = [...visibleDishes, ...visibleDishes];
 
   useEffect(() => {
     const observerOptions = {
@@ -37,6 +42,28 @@ export default function GallerySection() {
 
     return () => observer.disconnect();
   }, []);
+
+  // Auto-scroll the horizontal row continuously using a timer (more reliable across tabs)
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+
+    row.scrollLeft = 0;
+    const speedPxPerSec = 60; // tune speed here
+    const stepPx = speedPxPerSec / 60; // ~60fps
+
+    const id = window.setInterval(() => {
+      // re-evaluate because images may change width after load
+      const half = Math.max(1, Math.floor(row.scrollWidth / 2));
+      row.scrollLeft += stepPx;
+      if (row.scrollLeft >= half) {
+        // jump instantly to create seamless loop
+        row.scrollLeft -= half;
+      }
+    }, 16);
+
+    return () => window.clearInterval(id);
+  }, [loopDishes.length]);
 
   if (isLoading) {
     return (
@@ -81,47 +108,54 @@ export default function GallerySection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {dishes?.map((dish, index) => (
-            <div
-              key={dish.id}
-              className="scroll-reveal group"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <Card className="bg-card overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-96 flex flex-col">
-                <div className="relative overflow-hidden flex-shrink-0">
-                  <img
-                    src={dish.imageUrl}
-                    alt={dish.title}
-                    className="w-full h-48 object-cover image-hover"
-                    data-testid={`dish-image-${dish.id}`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <i
-                        className="fas fa-heart text-lg"
-                        data-testid={`dish-heart-${dish.id}`}
-                      ></i>
+        {/* Horizontal scroll row */}
+        <div
+          ref={rowRef}
+          className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          <div className="flex gap-6 pr-6 [&::-webkit-scrollbar]:hidden">
+            {loopDishes.map((dish, index) => (
+              <div
+                key={`${dish.id}-${index}`}
+                className="scroll-reveal group"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <Card className="bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-96 min-w-[14rem] sm:min-w-[16rem] md:min-w-[18rem] flex-shrink-0 flex flex-col">
+                  <div className="relative overflow-hidden flex-shrink-0">
+                    <img
+                      src={dish.imageUrl}
+                      alt={dish.title}
+                      className="w-full h-48 object-cover image-hover"
+                      data-testid={`dish-image-${dish.id}`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <i
+                          className="fas fa-heart text-lg"
+                          data-testid={`dish-heart-${dish.id}`}
+                        ></i>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <CardContent className="p-6 flex-1 flex flex-col">
-                  <h3
-                    className="font-serif text-xl font-semibold mb-2"
-                    data-testid={`dish-title-${dish.id}`}
-                  >
-                    {dish.title}
-                  </h3>
-                  <p
-                    className="text-muted-foreground flex-1"
-                    data-testid={`dish-description-${dish.id}`}
-                  >
-                    {dish.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
+                  <CardContent className="p-6 flex-1 flex flex-col">
+                    <h3
+                      className="font-serif text-xl font-semibold mb-2"
+                      data-testid={`dish-title-${dish.id}`}
+                    >
+                      {dish.title}
+                    </h3>
+                    <p
+                      className="text-muted-foreground flex-1"
+                      data-testid={`dish-description-${dish.id}`}
+                    >
+                      {dish.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="text-center mt-12">

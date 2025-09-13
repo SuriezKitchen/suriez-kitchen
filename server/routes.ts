@@ -34,14 +34,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all categories
+  app.get("/api/categories", async (req, res) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch categories" });
+    }
+  });
+
   // YouTube API integration endpoint
   app.get("/api/youtube/videos", async (req, res) => {
-    const API_KEY = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY;
-    const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID;
-    
+    const API_KEY =
+      process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY;
+    const CHANNEL_ID =
+      process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID;
+
     if (!API_KEY || !CHANNEL_ID) {
-      return res.status(500).json({ 
-        message: "YouTube API configuration missing. Please set YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID environment variables." 
+      return res.status(500).json({
+        message:
+          "YouTube API configuration missing. Please set YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID environment variables.",
       });
     }
 
@@ -55,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const data = await response.json();
-      
+
       // Transform YouTube API response to our video format
       const videos = data.items.map((item: any) => ({
         youtubeId: item.id.videoId,
@@ -70,11 +83,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(videos);
     } catch (error) {
       console.error("YouTube API error:", error);
-      res.status(500).json({ 
-        message: "Failed to fetch YouTube videos. Please check your API configuration." 
+      res.status(500).json({
+        message:
+          "Failed to fetch YouTube videos. Please check your API configuration.",
       });
     }
   });
+
+  // Admin authentication middleware
+  const authenticateAdmin = (req: any, res: any, next: any) => {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+
+    // Simple token check - in production, use proper JWT validation
+    if (token === "admin-token-123") {
+      next();
+    } else {
+      res.status(401).json({ message: "Unauthorized" });
+    }
+  };
+
+  // Admin login endpoint
+  app.post("/api/admin/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    // Simple hardcoded credentials - in production, use proper authentication
+    if (username === "admin" && password === "admin123") {
+      res.json({ token: "admin-token-123" });
+    } else {
+      res.status(401).json({ message: "Invalid credentials" });
+    }
+  });
+
+  // Admin routes - protected
+  app.post("/api/admin/dishes", authenticateAdmin, async (req, res) => {
+    try {
+      const dish = await storage.createDish(req.body);
+      res.json(dish);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create dish" });
+    }
+  });
+
+  app.put("/api/admin/dishes/:id", authenticateAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const dish = await storage.updateDish(id, req.body);
+      res.json(dish);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update dish" });
+    }
+  });
+
+  app.delete("/api/admin/dishes/:id", authenticateAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteDish(id);
+      res.json({ message: "Dish deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete dish" });
+    }
+  });
+
+  // Admin category routes - protected
+  app.post("/api/admin/categories", authenticateAdmin, async (req, res) => {
+    try {
+      const category = await storage.createCategory(req.body);
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create category" });
+    }
+  });
+
+  app.put("/api/admin/categories/:id", authenticateAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const category = await storage.updateCategory(id, req.body);
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update category" });
+    }
+  });
+
+  app.delete(
+    "/api/admin/categories/:id",
+    authenticateAdmin,
+    async (req, res) => {
+      try {
+        const { id } = req.params;
+        await storage.deleteCategory(id);
+        res.json({ message: "Category deleted successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to delete category" });
+      }
+    }
+  );
 
   const httpServer = createServer(app);
   return httpServer;

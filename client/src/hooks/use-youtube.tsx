@@ -18,6 +18,13 @@ export function useYouTube() {
     error,
   } = useQuery<YouTubeVideo[]>({
     queryKey: ["api", "youtube", "videos"],
+    queryFn: async () => {
+      const response = await fetch("/api/youtube/videos");
+      if (!response.ok) {
+        throw new Error("Failed to fetch YouTube videos");
+      }
+      return response.json();
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
   });

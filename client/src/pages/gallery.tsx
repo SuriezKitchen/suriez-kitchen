@@ -1,20 +1,49 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import type { Dish } from "@shared/schema";
+import type { Dish, Category } from "@shared/schema";
 
 export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const { data: dishes, isLoading } = useQuery<Dish[]>({
+  const {
+    data: dishes,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<Dish[]>({
     queryKey: ["api", "dishes"],
   });
+
+  const { data: categories } = useQuery<Category[]>({
+    queryKey: ["api", "categories"],
+    queryFn: async () => {
+      const response = await fetch("/api/categories");
+      if (!response.ok) throw new Error("Failed to fetch categories");
+      return response.json();
+    },
+  });
+
+  // Pagination state
+  const INITIAL_PAGE = 20; // show 20 first (5 rows of 4), then load more with button
+  const LOAD_STEP = 4; // Load 4 more dishes at a time (1 row of 4)
+  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_PAGE);
+
+  // Ensure visibleCount is never 0
+  const safeVisibleCount = Math.max(visibleCount, INITIAL_PAGE);
 
   useEffect(() => {
     const observerOptions = {
@@ -42,20 +71,30 @@ export default function Gallery() {
     return () => observer.disconnect();
   }, []);
 
-  const categories = dishes
+  const availableCategories = categories
     ? [
-        "all",
-        ...Array.from(
-          new Set(dishes.map((dish) => dish.category.toLowerCase()))
-        ),
+        { name: "all", displayName: "All" },
+        ...categories.map((cat) => ({
+          name: cat.name.toLowerCase(),
+          displayName: cat.name,
+        })),
       ]
-    : ["all"];
-  const filteredDishes =
-    dishes?.filter(
-      (dish) =>
-        selectedCategory === "all" ||
-        dish.category.toLowerCase() === selectedCategory
-    ) || [];
+    : [{ name: "all", displayName: "All" }];
+  const filteredDishes = (dishes ?? []).filter(
+    (dish) =>
+      selectedCategory === "all" ||
+      dish.category.toLowerCase() === selectedCategory
+  );
+
+  // Calculate visible dishes
+  const visibleDishes = filteredDishes.slice(0, safeVisibleCount);
+
+  // Reset visible count when category filter changes
+  useEffect(() => {
+    setVisibleCount(INITIAL_PAGE);
+  }, [selectedCategory]);
+
+  // Disabled automatic infinite scroll - using manual "Load More" button instead
 
   if (isLoading) {
     return (
@@ -66,10 +105,8 @@ export default function Gallery() {
             <div className="text-center mb-16">
               <Skeleton className="h-16 w-96 mx-auto mb-6" />
               <Skeleton className="h-6 w-full max-w-3xl mx-auto mb-8" />
-              <div className="flex justify-center gap-4 mb-12">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton key={i} className="h-10 w-24" />
-                ))}
+              <div className="flex justify-center mb-12">
+                <Skeleton className="h-10 w-64" />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -91,6 +128,37 @@ export default function Gallery() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-24 pb-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center py-20">
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-8 max-w-2xl mx-auto">
+                <i className="fas fa-exclamation-triangle text-4xl text-destructive mb-4"></i>
+                <h3 className="font-serif text-2xl font-semibold mb-4 text-destructive">
+                  Failed to Load Dishes
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  There was an error loading the gallery. Please try again.
+                </p>
+                <button
+                  onClick={() => refetch()}
+                  className="btn-primary px-6 py-3"
+                >
+                  <i className="fas fa-refresh mr-2"></i>
+                  Retry
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -98,7 +166,7 @@ export default function Gallery() {
       <main className="pt-24 pb-20" ref={sectionRef}>
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="text-center mb-16 scroll-reveal">
+          <div className="text-center mb-[35px]">
             <h1
               className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-6"
               data-testid="gallery-page-title"
@@ -109,9 +177,9 @@ export default function Gallery() {
               className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8"
               data-testid="gallery-page-description"
             >
-              A collection of my culinary creations, each telling a unique story
-              of flavor, technique, and artistry. Explore the passion and
-              creativity behind every dish.
+              A collection of my dishes, each telling a unique story of flavor,
+              technique, and artistry. Explore the passion and creativity behind
+              every dish.
             </p>
 
             {/* Back to Home Link */}
@@ -128,34 +196,30 @@ export default function Gallery() {
           </div>
 
           {/* Category Filter */}
-          <div className="flex justify-center mb-12 scroll-reveal">
-            <div className="flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={
-                    selectedCategory === category ? "default" : "outline"
-                  }
-                  onClick={() => setSelectedCategory(category)}
-                  className={`capitalize ${
-                    selectedCategory === category ? "btn-primary" : ""
-                  }`}
-                  data-testid={`category-filter-${category}`}
-                >
-                  {category}
-                </Button>
-              ))}
+          <div className="flex justify-center mb-12">
+            <div className="w-full max-w-xs">
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableCategories.map((category) => (
+                    <SelectItem key={category.name} value={category.name}>
+                      <span className="capitalize">{category.displayName}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          {/* Gallery Grid */}
+          {/* Gallery Grid (paginated) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredDishes.map((dish, index) => (
-              <div
-                key={dish.id}
-                className="scroll-reveal group"
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
+            {visibleDishes.map((dish, index) => (
+              <div key={dish.id} className="group">
                 <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 h-[500px] flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
                     <img
@@ -211,6 +275,22 @@ export default function Gallery() {
             ))}
           </div>
 
+          {/* Load more button */}
+          {visibleCount < filteredDishes.length && (
+            <div className="text-center mt-12">
+              <button
+                onClick={() => {
+                  setVisibleCount((prev) =>
+                    Math.min(prev + LOAD_STEP, filteredDishes.length)
+                  );
+                }}
+                className="bg-green-100 hover:bg-green-200 text-green-700 border border-green-300 px-6 py-2 text-base font-medium rounded-lg transition-colors"
+              >
+                Load More Dishes
+              </button>
+            </div>
+          )}
+
           {/* Empty State */}
           {filteredDishes.length === 0 && !isLoading && (
             <div className="text-center py-20">
@@ -229,7 +309,7 @@ export default function Gallery() {
 
           {/* Stats */}
           {dishes && dishes.length > 0 && (
-            <div className="mt-20 text-center scroll-reveal">
+            <div className="mt-20 text-center">
               <div className="bg-card rounded-xl p-8 max-w-2xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
@@ -240,7 +320,7 @@ export default function Gallery() {
                   </div>
                   <div>
                     <div className="text-3xl font-bold text-primary mb-2">
-                      {categories.length - 1}
+                      {categories?.length || 0}
                     </div>
                     <div className="text-muted-foreground">Categories</div>
                   </div>
