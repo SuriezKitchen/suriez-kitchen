@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import SessionManager from "@/components/session-manager";
 import type { Category } from "@shared/schema";
 
 export default function AdminCategories() {
@@ -166,225 +167,228 @@ export default function AdminCategories() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-card border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={handleBackToDashboard}>
-                ← Back to Dashboard
-              </Button>
-              <h1 className="text-2xl font-bold">Categories Management</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">
-                {categories?.length || 0} categories
-              </span>
-              <Button variant="outline" onClick={handleLogout}>
-                Logout
-              </Button>
+    <SessionManager>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <div className="bg-card border-b">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button variant="outline" onClick={handleBackToDashboard}>
+                  ← Back to Dashboard
+                </Button>
+                <h1 className="text-2xl font-bold">Categories Management</h1>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">
+                  {categories?.length || 0} categories
+                </span>
+                <Button variant="outline" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Add New Category */}
-        <Collapsible
-          open={isAddCategoryOpen}
-          onOpenChange={setIsAddCategoryOpen}
-        >
-          <Card className="mb-8">
-            <CollapsibleTrigger asChild>
-              <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
-                <CardTitle className="flex items-center justify-between">
-                  Add New Category
-                  <span className="text-sm text-gray-500">
-                    {isAddCategoryOpen ? "▼" : "▶"}
-                  </span>
-                </CardTitle>
-              </CardHeader>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <CardContent>
-                <form onSubmit={handleCategorySubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="container mx-auto px-4 py-8">
+          {/* Add New Category */}
+          <Collapsible
+            open={isAddCategoryOpen}
+            onOpenChange={setIsAddCategoryOpen}
+          >
+            <Card className="mb-8">
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+                  <CardTitle className="flex items-center justify-between">
+                    Add New Category
+                    <span className="text-sm text-gray-500">
+                      {isAddCategoryOpen ? "▼" : "▶"}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent>
+                  <form onSubmit={handleCategorySubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                          id="name"
+                          value={categoryForm.name}
+                          onChange={(e) =>
+                            setCategoryForm({
+                              ...categoryForm,
+                              name: e.target.value,
+                            })
+                          }
+                          required
+                          placeholder="e.g., breakfast"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="color">Color</Label>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            id="color"
+                            type="color"
+                            value={categoryForm.color}
+                            onChange={(e) =>
+                              setCategoryForm({
+                                ...categoryForm,
+                                color: e.target.value,
+                              })
+                            }
+                            className="w-16 h-10 p-1 border rounded"
+                          />
+                          <Input
+                            value={categoryForm.color}
+                            onChange={(e) =>
+                              setCategoryForm({
+                                ...categoryForm,
+                                color: e.target.value,
+                              })
+                            }
+                            placeholder="#3B82F6"
+                            className="flex-1"
+                          />
+                        </div>
+                      </div>
+                    </div>
                     <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
+                      <Label htmlFor="description">Description</Label>
                       <Input
-                        id="name"
-                        value={categoryForm.name}
+                        id="description"
+                        value={categoryForm.description}
                         onChange={(e) =>
                           setCategoryForm({
                             ...categoryForm,
-                            name: e.target.value,
+                            description: e.target.value,
                           })
                         }
-                        required
-                        placeholder="e.g., breakfast"
+                        placeholder="Brief description of this category"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="color">Color</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          id="color"
-                          type="color"
-                          value={categoryForm.color}
-                          onChange={(e) =>
-                            setCategoryForm({
-                              ...categoryForm,
-                              color: e.target.value,
-                            })
-                          }
-                          className="w-16 h-10 p-1 border rounded"
-                        />
-                        <Input
-                          value={categoryForm.color}
-                          onChange={(e) =>
-                            setCategoryForm({
-                              ...categoryForm,
-                              color: e.target.value,
-                            })
-                          }
-                          placeholder="#3B82F6"
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Input
-                      id="description"
-                      value={categoryForm.description}
-                      onChange={(e) =>
-                        setCategoryForm({
-                          ...categoryForm,
-                          description: e.target.value,
-                        })
-                      }
-                      placeholder="Brief description of this category"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      type="submit"
-                      disabled={createCategoryMutation.isPending}
-                    >
-                      {createCategoryMutation.isPending
-                        ? "Adding..."
-                        : "Add Category"}
-                    </Button>
-                    {isEditingCategory && (
+                    <div className="flex gap-2">
                       <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          setIsEditingCategory(false);
-                          setEditingCategory(null);
-                          resetCategoryForm();
-                        }}
+                        type="submit"
+                        disabled={createCategoryMutation.isPending}
                       >
-                        Cancel Edit
+                        {createCategoryMutation.isPending
+                          ? "Adding..."
+                          : "Add Category"}
                       </Button>
-                    )}
-                  </div>
-                </form>
-              </CardContent>
-            </CollapsibleContent>
-          </Card>
-        </Collapsible>
-
-        {/* Categories List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Existing Categories</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {categoriesLoading
-                ? Array.from({ length: 3 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center space-x-4 p-4 border rounded-lg"
-                    >
-                      <Skeleton className="h-4 w-4 rounded" />
-                      <div className="flex-1 space-y-2">
-                        <Skeleton className="h-4 w-1/4" />
-                        <Skeleton className="h-3 w-1/2" />
-                      </div>
-                      <div className="flex gap-2">
-                        <Skeleton className="h-8 w-16" />
-                        <Skeleton className="h-8 w-16" />
-                      </div>
-                    </div>
-                  ))
-                : categories?.map((category) => (
-                    <div
-                      key={category.id}
-                      className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                    >
-                      <div
-                        className="w-4 h-4 rounded-full"
-                        style={{ backgroundColor: category.color }}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-lg mb-1">
-                          {category.name}
-                        </h3>
-                        {category.description && (
-                          <p className="text-sm text-muted-foreground">
-                            {category.description}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex gap-2 flex-shrink-0">
+                      {isEditingCategory && (
                         <Button
-                          size="sm"
+                          type="button"
                           variant="outline"
-                          onClick={() => handleEditCategory(category)}
+                          onClick={() => {
+                            setIsEditingCategory(false);
+                            setEditingCategory(null);
+                            resetCategoryForm();
+                          }}
                         >
-                          Edit
+                          Cancel Edit
                         </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button size="sm" variant="destructive">
-                              Delete
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete Category
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to delete "{category.name}
-                                "? This action cannot be undone and will affect
-                                all dishes in this category.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() =>
-                                  handleDeleteCategory(category.id)
-                                }
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
+                      )}
                     </div>
-                  ))}
-            </div>
-          </CardContent>
-        </Card>
+                  </form>
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
+          {/* Categories List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Existing Categories</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {categoriesLoading
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center space-x-4 p-4 border rounded-lg"
+                      >
+                        <Skeleton className="h-4 w-4 rounded" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-4 w-1/4" />
+                          <Skeleton className="h-3 w-1/2" />
+                        </div>
+                        <div className="flex gap-2">
+                          <Skeleton className="h-8 w-16" />
+                          <Skeleton className="h-8 w-16" />
+                        </div>
+                      </div>
+                    ))
+                  : categories?.map((category) => (
+                      <div
+                        key={category.id}
+                        className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                      >
+                        <div
+                          className="w-4 h-4 rounded-full"
+                          style={{ backgroundColor: category.color }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-lg mb-1">
+                            {category.name}
+                          </h3>
+                          {category.description && (
+                            <p className="text-sm text-muted-foreground">
+                              {category.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex gap-2 flex-shrink-0">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditCategory(category)}
+                          >
+                            Edit
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="destructive">
+                                Delete
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete Category
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "
+                                  {category.name}
+                                  "? This action cannot be undone and will
+                                  affect all dishes in this category.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    handleDeleteCategory(category.id)
+                                  }
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </div>
+                    ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </SessionManager>
   );
 }

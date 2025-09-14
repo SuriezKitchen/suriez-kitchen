@@ -55,6 +55,32 @@ export const socialLinks = sqliteTable("social_links", {
   isActive: integer("is_active", { mode: "boolean" }).default(true),
 });
 
+export const settings = sqliteTable("settings", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  key: text("key").notNull().unique(),
+  value: text("value").notNull(),
+  description: text("description"),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const adminUsers = sqliteTable("admin_users", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  email: text("email"),
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  lastLoginAt: integer("last_login_at", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
 export const insertDishSchema = createInsertSchema(dishes).omit({
   id: true,
   createdAt: true,
@@ -74,6 +100,16 @@ export const insertSocialLinkSchema = createInsertSchema(socialLinks).omit({
   id: true,
 });
 
+export const insertSettingSchema = createInsertSchema(settings).omit({
+  id: true,
+  updatedAt: true,
+});
+
+export const insertAdminUserSchema = createInsertSchema(adminUsers).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertDish = z.infer<typeof insertDishSchema>;
 export type Dish = typeof dishes.$inferSelect;
 
@@ -85,3 +121,9 @@ export type Category = typeof categories.$inferSelect;
 
 export type InsertSocialLink = z.infer<typeof insertSocialLinkSchema>;
 export type SocialLink = typeof socialLinks.$inferSelect;
+
+export type InsertSetting = z.infer<typeof insertSettingSchema>;
+export type Setting = typeof settings.$inferSelect;
+
+export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
+export type AdminUser = typeof adminUsers.$inferSelect;

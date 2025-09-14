@@ -113,6 +113,18 @@ export default function Navigation() {
                 Contact
               </span>
             </Link>
+            <a
+              href="/admin/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-4 py-2 rounded-lg text-white font-medium transition-all transform hover:scale-105 shadow-lg cursor-pointer inline-block"
+              )}
+              data-testid="nav-portal"
+            >
+              <i className="fas fa-user-shield mr-2"></i>
+              Portal
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -190,6 +202,17 @@ export default function Navigation() {
                   Contact
                 </span>
               </Link>
+              <a
+                href="/admin/login"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-4 py-2 rounded-lg text-white font-medium transition-all transform hover:scale-105 shadow-lg cursor-pointer text-center block mt-2"
+                data-testid="mobile-nav-portal"
+              >
+                <i className="fas fa-user-shield mr-2"></i>
+                Portal
+              </a>
             </div>
           </div>
         )}

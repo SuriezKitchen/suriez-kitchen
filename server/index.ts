@@ -1,11 +1,27 @@
 import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import SQLiteStore from "connect-sqlite3";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { sessionConfig } from "./auth";
+
+const SQLiteStoreSession = SQLiteStore(session);
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Session middleware
+app.use(
+  session({
+    ...sessionConfig,
+    store: new SQLiteStoreSession({
+      db: "sessions.db",
+      dir: "./",
+    }) as any, // Type assertion for compatibility
+  })
+);
 
 app.use((req, res, next) => {
   const start = Date.now();

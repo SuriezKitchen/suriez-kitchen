@@ -7,10 +7,16 @@ import {
   type InsertSocialLink,
   type Category,
   type InsertCategory,
+  type Setting,
+  type InsertSetting,
+  type AdminUser,
+  type InsertAdminUser,
   dishes,
   videos,
   socialLinks,
   categories,
+  settings,
+  adminUsers,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/d1";
@@ -40,6 +46,26 @@ export interface IStorage {
 
   getSocialLinks(): Promise<SocialLink[]>;
   createSocialLink(link: InsertSocialLink): Promise<SocialLink>;
+
+  // Settings methods
+  getSettings(): Promise<Setting[]>;
+  getSetting(key: string): Promise<Setting | null>;
+  createSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting>;
+  updateSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting>;
+
+  // Admin user methods
+  getAdminUserByUsername(username: string): Promise<AdminUser | null>;
+  createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
+  updateAdminUserLastLogin(id: string): Promise<void>;
+  updateAdminUserPassword(id: string, passwordHash: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -47,12 +73,16 @@ export class MemStorage implements IStorage {
   private videos: Map<string, Video>;
   private socialLinks: Map<string, SocialLink>;
   private categories: Map<string, Category>;
+  private settings: Map<string, Setting>;
+  private adminUsers: Map<string, AdminUser>;
 
   constructor() {
     this.dishes = new Map();
     this.videos = new Map();
     this.socialLinks = new Map();
     this.categories = new Map();
+    this.settings = new Map();
+    this.adminUsers = new Map();
 
     // Initialize with sample data
     this.initializeSampleData();
@@ -466,6 +496,94 @@ export class MemStorage implements IStorage {
     }
     this.categories.delete(id);
   }
+
+  // Settings methods
+  async getSettings(): Promise<Setting[]> {
+    return Array.from(this.settings.values());
+  }
+
+  async getSetting(key: string): Promise<Setting | null> {
+    return this.settings.get(key) || null;
+  }
+
+  async createSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting> {
+    const setting: Setting = {
+      id: randomUUID(),
+      key,
+      value,
+      description: description || null,
+      updatedAt: new Date(),
+    };
+    this.settings.set(key, setting);
+    return setting;
+  }
+
+  async updateSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting> {
+    const existing = this.settings.get(key);
+    if (!existing) {
+      return this.createSetting(key, value, description);
+    }
+
+    const updated: Setting = {
+      ...existing,
+      value,
+      description: description || existing.description,
+      updatedAt: new Date(),
+    };
+    this.settings.set(key, updated);
+    return updated;
+  }
+
+  // Admin user methods
+  async getAdminUserByUsername(username: string): Promise<AdminUser | null> {
+    for (const user of this.adminUsers.values()) {
+      if (user.username === username) {
+        return user;
+      }
+    }
+    return null;
+  }
+
+  async createAdminUser(user: InsertAdminUser): Promise<AdminUser> {
+    const adminUser: AdminUser = {
+      id: randomUUID(),
+      username: user.username,
+      passwordHash: user.passwordHash,
+      email: user.email || null,
+      isActive: user.isActive ?? true,
+      lastLoginAt: null,
+      createdAt: new Date(),
+    };
+    this.adminUsers.set(adminUser.id, adminUser);
+    return adminUser;
+  }
+
+  async updateAdminUserLastLogin(id: string): Promise<void> {
+    const user = this.adminUsers.get(id);
+    if (user) {
+      user.lastLoginAt = new Date();
+      this.adminUsers.set(id, user);
+    }
+  }
+
+  async updateAdminUserPassword(
+    id: string,
+    passwordHash: string
+  ): Promise<void> {
+    const user = this.adminUsers.get(id);
+    if (user) {
+      user.passwordHash = passwordHash;
+      this.adminUsers.set(id, user);
+    }
+  }
 }
 
 export class D1Storage implements IStorage {
@@ -609,6 +727,90 @@ export class D1Storage implements IStorage {
     if (result.length === 0) {
       throw new Error("Category not found");
     }
+  }
+
+  // Settings methods
+  async getSettings(): Promise<Setting[]> {
+    return await this.db.select().from(settings);
+  }
+
+  async getSetting(key: string): Promise<Setting | null> {
+    const result = await this.db
+      .select()
+      .from(settings)
+      .where(eq(settings.key, key));
+    return result[0] || null;
+  }
+
+  async createSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting> {
+    const insertSetting: InsertSetting = {
+      key,
+      value,
+      description: description || null,
+    };
+
+    const result = await this.db
+      .insert(settings)
+      .values(insertSetting)
+      .returning();
+    return result[0];
+  }
+
+  async updateSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting> {
+    const existing = await this.getSetting(key);
+    if (!existing) {
+      return this.createSetting(key, value, description);
+    }
+
+    const result = await this.db
+      .update(settings)
+      .set({
+        value,
+        description: description || existing.description,
+        updatedAt: new Date(),
+      })
+      .where(eq(settings.key, key))
+      .returning();
+    return result[0];
+  }
+
+  // Admin user methods
+  async getAdminUserByUsername(username: string): Promise<AdminUser | null> {
+    const result = await this.db
+      .select()
+      .from(adminUsers)
+      .where(eq(adminUsers.username, username));
+    return result[0] || null;
+  }
+
+  async createAdminUser(user: InsertAdminUser): Promise<AdminUser> {
+    const result = await this.db.insert(adminUsers).values(user).returning();
+    return result[0];
+  }
+
+  async updateAdminUserLastLogin(id: string): Promise<void> {
+    await this.db
+      .update(adminUsers)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(adminUsers.id, id));
+  }
+
+  async updateAdminUserPassword(
+    id: string,
+    passwordHash: string
+  ): Promise<void> {
+    await this.db
+      .update(adminUsers)
+      .set({ passwordHash })
+      .where(eq(adminUsers.id, id));
   }
 }
 
@@ -1222,6 +1424,144 @@ export class SqliteStorage implements IStorage {
     if (result.changes === 0) {
       throw new Error("Category not found");
     }
+  }
+
+  // Settings methods
+  async getSettings(): Promise<Setting[]> {
+    const stmt = this.db.prepare("SELECT * FROM settings");
+    const rows = stmt.all() as any[];
+    return rows.map((row) => ({
+      id: row.id,
+      key: row.key,
+      value: row.value,
+      description: row.description,
+      updatedAt: new Date(row.updated_at),
+    }));
+  }
+
+  async getSetting(key: string): Promise<Setting | null> {
+    const stmt = this.db.prepare("SELECT * FROM settings WHERE key = ?");
+    const row = stmt.get(key) as any;
+
+    if (!row) return null;
+
+    return {
+      id: row.id,
+      key: row.key,
+      value: row.value,
+      description: row.description,
+      updatedAt: new Date(row.updated_at),
+    };
+  }
+
+  async createSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting> {
+    const id = randomUUID();
+    const stmt = this.db.prepare(
+      "INSERT INTO settings (id, key, value, description, updated_at) VALUES (?, ?, ?, ?, ?)"
+    );
+    stmt.run(id, key, value, description || null, new Date().toISOString());
+
+    return {
+      id,
+      key,
+      value,
+      description: description || null,
+      updatedAt: new Date(),
+    };
+  }
+
+  async updateSetting(
+    key: string,
+    value: string,
+    description?: string
+  ): Promise<Setting> {
+    const existing = await this.getSetting(key);
+    if (!existing) {
+      return this.createSetting(key, value, description);
+    }
+
+    const stmt = this.db.prepare(
+      "UPDATE settings SET value = ?, description = ?, updated_at = ? WHERE key = ?"
+    );
+    stmt.run(
+      value,
+      description || existing.description,
+      new Date().toISOString(),
+      key
+    );
+
+    return {
+      ...existing,
+      value,
+      description: description || existing.description,
+      updatedAt: new Date(),
+    };
+  }
+
+  // Admin user methods
+  async getAdminUserByUsername(username: string): Promise<AdminUser | null> {
+    const stmt = this.db.prepare(
+      "SELECT * FROM admin_users WHERE username = ?"
+    );
+    const row = stmt.get(username) as any;
+
+    if (!row) return null;
+
+    return {
+      id: row.id,
+      username: row.username,
+      passwordHash: row.password_hash,
+      email: row.email,
+      isActive: Boolean(row.is_active),
+      lastLoginAt: row.last_login_at ? new Date(row.last_login_at) : null,
+      createdAt: new Date(row.created_at),
+    };
+  }
+
+  async createAdminUser(user: InsertAdminUser): Promise<AdminUser> {
+    const id = randomUUID();
+    const stmt = this.db.prepare(
+      "INSERT INTO admin_users (id, username, password_hash, email, is_active, created_at) VALUES (?, ?, ?, ?, ?, ?)"
+    );
+    stmt.run(
+      id,
+      user.username,
+      user.passwordHash,
+      user.email || null,
+      user.isActive ? 1 : 0,
+      new Date().toISOString()
+    );
+
+    return {
+      id,
+      username: user.username,
+      passwordHash: user.passwordHash,
+      email: user.email || null,
+      isActive: user.isActive ?? true,
+      lastLoginAt: null,
+      createdAt: new Date(),
+    };
+  }
+
+  async updateAdminUserLastLogin(id: string): Promise<void> {
+    const stmt = this.db.prepare(
+      "UPDATE admin_users SET last_login_at = ? WHERE id = ?"
+    );
+    stmt.run(new Date().toISOString(), id);
+  }
+
+  async updateAdminUserPassword(
+    id: string,
+    passwordHash: string
+  ): Promise<void> {
+    const stmt = this.db.prepare(
+      "UPDATE admin_users SET password_hash = ? WHERE id = ?"
+    );
+    stmt.run(passwordHash, id);
   }
 }
 
