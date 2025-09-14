@@ -19,6 +19,11 @@ export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
+  // Ensure page scrolls to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const {
     data: dishes,
     isLoading,
@@ -166,9 +171,9 @@ export default function Gallery() {
       <main className="pt-24 pb-20" ref={sectionRef}>
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="text-center mb-[35px]">
+          <div className="text-center mb-[35px] mt-8">
             <h1
-              className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-6"
+              className="font-serif text-4xl md:text-5xl font-bold text-gray-600 mb-6"
               data-testid="gallery-page-title"
             >
               Culinary Gallery

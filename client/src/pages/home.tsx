@@ -3,7 +3,6 @@ import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
 import GallerySection from "@/components/gallery-section";
 import VideosSection from "@/components/videos-section";
-import AboutSection from "@/components/about-section";
 import ContactSection from "@/components/contact-section";
 import Footer from "@/components/footer";
 import TestimonialsSection from "@/components/testimonials-section";
@@ -47,7 +46,6 @@ export default function Home() {
       <GallerySection />
       <VideosSection />
       <TestimonialsSection />
-      <AboutSection />
       <ContactSection />
       <Footer />
     </div>

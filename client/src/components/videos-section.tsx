@@ -1,12 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { useYouTube } from "@/hooks/use-youtube";
 
 export default function VideosSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const { videos, isLoading, error } = useYouTube();
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const observerOptions = {
@@ -33,6 +37,40 @@ export default function VideosSection() {
 
     return () => observer.disconnect();
   }, []);
+
+  // Auto-rotate videos every 5 seconds
+  useEffect(() => {
+    if (videos.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [videos.length]);
+
+  const goToNext = () => {
+    if (isTransitioning || videos.length <= 1) return;
+    setIsTransitioning(true);
+    setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+    setTimeout(() => setIsTransitioning(false), 500);
+  };
+
+  const goToPrevious = () => {
+    if (isTransitioning || videos.length <= 1) return;
+    setIsTransitioning(true);
+    setCurrentVideoIndex((prevIndex) =>
+      prevIndex === 0 ? videos.length - 1 : prevIndex - 1
+    );
+    setTimeout(() => setIsTransitioning(false), 500);
+  };
+
+  const goToVideo = (index: number) => {
+    if (isTransitioning || index === currentVideoIndex) return;
+    setIsTransitioning(true);
+    setCurrentVideoIndex(index);
+    setTimeout(() => setIsTransitioning(false), 500);
+  };
 
   const openVideo = (youtubeId: string) => {
     window.open(`https://www.youtube.com/watch?v=${youtubeId}`, "_blank");
@@ -69,17 +107,19 @@ export default function VideosSection() {
             <Skeleton className="h-12 w-96 mx-auto mb-6" />
             <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Card key={i}>
-                <Skeleton className="h-64 w-full" />
-                <CardContent className="p-6">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full mb-4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </CardContent>
-              </Card>
-            ))}
+          <div className="flex justify-center">
+            <Card className="w-full max-w-4xl">
+              <Skeleton className="h-80 w-full" />
+              <CardContent className="p-8">
+                <Skeleton className="h-8 w-3/4 mb-4" />
+                <Skeleton className="h-4 w-full mb-4" />
+                <Skeleton className="h-4 w-2/3 mb-6" />
+                <div className="flex gap-4">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -105,75 +145,131 @@ export default function VideosSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="relative">
           {videos.length > 0 ? (
-            videos.map((video, index) => (
+            <div className="relative overflow-hidden">
+              {/* Carousel Container */}
               <div
-                key={video.youtubeId}
-                className="scroll-reveal video-hover"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                ref={carouselRef}
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{
+                  transform: `translateX(-${currentVideoIndex * 100}%)`,
+                }}
               >
-                <Card className="bg-card overflow-hidden shadow-lg">
-                  <div
-                    className="relative cursor-pointer"
-                    onClick={() => openVideo(video.youtubeId)}
-                  >
-                    <img
-                      src={video.thumbnailUrl}
-                      alt={video.title}
-                      className="w-full h-64 object-cover"
-                      data-testid={`video-thumbnail-${video.youtubeId}`}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <button
-                        className="bg-primary text-white rounded-full w-16 h-16 flex items-center justify-center hover:bg-accent transition-colors"
-                        data-testid={`video-play-${video.youtubeId}`}
-                      >
-                        <i className="fas fa-play text-xl ml-1"></i>
-                      </button>
+                {videos.map((video, index) => (
+                  <div key={video.youtubeId} className="w-full flex-shrink-0">
+                    <div className="flex justify-center px-4">
+                      <Card className="bg-card overflow-hidden shadow-lg w-full max-w-4xl">
+                        <div
+                          className="relative cursor-pointer group"
+                          onClick={() => openVideo(video.youtubeId)}
+                        >
+                          <img
+                            src={video.thumbnailUrl}
+                            alt={video.title}
+                            className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+                            data-testid={`video-thumbnail-${video.youtubeId}`}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                            <button
+                              className="bg-red-600 text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-red-700 transition-all transform group-hover:scale-110"
+                              data-testid={`video-play-${video.youtubeId}`}
+                            >
+                              <i className="fas fa-play text-2xl ml-1"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <CardContent className="p-8">
+                          <h3
+                            className="font-serif text-2xl font-semibold mb-4"
+                            data-testid={`video-title-${video.youtubeId}`}
+                          >
+                            {video.title.length > 80
+                              ? `${video.title.substring(0, 80)}...`
+                              : video.title}
+                          </h3>
+                          <p
+                            className="text-muted-foreground mb-6 text-lg leading-relaxed"
+                            data-testid={`video-description-${video.youtubeId}`}
+                          >
+                            {video.description.length > 150
+                              ? `${video.description.substring(0, 150)}...`
+                              : video.description}
+                          </p>
+                          <div className="flex items-center text-sm text-muted-foreground gap-6">
+                            <span className="flex items-center">
+                              <i className="far fa-eye mr-2"></i>
+                              <span
+                                data-testid={`video-views-${video.youtubeId}`}
+                              >
+                                {video.viewCount
+                                  ? `${video.viewCount.toLocaleString()} views`
+                                  : "Views unavailable"}
+                              </span>
+                            </span>
+                            <span className="flex items-center">
+                              <i className="far fa-heart mr-2"></i>
+                              <span
+                                data-testid={`video-likes-${video.youtubeId}`}
+                              >
+                                {video.likeCount
+                                  ? `${video.likeCount.toLocaleString()} likes`
+                                  : "Likes unavailable"}
+                              </span>
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
                     </div>
                   </div>
-                  <CardContent className="p-6">
-                    <h3
-                      className="font-serif text-xl font-semibold mb-2"
-                      data-testid={`video-title-${video.youtubeId}`}
-                    >
-                      {video.title.length > 60
-                        ? `${video.title.substring(0, 60)}...`
-                        : video.title}
-                    </h3>
-                    <p
-                      className="text-muted-foreground mb-4"
-                      data-testid={`video-description-${video.youtubeId}`}
-                    >
-                      {video.description.length > 100
-                        ? `${video.description.substring(0, 100)}...`
-                        : video.description}
-                    </p>
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <i className="far fa-eye mr-2"></i>
-                      <span
-                        className="mr-4"
-                        data-testid={`video-views-${video.youtubeId}`}
-                      >
-                        {video.viewCount
-                          ? `${video.viewCount.toLocaleString()} views`
-                          : "Views unavailable"}
-                      </span>
-                      <i className="far fa-heart mr-2"></i>
-                      <span data-testid={`video-likes-${video.youtubeId}`}>
-                        {video.likeCount
-                          ? `${video.likeCount.toLocaleString()} likes`
-                          : "Likes unavailable"}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
+                ))}
               </div>
-            ))
+
+              {/* Navigation Arrows */}
+              {videos.length > 1 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg"
+                    onClick={goToPrevious}
+                    disabled={isTransitioning}
+                  >
+                    <i className="fas fa-chevron-left"></i>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg"
+                    onClick={goToNext}
+                    disabled={isTransitioning}
+                  >
+                    <i className="fas fa-chevron-right"></i>
+                  </Button>
+                </>
+              )}
+
+              {/* Video indicators */}
+              {videos.length > 1 && (
+                <div className="flex justify-center mt-8 gap-2">
+                  {videos.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToVideo(index)}
+                      disabled={isTransitioning}
+                      className={`w-3 h-3 rounded-full transition-all ${
+                        index === currentVideoIndex
+                          ? "bg-primary"
+                          : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           ) : (
             // Fallback content when no videos are available
-            <div className="col-span-full text-center py-12">
+            <div className="text-center py-12">
               <div className="bg-card rounded-xl p-8 max-w-md mx-auto">
                 <i className="fab fa-youtube text-6xl text-primary mb-4"></i>
                 <h3 className="font-serif text-xl font-semibold mb-2">

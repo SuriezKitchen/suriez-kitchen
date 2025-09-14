@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -63,22 +64,24 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            className="btn-primary px-8 py-4 text-white font-medium rounded-lg"
-            onClick={() => scrollToSection("videos")}
-            data-testid="button-watch-vlogs"
-          >
-            <i className="fas fa-play mr-2"></i>
-            Watch Latest Vlogs
-          </button>
-          <button
-            className="border border-white/30 backdrop-blur-sm px-8 py-4 text-white font-medium rounded-lg hover:bg-white/10 transition-all"
-            onClick={() => scrollToSection("gallery")}
-            data-testid="button-view-creations"
-          >
-            <i className="fas fa-utensils mr-2"></i>
-            View Creations
-          </button>
+          <Link href="/videos">
+            <button
+              className="btn-primary px-8 py-4 text-white font-medium rounded-lg"
+              data-testid="button-watch-vlogs"
+            >
+              <i className="fas fa-play mr-2"></i>
+              Watch Latest Vlogs
+            </button>
+          </Link>
+          <Link href="/gallery">
+            <button
+              className="border border-white/30 backdrop-blur-sm px-8 py-4 text-white font-medium rounded-lg hover:bg-white/10 transition-all"
+              data-testid="button-view-creations"
+            >
+              <i className="fas fa-utensils mr-2"></i>
+              View Creations
+            </button>
+          </Link>
         </div>
       </div>
 

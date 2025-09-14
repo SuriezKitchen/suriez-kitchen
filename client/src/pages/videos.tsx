@@ -5,12 +5,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import { useYouTube } from "@/hooks/use-youtube";
+import { useYouTube, useYouTubeChannelStats } from "@/hooks/use-youtube";
 
 export default function Videos() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [selectedPlatform, setSelectedPlatform] = useState<string>("all");
   const { videos: youtubeVideos, isLoading, error } = useYouTube();
+  const { channelStats } = useYouTubeChannelStats();
+
+  // Ensure page scrolls to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const observerOptions = {
@@ -38,46 +43,6 @@ export default function Videos() {
     return () => observer.disconnect();
   }, []);
 
-  // Mock Instagram videos for demonstration
-  const instagramVideos = [
-    {
-      id: "ig1",
-      platform: "instagram",
-      title: "Quick Pasta Tip",
-      description: "A 30-second tip for perfect al-dente pasta every time",
-      thumbnailUrl:
-        "https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-      url: "https://instagram.com/sureiyah__",
-      duration: "0:30",
-      views: "15.2K",
-      likes: "892",
-    },
-    {
-      id: "ig2",
-      platform: "instagram",
-      title: "Plating Like a Pro",
-      description: "Learn the art of beautiful food presentation",
-      thumbnailUrl:
-        "https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-      url: "https://instagram.com/sureiyah__",
-      duration: "1:15",
-      views: "23.8K",
-      likes: "1.4K",
-    },
-    {
-      id: "ig3",
-      platform: "instagram",
-      title: "Kitchen Essentials",
-      description: "Must-have tools for every home chef",
-      thumbnailUrl:
-        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-      url: "https://instagram.com/sureiyah__",
-      duration: "0:45",
-      views: "18.5K",
-      likes: "967",
-    },
-  ];
-
   // Transform YouTube videos to match our format
   const formattedYouTubeVideos = youtubeVideos.map((video) => ({
     id: video.youtubeId,
@@ -91,10 +56,7 @@ export default function Videos() {
     likes: video.likeCount ? `${video.likeCount.toLocaleString()}` : "N/A",
   }));
 
-  const allVideos = [...formattedYouTubeVideos, ...instagramVideos];
-  const filteredVideos = allVideos.filter(
-    (video) => selectedPlatform === "all" || video.platform === selectedPlatform
-  );
+  const allVideos = [...formattedYouTubeVideos];
 
   const openVideo = (url: string) => {
     window.open(url, "_blank");
@@ -117,12 +79,12 @@ export default function Videos() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 9 }).map((_, i) => (
-                <Card key={i}>
-                  <Skeleton className="h-64 w-full" />
-                  <CardContent className="p-6">
+                <Card key={i} className="h-[500px] flex flex-col">
+                  <Skeleton className="h-48 w-full" />
+                  <CardContent className="px-4 pt-4 pb-2">
                     <Skeleton className="h-6 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-full mb-2" />
-                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-4 w-full mb-2 flex-1" />
+                    <Skeleton className="h-4 w-2/3 mt-auto" />
                   </CardContent>
                 </Card>
               ))}
@@ -141,9 +103,9 @@ export default function Videos() {
       <main className="pt-24 pb-20" ref={sectionRef}>
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="text-center mb-16 scroll-reveal">
+          <div className="text-center mb-16 mt-8">
             <h1
-              className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-6"
+              className="font-serif text-4xl md:text-5xl font-bold text-gray-600 mb-6"
               data-testid="videos-page-title"
             >
               Video Collection
@@ -170,46 +132,9 @@ export default function Videos() {
             </Link>
           </div>
 
-          {/* Platform Filter */}
-          <div className="flex justify-center mb-12 scroll-reveal">
-            <div className="flex gap-3">
-              <Button
-                variant={selectedPlatform === "all" ? "default" : "outline"}
-                onClick={() => setSelectedPlatform("all")}
-                className={selectedPlatform === "all" ? "btn-primary" : ""}
-                data-testid="platform-filter-all"
-              >
-                <i className="fas fa-video mr-2"></i>
-                All Videos
-              </Button>
-              <Button
-                variant={selectedPlatform === "youtube" ? "default" : "outline"}
-                onClick={() => setSelectedPlatform("youtube")}
-                className={selectedPlatform === "youtube" ? "btn-primary" : ""}
-                data-testid="platform-filter-youtube"
-              >
-                <i className="fab fa-youtube mr-2"></i>
-                YouTube
-              </Button>
-              <Button
-                variant={
-                  selectedPlatform === "instagram" ? "default" : "outline"
-                }
-                onClick={() => setSelectedPlatform("instagram")}
-                className={
-                  selectedPlatform === "instagram" ? "btn-primary" : ""
-                }
-                data-testid="platform-filter-instagram"
-              >
-                <i className="fab fa-instagram mr-2"></i>
-                Instagram
-              </Button>
-            </div>
-          </div>
-
           {/* Error State for YouTube */}
-          {error && selectedPlatform !== "instagram" && (
-            <div className="mb-8 scroll-reveal">
+          {error && (
+            <div className="mb-8">
               <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-2xl mx-auto text-center">
                 <i className="fab fa-youtube text-4xl text-destructive mb-3"></i>
                 <p className="text-destructive font-medium mb-2">
@@ -225,10 +150,10 @@ export default function Videos() {
 
           {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredVideos.map((video, index) => (
+            {allVideos.map((video, index) => (
               <div
                 key={video.id}
-                className="scroll-reveal video-hover group"
+                className="video-hover group"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
@@ -239,7 +164,7 @@ export default function Videos() {
                     <img
                       src={video.thumbnailUrl}
                       alt={video.title}
-                      className="w-full h-64 object-cover"
+                      className="w-full h-48 object-cover"
                       data-testid={`video-thumbnail-${video.id}`}
                     />
 
@@ -280,7 +205,7 @@ export default function Videos() {
                     </div>
                   </div>
 
-                  <CardContent className="p-6">
+                  <div className="px-4 pt-4 pb-2">
                     <h3
                       className="font-serif text-xl font-semibold mb-2"
                       data-testid={`video-title-${video.id}`}
@@ -290,7 +215,7 @@ export default function Videos() {
                         : video.title}
                     </h3>
                     <p
-                      className="text-muted-foreground mb-4 leading-relaxed"
+                      className="text-muted-foreground mb-3 leading-relaxed"
                       data-testid={`video-description-${video.id}`}
                     >
                       {video.description.length > 100
@@ -299,7 +224,7 @@ export default function Videos() {
                     </p>
 
                     {/* Video Stats */}
-                    <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t border-border">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground pt-3 border-t border-border">
                       <span className="flex items-center">
                         <i className="far fa-eye mr-2"></i>
                         <span data-testid={`video-views-${video.id}`}>
@@ -313,14 +238,14 @@ export default function Videos() {
                         </span>
                       </span>
                     </div>
-                  </CardContent>
+                  </div>
                 </Card>
               </div>
             ))}
           </div>
 
           {/* Empty State */}
-          {filteredVideos.length === 0 && !isLoading && (
+          {allVideos.length === 0 && !isLoading && (
             <div className="text-center py-20">
               <div className="bg-card rounded-xl p-12 max-w-md mx-auto">
                 <i className="fas fa-video text-6xl text-muted-foreground mb-6"></i>
@@ -328,16 +253,15 @@ export default function Videos() {
                   No Videos Found
                 </h3>
                 <p className="text-muted-foreground">
-                  {selectedPlatform === "all"
-                    ? "No videos are available at the moment. Check back soon for new content!"
-                    : `No ${selectedPlatform} videos are currently available.`}
+                  No videos are available at the moment. Check back soon for new
+                  content!
                 </p>
               </div>
             </div>
           )}
 
           {/* Social Links */}
-          <div className="mt-20 text-center scroll-reveal">
+          <div className="mt-20 text-center">
             <h2 className="font-serif text-3xl font-bold mb-8">
               Follow My Journey
             </h2>
@@ -348,7 +272,7 @@ export default function Videos() {
                 rel="noopener noreferrer"
                 className="group"
               >
-                <div className="bg-red-600 hover:bg-red-700 text-white p-6 rounded-xl transition-all duration-300 transform group-hover:-translate-y-2">
+                <div className="bg-red-600 hover:bg-red-700 text-white p-6 rounded-xl transition-all duration-300 transform group-hover:-translate-y-2 w-48 h-32 flex flex-col items-center justify-center text-center">
                   <i className="fab fa-youtube text-3xl mb-3"></i>
                   <h3 className="font-semibold">YouTube Channel</h3>
                   <p className="text-red-100 text-sm">
@@ -357,12 +281,12 @@ export default function Videos() {
                 </div>
               </a>
               <a
-                href="https://instagram.com/sureiyah__"
+                href="https://instagram.com/surez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group"
               >
-                <div className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-6 rounded-xl transition-all duration-300 transform group-hover:-translate-y-2">
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-6 rounded-xl transition-all duration-300 transform group-hover:-translate-y-2 w-48 h-32 flex flex-col items-center justify-center text-center">
                   <i className="fab fa-instagram text-3xl mb-3"></i>
                   <h3 className="font-semibold">Instagram</h3>
                   <p className="text-purple-100 text-sm">Daily cooking tips</p>
@@ -372,9 +296,9 @@ export default function Videos() {
           </div>
 
           {/* Stats */}
-          <div className="mt-16 scroll-reveal">
-            <div className="bg-card rounded-xl p-8 max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+          <div className="mt-16">
+            <div className="bg-card rounded-xl p-6 max-w-2xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-3xl font-bold text-primary mb-2">
                     {allVideos.length}
@@ -383,7 +307,7 @@ export default function Videos() {
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-primary mb-2">
-                    50K+
+                    {`${channelStats?.formattedSubscribers || "0"}+`}
                   </div>
                   <div className="text-muted-foreground">
                     YouTube Subscribers
@@ -391,15 +315,13 @@ export default function Videos() {
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-primary mb-2">
-                    25K+
-                  </div>
-                  <div className="text-muted-foreground">
-                    Instagram Followers
-                  </div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-primary mb-2">
-                    500K+
+                    {channelStats?.viewCount
+                      ? channelStats.viewCount >= 1000000
+                        ? `${(channelStats.viewCount / 1000000).toFixed(1)}M+`
+                        : channelStats.viewCount >= 1000
+                        ? `${(channelStats.viewCount / 1000).toFixed(0)}K+`
+                        : `${channelStats.viewCount}+`
+                      : "0+"}
                   </div>
                   <div className="text-muted-foreground">Total Views</div>
                 </div>

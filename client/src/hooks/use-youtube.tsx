@@ -11,6 +11,13 @@ interface YouTubeVideo {
   likeCount?: number;
 }
 
+interface YouTubeChannelStats {
+  subscriberCount: number;
+  formattedSubscribers: string;
+  videoCount: number;
+  viewCount: number;
+}
+
 export function useYouTube() {
   const {
     data: videos,
@@ -31,6 +38,31 @@ export function useYouTube() {
 
   return {
     videos: videos || [],
+    isLoading,
+    error,
+  };
+}
+
+export function useYouTubeChannelStats() {
+  const {
+    data: channelStats,
+    isLoading,
+    error,
+  } = useQuery<YouTubeChannelStats>({
+    queryKey: ["api", "youtube", "channel"],
+    queryFn: async () => {
+      const response = await fetch("/api/youtube/channel");
+      if (!response.ok) {
+        throw new Error("Failed to fetch YouTube channel statistics");
+      }
+      return response.json();
+    },
+    staleTime: 10 * 60 * 1000, // 10 minutes (longer cache for stats)
+    retry: 2,
+  });
+
+  return {
+    channelStats,
     isLoading,
     error,
   };

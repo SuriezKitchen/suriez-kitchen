@@ -65,7 +65,7 @@ export default function TestimonialsSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-14 scroll-reveal">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Kind Words
+            Testimonials
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             A few notes from diners and partners who’ve experienced Suriez
@@ -73,26 +73,28 @@ export default function TestimonialsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="scroll-reveal bg-card rounded-xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="scroll-reveal bg-card rounded-xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow"
               style={{ animationDelay: `${idx * 0.08}s` }}
             >
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-3 mb-3">
                 <img
                   src={t.avatar}
                   alt={t.name}
-                  className="w-14 h-14 rounded-full object-cover"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <div className="font-semibold text-foreground">{t.name}</div>
-                  <div className="text-sm text-muted-foreground">{t.role}</div>
+                  <div className="font-semibold text-foreground text-sm">
+                    {t.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{t.role}</div>
                 </div>
               </div>
-              <blockquote className="text-foreground leading-relaxed">
-                “{t.quote}”
+              <blockquote className="text-foreground leading-relaxed text-sm">
+                "{t.quote}"
               </blockquote>
             </div>
           ))}
@@ -101,4 +103,3 @@ export default function TestimonialsSection() {
     </section>
   );
 }
-

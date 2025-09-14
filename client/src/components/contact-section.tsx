@@ -68,18 +68,18 @@ export default function ContactSection() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="scroll-reveal text-center">
-              <Card className="bg-card p-8 shadow-lg">
+              <Card className="bg-card p-6 shadow-lg">
                 <CardContent className="p-0">
-                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i className="fas fa-envelope text-2xl text-primary"></i>
+                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i className="fas fa-envelope text-lg text-primary"></i>
                   </div>
-                  <h3 className="font-serif text-xl font-semibold mb-2">
+                  <h3 className="font-serif text-lg font-semibold mb-2">
                     Email Me
                   </h3>
                   <p
-                    className="text-muted-foreground"
+                    className="text-muted-foreground text-sm"
                     data-testid="contact-email"
                   >
                     sureiyah__@example.com
@@ -94,20 +94,20 @@ export default function ContactSection() {
                 className="scroll-reveal text-center"
                 style={{ animationDelay: `${(index + 1) * 0.1}s` }}
               >
-                <Card className="bg-card p-8 shadow-lg">
+                <Card className="bg-card p-6 shadow-lg">
                   <CardContent className="p-0">
-                    <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                       <i
                         className={`${getSocialIcon(
                           link.platform
-                        )} text-2xl text-primary`}
+                        )} text-lg text-primary`}
                       ></i>
                     </div>
-                    <h3 className="font-serif text-xl font-semibold mb-2 capitalize">
+                    <h3 className="font-serif text-lg font-semibold mb-2 capitalize">
                       {link.platform}
                     </h3>
                     <p
-                      className="text-muted-foreground"
+                      className="text-muted-foreground text-sm"
                       data-testid={`contact-${link.platform}`}
                     >
                       {link.username}
@@ -124,15 +124,17 @@ export default function ContactSection() {
                   className="scroll-reveal text-center"
                   style={{ animationDelay: "0.1s" }}
                 >
-                  <Card className="bg-card p-8 shadow-lg">
+                  <Card className="bg-card p-6 shadow-lg">
                     <CardContent className="p-0">
-                      <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i className="fab fa-youtube text-2xl text-primary"></i>
+                      <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i className="fab fa-youtube text-lg text-primary"></i>
                       </div>
-                      <h3 className="font-serif text-xl font-semibold mb-2">
+                      <h3 className="font-serif text-lg font-semibold mb-2">
                         YouTube
                       </h3>
-                      <p className="text-muted-foreground">@Sureiyahsaid</p>
+                      <p className="text-muted-foreground text-sm">
+                        @Sureiyahsaid
+                      </p>
                     </CardContent>
                   </Card>
                 </div>
@@ -141,15 +143,17 @@ export default function ContactSection() {
                   className="scroll-reveal text-center"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  <Card className="bg-card p-8 shadow-lg">
+                  <Card className="bg-card p-6 shadow-lg">
                     <CardContent className="p-0">
-                      <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i className="fab fa-instagram text-2xl text-primary"></i>
+                      <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i className="fab fa-instagram text-lg text-primary"></i>
                       </div>
-                      <h3 className="font-serif text-xl font-semibold mb-2">
+                      <h3 className="font-serif text-lg font-semibold mb-2">
                         Instagram
                       </h3>
-                      <p className="text-muted-foreground">@sureiyah__</p>
+                      <p className="text-muted-foreground text-sm">
+                        @surez_kitchen
+                      </p>
                     </CardContent>
                   </Card>
                 </div>
@@ -169,7 +173,7 @@ export default function ContactSection() {
                 <i className="fab fa-youtube text-xl"></i>
               </a>
               <a
-                href="https://instagram.com/sureiyah__"
+                href="https://instagram.com/surez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"

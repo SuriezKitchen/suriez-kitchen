@@ -43,7 +43,9 @@ export default function Navigation() {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
           ? "navbar-bg border-b border-border"
-          : "bg-black/20 backdrop-blur-sm"
+          : location === "/"
+          ? "bg-transparent"
+          : "bg-foreground"
       )}
     >
       <div className="container mx-auto px-4 py-4">
@@ -98,30 +100,19 @@ export default function Navigation() {
                 Videos
               </span>
             </Link>
-            <button
-              onClick={() => handleNavigation("/", "about")}
-              className={cn(
-                "hover:text-primary transition-colors",
-                isScrolled
-                  ? "text-muted-foreground"
-                  : "text-white/90 hover:text-white"
-              )}
-              data-testid="nav-about"
-            >
-              About
-            </button>
-            <button
-              onClick={() => handleNavigation("/", "contact")}
-              className={cn(
-                "hover:text-primary transition-colors",
-                isScrolled
-                  ? "text-muted-foreground"
-                  : "text-white/90 hover:text-white"
-              )}
-              data-testid="nav-contact"
-            >
-              Contact
-            </button>
+            <Link href="/contact">
+              <span
+                className={cn(
+                  "hover:text-primary transition-colors cursor-pointer",
+                  isScrolled
+                    ? "text-muted-foreground"
+                    : "text-white/90 hover:text-white"
+                )}
+                data-testid="nav-contact"
+              >
+                Contact
+              </span>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -186,30 +177,19 @@ export default function Navigation() {
                   Videos
                 </span>
               </Link>
-              <button
-                onClick={() => handleNavigation("/", "about")}
-                className={cn(
-                  "hover:text-primary transition-colors text-left",
-                  isScrolled
-                    ? "text-muted-foreground"
-                    : "text-white/90 hover:text-white"
-                )}
-                data-testid="mobile-nav-about"
-              >
-                About
-              </button>
-              <button
-                onClick={() => handleNavigation("/", "contact")}
-                className={cn(
-                  "hover:text-primary transition-colors text-left",
-                  isScrolled
-                    ? "text-muted-foreground"
-                    : "text-white/90 hover:text-white"
-                )}
-                data-testid="mobile-nav-contact"
-              >
-                Contact
-              </button>
+              <Link href="/contact">
+                <span
+                  className={cn(
+                    "hover:text-primary transition-colors text-left cursor-pointer",
+                    isScrolled
+                      ? "text-muted-foreground"
+                      : "text-white/90 hover:text-white"
+                  )}
+                  data-testid="mobile-nav-contact"
+                >
+                  Contact
+                </span>
+              </Link>
             </div>
           </div>
         )}
