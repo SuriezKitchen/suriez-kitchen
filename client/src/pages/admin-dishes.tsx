@@ -55,10 +55,20 @@ export default function AdminDishes() {
 
   // Check authentication
   useEffect(() => {
-    const token = localStorage.getItem("adminToken");
-    if (!token) {
-      setLocation("/admin/login");
-    }
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/admin/me", {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          setLocation("/admin/login");
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setLocation("/admin/login");
+      }
+    };
+    checkAuth();
   }, [setLocation]);
 
   // Fetch dishes
@@ -90,9 +100,7 @@ export default function AdminDishes() {
     mutationFn: async (id: string) => {
       const response = await fetch(`/api/admin/dishes/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to delete dish");
       return response.json();
@@ -109,8 +117,8 @@ export default function AdminDishes() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
         },
+        credentials: "include",
         body: JSON.stringify(dishData),
       });
       if (!response.ok) throw new Error("Failed to create dish");
@@ -129,8 +137,8 @@ export default function AdminDishes() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
         },
+        credentials: "include",
         body: JSON.stringify(dishData),
       });
       if (!response.ok) throw new Error("Failed to update dish");
@@ -173,9 +181,17 @@ export default function AdminDishes() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    setLocation("/admin/login");
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setLocation("/admin/login");
+    }
   };
 
   const handleBackToDashboard = () => {

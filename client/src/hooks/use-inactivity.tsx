@@ -16,8 +16,8 @@ export function useInactivity({
 }: UseInactivityOptions) {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [isWarning, setIsWarning] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const warningTimeoutRef = useRef<number | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
   const [, setLocation] = useLocation();
 

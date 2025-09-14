@@ -41,10 +41,20 @@ export default function AdminCategories() {
 
   // Check authentication
   useEffect(() => {
-    const token = localStorage.getItem("adminToken");
-    if (!token) {
-      setLocation("/admin/login");
-    }
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/admin/me", {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          setLocation("/admin/login");
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setLocation("/admin/login");
+      }
+    };
+    checkAuth();
   }, [setLocation]);
 
   // Fetch categories
@@ -62,13 +72,12 @@ export default function AdminCategories() {
   // Category mutations
   const createCategoryMutation = useMutation({
     mutationFn: async (categoryData: Omit<Category, "id" | "createdAt">) => {
-      const token = localStorage.getItem("adminToken");
       const response = await fetch("/api/admin/categories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(categoryData),
       });
       if (!response.ok) throw new Error("Failed to create category");
@@ -82,13 +91,12 @@ export default function AdminCategories() {
 
   const updateCategoryMutation = useMutation({
     mutationFn: async (categoryData: Category) => {
-      const token = localStorage.getItem("adminToken");
       const response = await fetch(`/api/admin/categories/${categoryData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(categoryData),
       });
       if (!response.ok) throw new Error("Failed to update category");
@@ -103,12 +111,9 @@ export default function AdminCategories() {
 
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
-      const token = localStorage.getItem("adminToken");
       const response = await fetch(`/api/admin/categories/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to delete category");
       return response.json();
@@ -127,9 +132,17 @@ export default function AdminCategories() {
     setIsAddCategoryOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    setLocation("/admin/login");
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setLocation("/admin/login");
+    }
   };
 
   const handleBackToDashboard = () => {

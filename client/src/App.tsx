@@ -12,6 +12,7 @@ import AdminDashboard from "@/pages/admin";
 import AdminDishes from "@/pages/admin-dishes";
 import AdminCategories from "@/pages/admin-categories";
 import AdminSettings from "@/pages/admin-settings";
+import AdminSettingsTest from "@/pages/admin-settings-test";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/admin/dishes" component={AdminDishes} />
       <Route path="/admin/categories" component={AdminCategories} />
       <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/settings-test" component={AdminSettingsTest} />
       <Route component={NotFound} />
     </Switch>
   );
