@@ -1,4 +1,4 @@
-# ChefVlog - Culinary Content Management System
+# Suriez Kitchen - Culinary Content Management System
 
 A modern full-stack web application for managing and showcasing culinary content, specifically designed for Suriez Kitchen cooking vlog.
 
@@ -22,7 +22,7 @@ A modern full-stack web application for managing and showcasing culinary content
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd chefvlog-cicd
+   cd suriez-kitchen
    ```
 
 2. **Install dependencies**
@@ -124,8 +124,8 @@ Configure these secrets in your GitHub repository:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_STAGING_PROJECT_NAME`
-- `CLOUDFLARE_PRODUCTION_PROJECT_NAME`
+- `CLOUDFLARE_STAGING_PROJECT_NAME` (e.g., "suriez-kitchen-staging")
+- `CLOUDFLARE_PRODUCTION_PROJECT_NAME` (e.g., "suriez-kitchen")
 
 ## 📊 Database Schema
 

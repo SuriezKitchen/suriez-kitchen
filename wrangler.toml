@@ -1,4 +1,4 @@
-name = "chefvlog"
+name = "suriez-kitchen"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "dist/public"
 
@@ -6,7 +6,7 @@ pages_build_output_dir = "dist/public"
 # D1 Database configuration
 [[d1_databases]]
 binding = "DB"
-database_name = "chefvlog-db"
+database_name = "suriez-kitchen-db"
 database_id = "492deff0-8881-4f9c-b8a7-f43fa94b2dd7"
 
 # Environment variables

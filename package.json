@@ -1,5 +1,5 @@
 {
-  "name": "chefvlog",
+  "name": "suriez-kitchen",
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply chefvlog-db",
+    "db:migrate": "wrangler d1 migrations apply suriez-kitchen-db",
     "deploy": "npm run build && wrangler pages deploy dist/public"
   },
   "dependencies": {

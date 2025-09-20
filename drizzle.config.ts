@@ -7,6 +7,6 @@ export default defineConfig({
   driver: "d1-http",
   dbCredentials: {
     wranglerConfigPath: "./wrangler.toml",
-    dbName: "chefvlog-db",
+    dbName: "suriez-kitchen-db",
   },
 });

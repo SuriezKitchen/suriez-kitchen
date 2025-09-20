@@ -90,7 +90,7 @@ jobs:
       - name: Notify deployment success
         run: |
           echo "✅ Staging deployment successful!"
-          echo "🌐 Staging URL: https://${{ secrets.CLOUDFLARE_STAGING_PROJECT_NAME }}.pages.dev"
+          echo "🌐 Staging URL: https://suriez-kitchen-staging.pages.dev"
 
   # Deploy to production (main branch)
   deploy-production:
@@ -131,7 +131,7 @@ jobs:
       - name: Notify deployment success
         run: |
           echo "🚀 Production deployment successful!"
-          echo "🌐 Production URL: https://${{ secrets.CLOUDFLARE_PRODUCTION_PROJECT_NAME }}.pages.dev"
+          echo "🌐 Production URL: https://suriez-kitchen.pages.dev"
 
   # Database migration (production only)
   migrate-database:
