@@ -102,6 +102,17 @@ export default function Footer() {
             <i className="fas fa-heart text-primary"></i> for the love of
             cooking.
           </p>
+          <p className="text-gray-500 text-sm mt-2">
+            Website crafted by{" "}
+            <a
+              href="https://nextcone.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 transition-colors font-medium"
+            >
+              NextCone
+            </a>
+          </p>
         </div>
       </div>
     </footer>

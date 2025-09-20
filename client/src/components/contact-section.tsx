@@ -68,9 +68,9 @@ export default function ContactSection() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-12 px-4 md:px-8">
             <div className="scroll-reveal text-center">
-              <Card className="bg-card p-6 shadow-lg">
+              <Card className="bg-card p-6 shadow-lg w-80 h-40 mx-auto md:w-72 lg:w-80">
                 <CardContent className="p-0">
                   <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                     <i className="fas fa-envelope text-lg text-primary"></i>
@@ -91,10 +91,10 @@ export default function ContactSection() {
             {socialLinks?.map((link, index) => (
               <div
                 key={link.id}
-                className="scroll-reveal text-center"
+                className="scroll-reveal text-center max-w-xs mx-auto md:max-w-none"
                 style={{ animationDelay: `${(index + 1) * 0.1}s` }}
               >
-                <Card className="bg-card p-6 shadow-lg">
+                <Card className="bg-card p-6 shadow-lg w-80 h-40 mx-auto md:w-72 lg:w-80">
                   <CardContent className="p-0">
                     <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                       <i
@@ -121,10 +121,10 @@ export default function ContactSection() {
             {(!socialLinks || socialLinks.length === 0) && (
               <>
                 <div
-                  className="scroll-reveal text-center"
+                  className="scroll-reveal text-center max-w-xs mx-auto md:max-w-none"
                   style={{ animationDelay: "0.1s" }}
                 >
-                  <Card className="bg-card p-6 shadow-lg">
+                  <Card className="bg-card p-6 shadow-lg w-80 h-40 mx-auto md:w-72 lg:w-80">
                     <CardContent className="p-0">
                       <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                         <i className="fab fa-youtube text-lg text-primary"></i>
@@ -140,10 +140,10 @@ export default function ContactSection() {
                 </div>
 
                 <div
-                  className="scroll-reveal text-center"
+                  className="scroll-reveal text-center max-w-xs mx-auto md:max-w-none"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  <Card className="bg-card p-6 shadow-lg">
+                  <Card className="bg-card p-6 shadow-lg w-80 h-40 mx-auto md:w-72 lg:w-80">
                     <CardContent className="p-0">
                       <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                         <i className="fab fa-instagram text-lg text-primary"></i>

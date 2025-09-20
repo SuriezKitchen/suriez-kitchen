@@ -65,9 +65,14 @@ export function useInactivity({
       "click",
     ];
 
-    // Add event listeners
+    // Add event listeners with appropriate options
     events.forEach((event) => {
-      document.addEventListener(event, handleActivity, true);
+      // Use passive listeners for touch and scroll events to avoid interfering with scrolling
+      if (event === "touchstart" || event === "scroll") {
+        document.addEventListener(event, handleActivity, { passive: true });
+      } else {
+        document.addEventListener(event, handleActivity, { capture: true });
+      }
     });
 
     // Start the timer
@@ -76,7 +81,15 @@ export function useInactivity({
     // Cleanup function
     return () => {
       events.forEach((event) => {
-        document.removeEventListener(event, handleActivity, true);
+        if (event === "touchstart" || event === "scroll") {
+          document.removeEventListener(event, handleActivity, {
+            passive: true,
+          });
+        } else {
+          document.removeEventListener(event, handleActivity, {
+            capture: true,
+          });
+        }
       });
 
       if (timeoutRef.current) {

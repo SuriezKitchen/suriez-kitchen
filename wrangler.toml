@@ -12,8 +12,9 @@ database_id = "492deff0-8881-4f9c-b8a7-f43fa94b2dd7"
 # Environment variables
 [vars]
 NODE_ENV = "production"
+SESSION_SECRET = "a39dac7a4a3286d0e93e64947f9a5aefc14d3e8026a5e2d240b4a393a8462f7c"
 
-# Optional: YouTube API configuration
+# YouTube API configuration (replace with your actual values)
 # [vars]
-# YOUTUBE_API_KEY = "your-youtube-api-key"
-# YOUTUBE_CHANNEL_ID = "your-youtube-channel-id"
+YOUTUBE_API_KEY = "AIzaSyCba_FtraHaQNxCkJT4A7Im5MsXkMyNEZ8"
+YOUTUBE_CHANNEL_ID = "UCsWnEV_XEevwZvSCpOLDkNw"

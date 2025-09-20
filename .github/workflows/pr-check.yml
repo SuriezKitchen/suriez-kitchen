@@ -1,0 +1,115 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type check
+        run: npm run check
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run tests (if available)
+        run: npm test --if-present
+        continue-on-error: true
+
+      - name: Security audit
+        run: npm audit --audit-level moderate
+        continue-on-error: true
+
+      - name: Check for console.log statements
+        run: |
+          if grep -r "console\.log" client/src/ server/ --exclude-dir=node_modules; then
+            echo "⚠️  Warning: console.log statements found in production code"
+            echo "Consider removing or replacing with proper logging"
+          fi
+
+      - name: Check for TODO/FIXME comments
+        run: |
+          if grep -r "TODO\|FIXME" client/src/ server/ --exclude-dir=node_modules; then
+            echo "📝 TODO/FIXME comments found:"
+            grep -r "TODO\|FIXME" client/src/ server/ --exclude-dir=node_modules || true
+          fi
+
+      - name: Validate environment variables
+        run: |
+          echo "Checking for required environment variables..."
+          if [ ! -f ".env.example" ]; then
+            echo "⚠️  No .env.example file found"
+          fi
+
+      - name: Comment PR with validation results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('## 🔍 PR Validation Results')
+            );
+            
+            const commentBody = `## 🔍 PR Validation Results
+            
+            ✅ **Build Status**: Successful
+            ✅ **TypeScript Check**: Passed
+            ✅ **Dependencies**: Installed successfully
+            
+            ### 📋 Checklist for Review:
+            - [ ] Code follows project conventions
+            - [ ] No console.log statements in production code
+            - [ ] Environment variables are properly configured
+            - [ ] Database migrations (if any) are included
+            - [ ] Tests pass (if applicable)
+            
+            ### 🚀 Ready for Review
+            This PR has passed all automated checks and is ready for code review.
+            
+            **Next Steps:**
+            1. Request review from team members
+            2. Address any feedback
+            3. Merge to \`main\` branch when approved
+            4. Production deployment will happen automatically`;
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }

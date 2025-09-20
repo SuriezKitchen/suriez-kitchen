@@ -225,18 +225,31 @@ export default function AdminDishes() {
         <div className="bg-card border-b">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button variant="outline" onClick={handleBackToDashboard}>
-                  ← Back to Dashboard
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleBackToDashboard}
+                  className="flex-shrink-0"
+                >
+                  <i className="fas fa-arrow-left"></i>
                 </Button>
-                <h1 className="text-2xl font-bold">Dishes Management</h1>
+                <h1 className="text-lg sm:text-2xl font-bold truncate">
+                  Dishes Management
+                </h1>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">
                   {dishes?.length || 0} dishes
                 </span>
-                <Button variant="outline" onClick={handleLogout}>
-                  Logout
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex-shrink-0"
+                >
+                  <span className="hidden sm:inline">Logout</span>
+                  <i className="fas fa-sign-out-alt sm:hidden"></i>
                 </Button>
               </div>
             </div>
@@ -421,7 +434,7 @@ export default function AdminDishes() {
 
           {/* Edit Dialog */}
           <Dialog open={isEditing} onOpenChange={setIsEditing}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="rounded-lg w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:w-auto sm:max-w-2xl">
               <DialogHeader>
                 <DialogTitle>Edit Dish</DialogTitle>
               </DialogHeader>
@@ -465,7 +478,10 @@ export default function AdminDishes() {
                     id="edit-description"
                     value={dishForm.description}
                     onChange={(e) =>
-                      setDishForm({ ...dishForm, description: e.target.value })
+                      setDishForm({
+                        ...dishForm,
+                        description: e.target.value,
+                      })
                     }
                     required
                   />
