@@ -23,6 +23,7 @@ out/
 *.db-shm
 *.db-wal
 sessions.db*
+local.db*
 
 # Logs
 logs/
