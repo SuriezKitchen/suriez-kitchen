@@ -13,30 +13,34 @@ A modern full-stack web application for managing and showcasing culinary content
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Git
 
 ### Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-repo-url>
    cd suriez-kitchen
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp env.example .env
    # Edit .env with your actual values
    ```
 
 4. **Start development server**
+
    ```bash
    npm run dev
    ```
@@ -64,11 +68,13 @@ A modern full-stack web application for managing and showcasing culinary content
 ### Automated Processes
 
 - **On Push to `sandbox`**:
+
   - Run tests and build validation
   - Deploy to staging environment
   - Notify team of staging deployment
 
 - **On Push to `main`**:
+
   - Run tests and build validation
   - Deploy to production environment
   - Run database migrations
@@ -149,6 +155,7 @@ The application uses SQLite with the following main entities:
 ## 🎨 Features
 
 ### Public Website
+
 - Hero section with video background
 - Gallery of culinary creations
 - YouTube video integration
@@ -156,6 +163,7 @@ The application uses SQLite with the following main entities:
 - Responsive design
 
 ### Admin Dashboard
+
 - Dish management (CRUD)
 - Category management
 - YouTube API configuration
@@ -180,6 +188,7 @@ MIT License - see LICENSE file for details
 ## 🆘 Support
 
 For issues and questions:
+
 1. Check existing issues
 2. Create a new issue with detailed description
 3. Contact the development team
