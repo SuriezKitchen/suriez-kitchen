@@ -159,6 +159,9 @@ export class MemStorage implements IStorage {
       this.categories.set(id, {
         id,
         ...category,
+        color: category.color ?? null,
+        description: category.description ?? null,
+        isActive: category.isActive ?? null,
         createdAt: new Date(),
       });
     }
@@ -427,6 +430,8 @@ export class MemStorage implements IStorage {
     const video: Video = {
       ...insertVideo,
       id,
+      viewCount: insertVideo.viewCount ?? null,
+      likeCount: insertVideo.likeCount ?? null,
       createdAt: new Date(),
     };
     this.videos.set(id, video);
@@ -443,7 +448,12 @@ export class MemStorage implements IStorage {
     insertSocialLink: InsertSocialLink
   ): Promise<SocialLink> {
     const id = randomUUID();
-    const link: SocialLink = { ...insertSocialLink, id };
+    const link: SocialLink = { 
+      ...insertSocialLink, 
+      id,
+      isActive: insertSocialLink.isActive ?? null,
+      username: insertSocialLink.username ?? null,
+    };
     this.socialLinks.set(id, link);
     return link;
   }
@@ -464,6 +474,9 @@ export class MemStorage implements IStorage {
     const category: Category = {
       ...insertCategory,
       id,
+      color: insertCategory.color ?? null,
+      description: insertCategory.description ?? null,
+      isActive: insertCategory.isActive ?? null,
       createdAt: new Date(),
     };
     this.categories.set(id, category);
@@ -544,7 +557,7 @@ export class MemStorage implements IStorage {
 
   // Admin user methods
   async getAdminUserByUsername(username: string): Promise<AdminUser | null> {
-    for (const user of this.adminUsers.values()) {
+    for (const user of Array.from(this.adminUsers.values())) {
       if (user.username === username) {
         return user;
       }
@@ -983,7 +996,7 @@ export class SqliteStorage implements IStorage {
       );
       const now = Date.now();
       const seed: Array<
-        Omit<Dish, "createdAt"> & { created_at: number; image_url: string }
+        Omit<Dish, "createdAt" | "imageUrl"> & { created_at: number; image_url: string }
       > = [
         {
           id: randomUUID(),
@@ -1258,7 +1271,11 @@ export class SqliteStorage implements IStorage {
       throw new Error("Dish not found");
     }
 
-    return this.getDish(id)!;
+    const dish = await this.getDish(id);
+    if (!dish) {
+      throw new Error(`Dish with id ${id} not found`);
+    }
+    return dish;
   }
 
   async deleteDish(id: string): Promise<void> {
@@ -1414,7 +1431,11 @@ export class SqliteStorage implements IStorage {
       throw new Error("Category not found");
     }
 
-    return this.getCategory(id)!;
+    const category = await this.getCategory(id);
+    if (!category) {
+      throw new Error(`Category with id ${id} not found`);
+    }
+    return category;
   }
 
   async deleteCategory(id: string): Promise<void> {
