@@ -162,6 +162,8 @@ export default function AdminCategories() {
       updateCategoryMutation.mutate({
         id: editingCategory.id,
         ...categoryForm,
+        createdAt: editingCategory.createdAt,
+        isActive: editingCategory.isActive,
       });
     } else {
       createCategoryMutation.mutate({
@@ -176,7 +178,7 @@ export default function AdminCategories() {
     setCategoryForm({
       name: category.name,
       description: category.description || "",
-      color: category.color,
+      color: category.color || "",
     });
     setIsEditingCategory(true);
   };
@@ -349,7 +351,9 @@ export default function AdminCategories() {
                       >
                         <div
                           className="w-4 h-4 rounded-full"
-                          style={{ backgroundColor: category.color }}
+                          style={{
+                            backgroundColor: category.color || "#000000",
+                          }}
                         />
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-lg mb-1">

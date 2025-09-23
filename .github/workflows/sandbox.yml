@@ -71,24 +71,3 @@ jobs:
           echo "Build completed successfully!"
           echo "Ready for deployment to your chosen hosting service"
           echo "You can configure the actual deployment step based on your hosting provider"
-
-    # Uncomment and configure based on your hosting service:
-    # - name: Deploy to Vercel
-    #   uses: amondnet/vercel-action@v25
-    #   with:
-    #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-    #     vercel-org-id: ${{ secrets.ORG_ID }}
-    #     vercel-project-id: ${{ secrets.PROJECT_ID }}
-    #     working-directory: ./
-    #     scope: ${{ secrets.VERCEL_SCOPE }}
-
-    # - name: Deploy to Netlify
-    #   uses: nwtgck/actions-netlify@v3.0
-    #   with:
-    #     publish-dir: './dist/public'
-    #     production-branch: sandbox
-    #     github-token: ${{ secrets.GITHUB_TOKEN }}
-    #     deploy-message: "Deploy from GitHub Actions"
-    #   env:
-    #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
