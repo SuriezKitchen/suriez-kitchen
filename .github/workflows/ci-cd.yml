@@ -79,15 +79,18 @@ jobs:
           NODE_ENV: staging
 
       - name: Deploy to Cloudflare Pages (Staging)
-        run: |
-          echo "🚀 Staging deployment placeholder"
-          echo "Configure Cloudflare Pages deployment when ready"
-          echo "Required secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STAGING_PROJECT_NAME"
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_STAGING_PROJECT_NAME }}
+          directory: dist/public
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify deployment success
         run: |
-          echo "✅ Staging deployment placeholder completed!"
-          echo "🌐 Configure actual deployment URL when ready"
+          echo "✅ Staging deployment successful!"
+          echo "🌐 Staging URL: https://${{ secrets.CLOUDFLARE_STAGING_PROJECT_NAME }}.pages.dev"
 
   # Deploy to production (main branch)
   deploy-production:
@@ -117,15 +120,18 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy to Cloudflare Pages (Production)
-        run: |
-          echo "🚀 Production deployment placeholder"
-          echo "Configure Cloudflare Pages deployment when ready"
-          echo "Required secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_PRODUCTION_PROJECT_NAME"
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PRODUCTION_PROJECT_NAME }}
+          directory: dist/public
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify deployment success
         run: |
-          echo "🚀 Production deployment placeholder completed!"
-          echo "🌐 Configure actual deployment URL when ready"
+          echo "🚀 Production deployment successful!"
+          echo "🌐 Production URL: https://${{ secrets.CLOUDFLARE_PRODUCTION_PROJECT_NAME }}.pages.dev"
 
   # Database migration (production only)
   migrate-database:
@@ -153,10 +159,10 @@ jobs:
         run: npm install -g wrangler
 
       - name: Run database migrations
-        run: |
-          echo "🗄️ Database migration placeholder"
-          echo "Configure database migration when ready"
-          echo "Required secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID"
+        run: npm run db:migrate
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Notify migration success
         run: echo "✅ Database migration completed successfully!"
