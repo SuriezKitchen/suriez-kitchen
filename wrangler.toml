@@ -4,7 +4,7 @@ pages_build_output_dir = "dist/public"
 
 # Build configuration for Cloudflare Pages
 [build]
-command = "npm run build:frontend"
+command = "npm run build"
 cwd = "."
 
 
