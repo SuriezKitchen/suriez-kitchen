@@ -2,9 +2,10 @@ name = "suriez-kitchen"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "dist/public"
 
-# Build configuration
+# Build configuration for Cloudflare Pages
 [build]
-command = "npm ci && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --target=node18"
+command = "npm ci && npx vite build"
+cwd = "."
 
 
 # D1 Database configuration
