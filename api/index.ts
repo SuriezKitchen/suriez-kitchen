@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { registerRoutes } from "../server/routes";
+import { PostgresStorage } from "../server/storage-postgres";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -41,6 +42,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   };
 
   try {
+    // Initialize PostgreSQL storage
+    const storage = new PostgresStorage();
+    
+    // Add storage to request object
+    (mockReq as any).storage = storage;
+    
     // Import and use your existing routes
     await registerRoutes(mockReq as any, mockRes as any);
   } catch (error) {
