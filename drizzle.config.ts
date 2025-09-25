@@ -3,10 +3,8 @@ import { defineConfig } from "drizzle-kit";
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
-  dialect: "sqlite",
-  driver: "d1-http",
+  dialect: "postgresql",
   dbCredentials: {
-    wranglerConfigPath: "./wrangler.toml",
-    dbName: "suriez-kitchen-db",
+    url: process.env.POSTGRES_URL!,
   },
 });
