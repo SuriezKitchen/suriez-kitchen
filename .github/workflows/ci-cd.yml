@@ -78,20 +78,19 @@ jobs:
         env:
           NODE_ENV: staging
 
-      - name: Deploy to Cloudflare Pages (Staging)
-        run: |
-          echo "🚀 Deploying to Cloudflare Pages staging..."
-          echo "Project: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}"
-          echo "Branch: sandbox"
-          echo "Directory: dist/public"
-          echo "✅ Build completed successfully!"
-          echo "🌐 Staging URL: https://${{ secrets.CLOUDFLARE_PROJECT_NAME }}.pages.dev"
-          echo "📝 Note: This will deploy to the sandbox branch of your Cloudflare Pages project"
+      - name: Deploy to Vercel (Staging)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          scope: ${{ secrets.VERCEL_ORG_ID }}
 
       - name: Notify deployment success
         run: |
           echo "✅ Staging deployment successful!"
-          echo "🌐 Staging URL: https://${{ secrets.CLOUDFLARE_PROJECT_NAME }}.pages.dev"
+          echo "🌐 Staging URL: https://${{ secrets.VERCEL_PROJECT_ID }}.vercel.app"
 
   # Deploy to production (main branch)
   deploy-production:
@@ -120,20 +119,20 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: Deploy to Cloudflare Pages (Production)
-        run: |
-          echo "🚀 Deploying to Cloudflare Pages production..."
-          echo "Project: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}"
-          echo "Branch: main"
-          echo "Directory: dist/public"
-          echo "✅ Build completed successfully!"
-          echo "🌐 Production URL: https://${{ secrets.CLOUDFLARE_PROJECT_NAME }}.pages.dev"
-          echo "📝 Note: This will deploy to the main branch of your Cloudflare Pages project"
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-args: '--prod'
 
       - name: Notify deployment success
         run: |
           echo "🚀 Production deployment successful!"
-          echo "🌐 Production URL: https://${{ secrets.CLOUDFLARE_PROJECT_NAME }}.pages.dev"
+          echo "🌐 Production URL: https://${{ secrets.VERCEL_PROJECT_ID }}.vercel.app"
 
   # Database migration (production only)
   migrate-database:
