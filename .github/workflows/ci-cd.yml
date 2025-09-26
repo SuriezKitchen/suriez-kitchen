@@ -86,7 +86,8 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./
           scope: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-args: '--env POSTGRES_URL=${{ secrets.POSTGRES_URL }}'
+          vercel-env: |
+            POSTGRES_URL=${{ secrets.POSTGRES_URL }}
 
       - name: Notify deployment success
         run: |
@@ -128,7 +129,9 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./
           scope: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-args: "--prod --env POSTGRES_URL=${{ secrets.POSTGRES_URL }}"
+          vercel-args: "--prod"
+          vercel-env: |
+            POSTGRES_URL=${{ secrets.POSTGRES_URL }}
 
       - name: Notify deployment success
         run: |
