@@ -17,7 +17,7 @@ import {
   categories,
   settings,
   adminUsers,
-} from "@shared/schema";
+} from "@shared/schema-postgres";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { eq } from "drizzle-orm";
@@ -102,7 +102,7 @@ export class PostgresStorage implements IStorage {
 
   async deleteDish(id: string): Promise<boolean> {
     const result = await this.db.delete(dishes).where(eq(dishes.id, id));
-    return result.rowCount > 0;
+    return result.length > 0;
   }
 
   async getVideos(): Promise<Video[]> {
@@ -131,7 +131,7 @@ export class PostgresStorage implements IStorage {
 
   async deleteVideo(id: string): Promise<boolean> {
     const result = await this.db.delete(videos).where(eq(videos.id, id));
-    return result.rowCount > 0;
+    return result.length > 0;
   }
 
   async getSocialLinks(): Promise<SocialLink[]> {
@@ -160,7 +160,7 @@ export class PostgresStorage implements IStorage {
 
   async deleteSocialLink(id: string): Promise<boolean> {
     const result = await this.db.delete(socialLinks).where(eq(socialLinks.id, id));
-    return result.rowCount > 0;
+    return result.length > 0;
   }
 
   async getCategories(): Promise<Category[]> {
@@ -189,7 +189,7 @@ export class PostgresStorage implements IStorage {
 
   async deleteCategory(id: string): Promise<boolean> {
     const result = await this.db.delete(categories).where(eq(categories.id, id));
-    return result.rowCount > 0;
+    return result.length > 0;
   }
 
   async getSettings(): Promise<Setting[]> {
@@ -207,7 +207,13 @@ export class PostgresStorage implements IStorage {
       createdAt: new Date(),
     };
     await this.db.insert(settings).values(newSetting);
-    return newSetting as Setting;
+    return {
+      id: randomUUID(),
+      key: newSetting.key,
+      value: newSetting.value,
+      description: newSetting.description || null,
+      updatedAt: new Date(),
+    } as Setting;
   }
 
   async updateSetting(key: string, setting: Partial<InsertSetting>): Promise<Setting | undefined> {
@@ -217,7 +223,7 @@ export class PostgresStorage implements IStorage {
 
   async deleteSetting(key: string): Promise<boolean> {
     const result = await this.db.delete(settings).where(eq(settings.key, key));
-    return result.rowCount > 0;
+    return result.length > 0;
   }
 
   async getAdminUsers(): Promise<AdminUser[]> {
@@ -251,6 +257,6 @@ export class PostgresStorage implements IStorage {
 
   async deleteAdminUser(id: string): Promise<boolean> {
     const result = await this.db.delete(adminUsers).where(eq(adminUsers.id, id));
-    return result.rowCount > 0;
+    return result.length > 0;
   }
 }
