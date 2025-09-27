@@ -65,9 +65,16 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Deploy to Sandbox Environment
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel (Sandbox)
+        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Notify deployment success
         run: |
-          echo "🚀 Deploying to sandbox environment..."
-          echo "Build completed successfully!"
-          echo "Ready for deployment to your chosen hosting service"
-          echo "You can configure the actual deployment step based on your hosting provider"
+          echo "✅ Sandbox deployment successful!"
+          echo "🌐 Sandbox URL: https://${{ secrets.VERCEL_PROJECT_ID }}.vercel.app"
