@@ -156,14 +156,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Wrangler CLI
-        run: npm install -g wrangler
-
       - name: Run database migrations
-        run: npm run db:migrate
+        run: npm run db:generate && npm run db:push
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
 
       - name: Notify migration success
         run: echo "✅ Database migration completed successfully!"
