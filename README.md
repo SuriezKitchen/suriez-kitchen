@@ -199,3 +199,4 @@ For issues and questions:
 # Trigger new deployment
 # Force new deployment - Fri Sep 26 13:16:21 CEST 2025
 # Latest deployment - 13:19:38
+# Test deployment with Vercel environment variables - 13:33:13
