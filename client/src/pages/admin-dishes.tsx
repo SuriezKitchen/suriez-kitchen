@@ -263,8 +263,17 @@ export default function AdminDishes() {
           <div className="mb-8">
             <Button
               onClick={() => {
-                resetDishForm();
+                console.log("Add New Dish button clicked");
+                setDishForm({
+                  title: "",
+                  description: "",
+                  imageUrl: "",
+                  category: "",
+                });
+                setIsEditing(false);
+                setEditingDish(null);
                 setIsAddDishOpen(true);
+                console.log("Set isAddDishOpen to true");
               }}
               className="flex items-center gap-2"
             >
@@ -355,6 +364,7 @@ export default function AdminDishes() {
 
           {/* Add/Edit Dialog */}
           <Dialog open={isAddDishOpen || isEditing} onOpenChange={(open) => {
+            console.log("Dialog onOpenChange:", open, "isAddDishOpen:", isAddDishOpen, "isEditing:", isEditing);
             if (!open) {
               resetDishForm();
             }
