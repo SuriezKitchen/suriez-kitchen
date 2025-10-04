@@ -52,6 +52,10 @@ export default async function handler(req, res) {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const pathSegments = url.pathname.split('/').filter(Boolean);
     const categoryId = pathSegments[3]; // admin/categories/[id]
+    
+    // Also check if the ID is in the query parameters (for dynamic routes)
+    const { id: queryId } = req.query;
+    const finalCategoryId = categoryId || queryId;
 
     if (req.method === "POST") {
       // Create new category
@@ -68,7 +72,7 @@ export default async function handler(req, res) {
       `;
 
       res.status(201).json(newCategory[0]);
-    } else if (req.method === "PUT" && categoryId) {
+    } else if (req.method === "PUT" && finalCategoryId) {
       // Update category
       const { name, description, color, isActive } = req.body;
 
@@ -79,7 +83,7 @@ export default async function handler(req, res) {
       const updatedCategory = await sql`
         UPDATE categories 
         SET name = ${name}, description = ${description || ""}, color = ${color || "#3B82F6"}, is_active = ${isActive !== false}
-        WHERE id = ${categoryId}
+        WHERE id = ${finalCategoryId}
         RETURNING id, name, description, color, is_active as "isActive", created_at as "createdAt"
       `;
 
@@ -88,11 +92,11 @@ export default async function handler(req, res) {
       }
 
       res.status(200).json(updatedCategory[0]);
-    } else if (req.method === "DELETE" && categoryId) {
+    } else if (req.method === "DELETE" && finalCategoryId) {
       // Delete category
       const deletedCategory = await sql`
         DELETE FROM categories 
-        WHERE id = ${categoryId}
+        WHERE id = ${finalCategoryId}
         RETURNING id, name
       `;
 
