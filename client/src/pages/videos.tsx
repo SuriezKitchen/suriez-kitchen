@@ -148,7 +148,7 @@ export default function Videos() {
               className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8"
               data-testid="videos-page-description"
             >
-              Follow my culinary journey through engaging video, cooking
+              Follow my culinary journey through engaging videos, cooking
               tutorials, and behind-the-scenes content across YouTube and
               Instagram.
             </p>
