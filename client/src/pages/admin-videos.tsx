@@ -315,7 +315,7 @@ export default function AdminVideos() {
           {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {videos?.map((video) => (
-              <Card key={video.id} className="overflow-hidden">
+              <Card key={video.id} className="overflow-hidden flex flex-col">
                 <div className="relative">
                   <img
                     src={video.thumbnailUrl}
@@ -328,18 +328,18 @@ export default function AdminVideos() {
                     </span>
                   </div>
                 </div>
-                <CardContent className="p-4">
+                <CardContent className="p-4 flex flex-col flex-1">
                   <h3 className="font-semibold mb-2 line-clamp-2">
                     {video.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-3 flex-1">
                     {video.description}
                   </p>
                   <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
                     <span>{video.views} views</span>
                     <span>{video.likes} likes</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-auto">
                     <Button
                       size="sm"
                       variant="outline"
