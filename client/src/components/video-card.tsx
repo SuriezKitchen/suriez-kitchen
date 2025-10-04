@@ -35,11 +35,11 @@ export default function VideoCard({
   };
 
   const getThumbnailClasses = () => {
-    return "w-full h-48 object-cover"; // Uniform height for all videos
+    return "w-full h-[400px] object-cover"; // Increased height to 400px
   };
 
   const getVideoClasses = () => {
-    return "w-full h-48 object-cover"; // Uniform height for all videos
+    return "w-full h-[400px] object-cover"; // Increased height to 400px
   };
 
   return (

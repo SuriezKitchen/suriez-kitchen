@@ -30,7 +30,7 @@ export default function AdminVideoCard({
         <img
           src={video.thumbnailUrl}
           alt={video.title}
-          className="w-full h-48 object-cover"
+          className="w-full h-[400px] object-cover"
         />
         <div className="absolute top-2 right-2">
           <span className="bg-primary text-white px-2 py-1 rounded text-xs">
