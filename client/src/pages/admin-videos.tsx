@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import SessionManager from "@/components/session-manager";
+import AdminVideoCard from "@/components/admin-video-card";
 
 interface LocalVideo {
   id: string;
@@ -315,52 +316,12 @@ export default function AdminVideos() {
           {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {videos?.map((video) => (
-              <Card key={video.id} className="overflow-hidden flex flex-col">
-                <div className="relative">
-                  <img
-                    src={video.thumbnailUrl}
-                    alt={video.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-2 right-2">
-                    <span className="bg-primary text-white px-2 py-1 rounded text-xs">
-                      {video.duration}
-                    </span>
-                  </div>
-                </div>
-                <CardContent className="p-4 flex flex-col flex-1">
-                  <h3 className="font-semibold mb-2 line-clamp-2">
-                    {video.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-3 flex-1">
-                    {video.description}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                    <span>{video.views} views</span>
-                    <span>{video.likes} likes</span>
-                  </div>
-                  <div className="flex gap-2 mt-auto">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEditVideo(video)}
-                      className="flex-1"
-                    >
-                      <i className="fas fa-edit mr-1"></i>
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDeleteVideo(video.id)}
-                      className="flex-1"
-                    >
-                      <i className="fas fa-trash mr-1"></i>
-                      Delete
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <AdminVideoCard
+                key={video.id}
+                video={video}
+                onEdit={handleEditVideo}
+                onDelete={handleDeleteVideo}
+              />
             ))}
           </div>
 

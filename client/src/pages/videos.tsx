@@ -7,6 +7,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { useYouTube, useYouTubeChannelStats } from "@/hooks/use-youtube";
 import { useQuery } from "@tanstack/react-query";
+import VideoCard from "@/components/video-card";
 
 export default function Videos() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -69,7 +70,7 @@ export default function Videos() {
   }));
 
   // Transform local videos to match our format
-  const formattedLocalVideos = (localVideos || []).map((video) => ({
+  const formattedLocalVideos = (localVideos || []).map((video: any) => ({
     id: video.id,
     platform: "local",
     title: video.title,
@@ -189,140 +190,13 @@ export default function Videos() {
                 className="video-hover group"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                  <div className="relative">
-                    {video.platform === "local" ? (
-                      // Local video player
-                      <div className="relative">
-                        {playingVideo === video.id ? (
-                          <video
-                            className="w-full h-48 object-cover"
-                            controls
-                            autoPlay
-                            onPause={handleVideoPause}
-                            onEnded={handleVideoPause}
-                            data-testid={`video-player-${video.id}`}
-                          >
-                            <source src={video.videoUrl} type="video/mp4" />
-                            Your browser does not support the video tag.
-                          </video>
-                        ) : (
-                          <div
-                            className="relative cursor-pointer"
-                            onClick={() => handleVideoPlay(video.id)}
-                          >
-                            <img
-                              src={video.thumbnailUrl}
-                              alt={video.title}
-                              className="w-full h-48 object-cover"
-                              data-testid={`video-thumbnail-${video.id}`}
-                            />
-
-                            {/* Play Button Overlay */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-primary hover:bg-primary/90"
-                                data-testid={`video-play-${video.id}`}
-                              >
-                                <i className="fas fa-play text-xl ml-1"></i>
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      // YouTube video (existing behavior)
-                      <div
-                        className="relative cursor-pointer"
-                        onClick={() => openVideo(video.url)}
-                      >
-                        <img
-                          src={video.thumbnailUrl}
-                          alt={video.title}
-                          className="w-full h-48 object-cover"
-                          data-testid={`video-thumbnail-${video.id}`}
-                        />
-
-                        {/* Play Button Overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-red-600 hover:bg-red-700"
-                            data-testid={`video-play-${video.id}`}
-                          >
-                            <i className="fas fa-play text-xl ml-1"></i>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Platform Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium text-white ${
-                          video.platform === "youtube"
-                            ? "bg-red-600"
-                            : video.platform === "local"
-                            ? "bg-primary"
-                            : "bg-gradient-to-r from-purple-600 to-pink-600"
-                        }`}
-                      >
-                        <i
-                          className={`${
-                            video.platform === "local"
-                              ? "fas fa-video"
-                              : `fab fa-${video.platform}`
-                          } mr-1`}
-                        ></i>
-                        {video.platform === "local"
-                          ? "Local"
-                          : video.platform.charAt(0).toUpperCase() +
-                            video.platform.slice(1)}
-                      </span>
-                    </div>
-
-                    {/* Duration Badge */}
-                    <div className="absolute bottom-4 right-4">
-                      <span className="bg-black/70 text-white px-2 py-1 rounded text-sm">
-                        {video.duration}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="px-4 pt-4 pb-2">
-                    <h3
-                      className="font-serif text-xl font-semibold mb-2"
-                      data-testid={`video-title-${video.id}`}
-                    >
-                      {video.title.length > 60
-                        ? `${video.title.substring(0, 60)}...`
-                        : video.title}
-                    </h3>
-                    <p
-                      className="text-muted-foreground mb-3 leading-relaxed"
-                      data-testid={`video-description-${video.id}`}
-                    >
-                      {video.description.length > 100
-                        ? `${video.description.substring(0, 100)}...`
-                        : video.description}
-                    </p>
-
-                    {/* Video Stats */}
-                    <div className="flex items-center justify-between text-sm text-muted-foreground pt-3 border-t border-border">
-                      <span className="flex items-center">
-                        <i className="far fa-eye mr-2"></i>
-                        <span data-testid={`video-views-${video.id}`}>
-                          {video.views} views
-                        </span>
-                      </span>
-                      <span className="flex items-center">
-                        <i className="far fa-heart mr-2"></i>
-                        <span data-testid={`video-likes-${video.id}`}>
-                          {video.likes} likes
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                </Card>
+                <VideoCard
+                  video={video}
+                  isPlaying={playingVideo === video.id}
+                  onPlay={handleVideoPlay}
+                  onPause={handleVideoPause}
+                  onYouTubeClick={openVideo}
+                />
               </div>
             ))}
           </div>
