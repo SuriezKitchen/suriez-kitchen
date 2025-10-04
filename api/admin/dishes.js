@@ -50,16 +50,16 @@ export default async function handler(req, res) {
 
     if (req.method === "POST") {
       // Create new dish
-      const { title, description, imageUrl, category } = req.body;
+      const { title, description, imageUrl } = req.body;
 
-      if (!title || !description || !imageUrl || !category) {
+      if (!title || !description || !imageUrl) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
       const newDish = await sql`
-        INSERT INTO dishes (id, title, description, image_url, category, created_at)
-        VALUES (gen_random_uuid(), ${title}, ${description}, ${imageUrl}, ${category}, NOW())
-        RETURNING id, title, description, image_url as "imageUrl", category, created_at as "createdAt"
+        INSERT INTO dishes (id, title, description, image_url, created_at)
+        VALUES (gen_random_uuid(), ${title}, ${description}, ${imageUrl}, NOW())
+        RETURNING id, title, description, image_url as "imageUrl", created_at as "createdAt"
       `;
 
       res.status(201).json(newDish[0]);

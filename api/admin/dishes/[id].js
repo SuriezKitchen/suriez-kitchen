@@ -56,17 +56,17 @@ export default async function handler(req, res) {
 
     if (req.method === "PUT") {
       // Update dish
-      const { title, description, imageUrl, category } = req.body;
+      const { title, description, imageUrl } = req.body;
 
-      if (!title || !description || !imageUrl || !category) {
+      if (!title || !description || !imageUrl) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
       const updatedDish = await sql`
         UPDATE dishes 
-        SET title = ${title}, description = ${description}, image_url = ${imageUrl}, category = ${category}
+        SET title = ${title}, description = ${description}, image_url = ${imageUrl}
         WHERE id = ${dishId}
-        RETURNING id, title, description, image_url as "imageUrl", category, created_at as "createdAt"
+        RETURNING id, title, description, image_url as "imageUrl", created_at as "createdAt"
       `;
 
       if (updatedDish.length === 0) {
