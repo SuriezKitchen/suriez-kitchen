@@ -50,9 +50,9 @@ export default async function handler(req, res) {
 
     // Parse URL to get video ID if present
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const pathSegments = url.pathname.split('/').filter(Boolean);
+    const pathSegments = url.pathname.split("/").filter(Boolean);
     const videoId = pathSegments[3]; // admin/local-videos/[id]
-    
+
     // Also check if the ID is in the query parameters (for dynamic routes)
     const { id: queryId } = req.query;
     const finalVideoId = videoId || queryId;
@@ -128,12 +128,10 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: "Video not found" });
       }
 
-      res
-        .status(200)
-        .json({
-          message: "Video deleted successfully",
-          video: deletedVideo[0],
-        });
+      res.status(200).json({
+        message: "Video deleted successfully",
+        video: deletedVideo[0],
+      });
     } else {
       res.status(405).json({ message: "Method not allowed" });
     }
