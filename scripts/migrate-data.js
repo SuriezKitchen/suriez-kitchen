@@ -160,8 +160,8 @@ const sampleSocialLinks = [
   },
   {
     platform: "instagram",
-    url: "https://instagram.com/sureiyah__",
-    username: "@sureiyah__",
+    url: "https://instagram.com/suriez_kitchen",
+    username: "@suriez_kitchen",
     is_active: true,
   },
 ];

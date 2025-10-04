@@ -238,7 +238,7 @@ export default function Videos() {
                 </div>
               </a>
               <a
-                href="https://instagram.com/surez_kitchen"
+                href="https://instagram.com/suriez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group"

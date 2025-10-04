@@ -172,7 +172,7 @@ export default function ContactSection() {
                 <i className="fab fa-youtube text-xl"></i>
               </a>
               <a
-                href="https://instagram.com/surez_kitchen"
+                href="https://instagram.com/suriez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"

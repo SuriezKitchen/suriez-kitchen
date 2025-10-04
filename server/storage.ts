@@ -355,8 +355,8 @@ export class MemStorage implements IStorage {
       },
       {
         platform: "instagram",
-        url: "https://instagram.com/sureiyah__",
-        username: "@sureiyah__",
+        url: "https://instagram.com/suriez_kitchen",
+        username: "@suriez_kitchen",
         isActive: true,
       },
     ];

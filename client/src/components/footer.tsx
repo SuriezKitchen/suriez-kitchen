@@ -77,7 +77,7 @@ export default function Footer() {
                 <i className="fab fa-youtube text-xl"></i>
               </a>
               <a
-                href="https://instagram.com/sureiyah__"
+                href="https://instagram.com/suriez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-primary transition-colors"
