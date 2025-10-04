@@ -109,6 +109,7 @@ export default function AdminDishes() {
   // Create dish mutation
   const createDishMutation = useMutation({
     mutationFn: async (dishData: Omit<Dish, "id" | "createdAt">) => {
+      console.log("Creating dish with data:", dishData);
       const response = await fetch("/api/admin/dishes", {
         method: "POST",
         headers: {
@@ -117,12 +118,23 @@ export default function AdminDishes() {
         credentials: "include",
         body: JSON.stringify(dishData),
       });
-      if (!response.ok) throw new Error("Failed to create dish");
-      return response.json();
+      console.log("Response status:", response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to create dish:", errorText);
+        throw new Error("Failed to create dish");
+      }
+      const result = await response.json();
+      console.log("Dish created successfully:", result);
+      return result;
     },
     onSuccess: () => {
+      console.log("Dish creation successful, invalidating queries");
       queryClient.invalidateQueries({ queryKey: ["api", "dishes"] });
       resetDishForm();
+    },
+    onError: (error) => {
+      console.error("Dish creation failed:", error);
     },
   });
 
@@ -172,9 +184,12 @@ export default function AdminDishes() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted:", dishForm, "isEditing:", isEditing, "editingDish:", editingDish);
     if (isEditing && editingDish) {
+      console.log("Updating dish");
       updateDishMutation.mutate(dishForm);
     } else {
+      console.log("Creating dish");
       createDishMutation.mutate(dishForm);
     }
   };
