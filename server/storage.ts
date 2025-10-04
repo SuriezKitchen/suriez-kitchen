@@ -19,8 +19,9 @@ import {
   adminUsers,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { drizzle } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/neon-serverless";
 import { eq } from "drizzle-orm";
+import { neon } from "@neondatabase/serverless";
 // Local SQLite (for Express dev server)
 import Database from "better-sqlite3";
 
@@ -586,20 +587,20 @@ export class MemStorage implements IStorage {
   }
 }
 
-export class D1Storage implements IStorage {
+export class NeonStorage implements IStorage {
   private db: ReturnType<typeof drizzle>;
 
   constructor() {
-    // For Cloudflare D1, we'll get the database from the environment
-    // In production, this will be provided by Cloudflare Workers/Pages
-    const db = (globalThis as any).DB || process.env.DB;
-    if (!db) {
+    // For Vercel with Neon, we'll use the Neon serverless driver
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
       throw new Error(
-        "D1 database is required. Make sure you're running in a Cloudflare environment or have DB environment variable set."
+        "DATABASE_URL is required. Make sure you have a Neon PostgreSQL database configured."
       );
     }
 
-    this.db = drizzle(db);
+    const sql = neon(connectionString);
+    this.db = drizzle(sql);
   }
 
   async getDishes(): Promise<Dish[]> {
@@ -1566,9 +1567,8 @@ export class SqliteStorage implements IStorage {
 }
 
 // Choose storage based on environment
-export const storage =
-  (globalThis as any).DB || process.env.DB
-    ? new D1Storage()
-    : process.env.NODE_ENV === "development"
-    ? new SqliteStorage()
-    : new MemStorage();
+export const storage = process.env.DATABASE_URL
+  ? new NeonStorage()
+  : process.env.NODE_ENV === "development"
+  ? new SqliteStorage()
+  : new MemStorage();

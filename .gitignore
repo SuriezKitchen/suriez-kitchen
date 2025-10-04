@@ -110,3 +110,14 @@ vite.config.ts.*
 *.tar.gz
 *.zip
 *.rar
+.vercel
+
+# Session cookies and sensitive files
+cookies*.txt
+*.cookies
+
+# Vercel deployment files
+.vercel/
+
+# Documentation files
+MIGRATION_GUIDE.md

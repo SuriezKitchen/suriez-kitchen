@@ -1,23 +1,23 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, text, integer, blob } from "drizzle-orm/sqlite-core";
+import { pgTable, text, integer, boolean, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const dishes = sqliteTable("dishes", {
-  id: text("id")
+export const dishes = pgTable("dishes", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
 });
 
-export const videos = sqliteTable("videos", {
-  id: text("id")
+export const videos = pgTable("videos", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   youtubeId: text("youtube_id").notNull().unique(),
@@ -26,57 +26,57 @@ export const videos = sqliteTable("videos", {
   thumbnailUrl: text("thumbnail_url").notNull(),
   viewCount: integer("view_count").default(0),
   likeCount: integer("like_count").default(0),
-  publishedAt: integer("published_at", { mode: "timestamp" }).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  publishedAt: timestamp("published_at").notNull(),
+  createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
 });
 
-export const categories = sqliteTable("categories", {
-  id: text("id")
+export const categories = pgTable("categories", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull().unique(),
   description: text("description"),
   color: text("color").default("#3B82F6"), // Default blue color
-  isActive: integer("is_active", { mode: "boolean" }).default(true),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
 });
 
-export const socialLinks = sqliteTable("social_links", {
-  id: text("id")
+export const socialLinks = pgTable("social_links", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   platform: text("platform").notNull(),
   url: text("url").notNull(),
   username: text("username"),
-  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  isActive: boolean("is_active").default(true),
 });
 
-export const settings = sqliteTable("settings", {
-  id: text("id")
+export const settings = pgTable("settings", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   key: text("key").notNull().unique(),
   value: text("value").notNull(),
   description: text("description"),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
+  updatedAt: timestamp("updated_at")
     .$defaultFn(() => new Date())
     .notNull(),
 });
 
-export const adminUsers = sqliteTable("admin_users", {
-  id: text("id")
+export const adminUsers = pgTable("admin_users", {
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   email: text("email"),
-  isActive: integer("is_active", { mode: "boolean" }).default(true),
-  lastLoginAt: integer("last_login_at", { mode: "timestamp" }),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  isActive: boolean("is_active").default(true),
+  lastLoginAt: timestamp("last_login_at"),
+  createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
 });

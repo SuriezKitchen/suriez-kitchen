@@ -11,6 +11,8 @@ export default function VideosSection() {
   const { videos, isLoading, error } = useYouTube();
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   useEffect(() => {
     const observerOptions = {
@@ -74,6 +76,31 @@ export default function VideosSection() {
 
   const openVideo = (youtubeId: string) => {
     window.open(`https://www.youtube.com/watch?v=${youtubeId}`, "_blank");
+  };
+
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && videos.length > 1) {
+      goToNext();
+    }
+    if (isRightSwipe && videos.length > 1) {
+      goToPrevious();
+    }
   };
 
   if (error) {
@@ -147,91 +174,14 @@ export default function VideosSection() {
 
         <div className="relative">
           {videos.length > 0 ? (
-            <div className="relative overflow-hidden">
-              {/* Carousel Container */}
-              <div
-                ref={carouselRef}
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{
-                  transform: `translateX(-${currentVideoIndex * 100}%)`,
-                }}
-              >
-                {videos.map((video, index) => (
-                  <div key={video.youtubeId} className="w-full flex-shrink-0">
-                    <div className="flex justify-center px-4">
-                      <Card className="bg-card overflow-hidden shadow-lg w-full max-w-4xl">
-                        <div
-                          className="relative cursor-pointer group"
-                          onClick={() => openVideo(video.youtubeId)}
-                        >
-                          <img
-                            src={video.thumbnailUrl}
-                            alt={video.title}
-                            className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                            data-testid={`video-thumbnail-${video.youtubeId}`}
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-                            <button
-                              className="bg-red-600 text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-red-700 transition-all transform group-hover:scale-110"
-                              data-testid={`video-play-${video.youtubeId}`}
-                            >
-                              <i className="fas fa-play text-2xl ml-1"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <CardContent className="p-8">
-                          <h3
-                            className="font-serif text-2xl font-semibold mb-4"
-                            data-testid={`video-title-${video.youtubeId}`}
-                          >
-                            {video.title.length > 80
-                              ? `${video.title.substring(0, 80)}...`
-                              : video.title}
-                          </h3>
-                          <p
-                            className="text-muted-foreground mb-6 text-lg leading-relaxed"
-                            data-testid={`video-description-${video.youtubeId}`}
-                          >
-                            {video.description.length > 150
-                              ? `${video.description.substring(0, 150)}...`
-                              : video.description}
-                          </p>
-                          <div className="flex items-center text-sm text-muted-foreground gap-6">
-                            <span className="flex items-center">
-                              <i className="far fa-eye mr-2"></i>
-                              <span
-                                data-testid={`video-views-${video.youtubeId}`}
-                              >
-                                {video.viewCount
-                                  ? `${video.viewCount.toLocaleString()} views`
-                                  : "Views unavailable"}
-                              </span>
-                            </span>
-                            <span className="flex items-center">
-                              <i className="far fa-heart mr-2"></i>
-                              <span
-                                data-testid={`video-likes-${video.youtubeId}`}
-                              >
-                                {video.likeCount
-                                  ? `${video.likeCount.toLocaleString()} likes`
-                                  : "Likes unavailable"}
-                              </span>
-                            </span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Navigation Arrows */}
+            <>
+              {/* Navigation Arrows - Hidden on mobile/tablet, visible on desktop */}
               {videos.length > 1 && (
                 <>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg"
+                    className="hidden lg:flex absolute left-4 top-1/2 transform -translate-y-1/2 z-30 bg-white/90 hover:bg-white shadow-lg"
                     onClick={goToPrevious}
                     disabled={isTransitioning}
                   >
@@ -240,7 +190,7 @@ export default function VideosSection() {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-lg"
+                    className="hidden lg:flex absolute right-4 top-1/2 transform -translate-y-1/2 z-30 bg-white/90 hover:bg-white shadow-lg"
                     onClick={goToNext}
                     disabled={isTransitioning}
                   >
@@ -248,6 +198,88 @@ export default function VideosSection() {
                   </Button>
                 </>
               )}
+
+              <div className="relative overflow-hidden">
+                {/* Carousel Container */}
+                <div
+                  ref={carouselRef}
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{
+                    transform: `translateX(-${currentVideoIndex * 100}%)`,
+                  }}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  {videos.map((video, index) => (
+                    <div key={video.youtubeId} className="w-full flex-shrink-0">
+                      <div className="flex justify-center px-4">
+                        <Card className="bg-card overflow-hidden shadow-lg w-full max-w-4xl">
+                          <div
+                            className="relative cursor-pointer group"
+                            onClick={() => openVideo(video.youtubeId)}
+                          >
+                            <img
+                              src={video.thumbnailUrl}
+                              alt={video.title}
+                              className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+                              data-testid={`video-thumbnail-${video.youtubeId}`}
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                              <button
+                                className="bg-red-600 text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-red-700 transition-all transform group-hover:scale-110"
+                                data-testid={`video-play-${video.youtubeId}`}
+                              >
+                                <i className="fas fa-play text-2xl ml-1"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <CardContent className="p-8">
+                            <h3
+                              className="font-serif text-2xl font-semibold mb-4"
+                              data-testid={`video-title-${video.youtubeId}`}
+                            >
+                              {video.title.length > 80
+                                ? `${video.title.substring(0, 80)}...`
+                                : video.title}
+                            </h3>
+                            <p
+                              className="text-muted-foreground mb-6 text-lg leading-relaxed"
+                              data-testid={`video-description-${video.youtubeId}`}
+                            >
+                              {video.description.length > 150
+                                ? `${video.description.substring(0, 150)}...`
+                                : video.description}
+                            </p>
+                            <div className="flex items-center text-sm text-muted-foreground gap-6">
+                              <span className="flex items-center">
+                                <i className="far fa-eye mr-2"></i>
+                                <span
+                                  data-testid={`video-views-${video.youtubeId}`}
+                                >
+                                  {video.viewCount
+                                    ? `${video.viewCount.toLocaleString()} views`
+                                    : "Views unavailable"}
+                                </span>
+                              </span>
+                              <span className="flex items-center">
+                                <i className="far fa-heart mr-2"></i>
+                                <span
+                                  data-testid={`video-likes-${video.youtubeId}`}
+                                >
+                                  {video.likeCount
+                                    ? `${video.likeCount.toLocaleString()} likes`
+                                    : "Likes unavailable"}
+                                </span>
+                              </span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Video indicators */}
               {videos.length > 1 && (
@@ -266,7 +298,7 @@ export default function VideosSection() {
                   ))}
                 </div>
               )}
-            </div>
+            </>
           ) : (
             // Fallback content when no videos are available
             <div className="text-center py-12">
@@ -285,10 +317,10 @@ export default function VideosSection() {
         </div>
 
         <div className="text-center mt-12">
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/videos">
               <span
-                className="btn-primary px-8 py-4 text-white font-medium rounded-lg inline-block cursor-pointer"
+                className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-white font-medium rounded-lg inline-block cursor-pointer w-fit"
                 data-testid="button-view-all-videos"
               >
                 <i className="fas fa-video mr-2"></i>
@@ -296,7 +328,7 @@ export default function VideosSection() {
               </span>
             </Link>
             <button
-              className="bg-primary hover:bg-accent text-white px-8 py-4 rounded-lg font-medium transition-colors"
+              className="bg-primary hover:bg-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium transition-colors w-fit"
               onClick={() =>
                 window.open("https://youtube.com/@Sureiyahsaid", "_blank")
               }

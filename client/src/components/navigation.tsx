@@ -41,7 +41,9 @@ export default function Navigation() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled
+        isMobileMenuOpen
+          ? "navbar-bg border-b border-border"
+          : isScrolled
           ? "navbar-bg border-b border-border"
           : location === "/"
           ? "bg-transparent"
@@ -55,7 +57,7 @@ export default function Navigation() {
               size="md"
               className={cn(
                 "transition-all duration-300",
-                isScrolled ? "opacity-90" : "opacity-100"
+                isMobileMenuOpen || isScrolled ? "opacity-90" : "opacity-100"
               )}
             />
           </Link>
@@ -131,7 +133,7 @@ export default function Navigation() {
           <button
             className={cn(
               "md:hidden transition-colors",
-              isScrolled ? "text-primary" : "text-white"
+              isMobileMenuOpen || isScrolled ? "text-primary" : "text-white"
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="mobile-menu-button"
@@ -153,7 +155,7 @@ export default function Navigation() {
                 onClick={() => handleNavigation("/", "home")}
                 className={cn(
                   "hover:text-primary transition-colors text-left",
-                  isScrolled
+                  isMobileMenuOpen || isScrolled
                     ? "text-muted-foreground"
                     : "text-white/90 hover:text-white"
                 )}
@@ -166,7 +168,7 @@ export default function Navigation() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
                     "hover:text-primary transition-colors text-left cursor-pointer block",
-                    isScrolled
+                    isMobileMenuOpen || isScrolled
                       ? "text-muted-foreground"
                       : "text-white/90 hover:text-white"
                   )}
@@ -180,7 +182,7 @@ export default function Navigation() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
                     "hover:text-primary transition-colors text-left cursor-pointer block",
-                    isScrolled
+                    isMobileMenuOpen || isScrolled
                       ? "text-muted-foreground"
                       : "text-white/90 hover:text-white"
                   )}
@@ -193,7 +195,7 @@ export default function Navigation() {
                 <span
                   className={cn(
                     "hover:text-primary transition-colors text-left cursor-pointer",
-                    isScrolled
+                    isMobileMenuOpen || isScrolled
                       ? "text-muted-foreground"
                       : "text-white/90 hover:text-white"
                   )}
@@ -207,7 +209,7 @@ export default function Navigation() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-4 py-2 rounded-lg text-white font-medium transition-all transform hover:scale-105 shadow-lg cursor-pointer text-center block mt-2"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-3 py-2 rounded-lg text-white font-medium transition-all transform hover:scale-105 shadow-lg cursor-pointer inline-block mt-2 w-fit"
                 data-testid="mobile-nav-portal"
               >
                 <i className="fas fa-user-shield mr-2"></i>

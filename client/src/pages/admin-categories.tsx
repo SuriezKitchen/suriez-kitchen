@@ -22,6 +22,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import SessionManager from "@/components/session-manager";
 import type { Category } from "@shared/schema";
 
@@ -43,7 +49,8 @@ export default function AdminCategories() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/admin/me", {
+        const response = await fetch("/api/admin/login", {
+          method: "GET",
           credentials: "include",
         });
         if (!response.ok) {
@@ -134,9 +141,13 @@ export default function AdminCategories() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ operation: "logout" }),
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -186,18 +197,31 @@ export default function AdminCategories() {
         <div className="bg-card border-b">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button variant="outline" onClick={handleBackToDashboard}>
-                  ← Back to Dashboard
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleBackToDashboard}
+                  className="flex-shrink-0"
+                >
+                  <i className="fas fa-arrow-left"></i>
                 </Button>
-                <h1 className="text-2xl font-bold">Categories Management</h1>
+                <h1 className="text-lg sm:text-2xl font-bold truncate">
+                  Categories Management
+                </h1>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">
                   {categories?.length || 0} categories
                 </span>
-                <Button variant="outline" onClick={handleLogout}>
-                  Logout
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex-shrink-0"
+                >
+                  <span className="hidden sm:inline">Logout</span>
+                  <i className="fas fa-sign-out-alt sm:hidden"></i>
                 </Button>
               </div>
             </div>
@@ -292,19 +316,6 @@ export default function AdminCategories() {
                           ? "Adding..."
                           : "Add Category"}
                       </Button>
-                      {isEditingCategory && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => {
-                            setIsEditingCategory(false);
-                            setEditingCategory(null);
-                            resetCategoryForm();
-                          }}
-                        >
-                          Cancel Edit
-                        </Button>
-                      )}
                     </div>
                   </form>
                 </CardContent>
@@ -400,6 +411,94 @@ export default function AdminCategories() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Edit Category Modal */}
+          <Dialog open={isEditingCategory} onOpenChange={setIsEditingCategory}>
+            <DialogContent className="rounded-lg w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:w-auto sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Edit Category</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleCategorySubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-name">Name</Label>
+                  <Input
+                    id="edit-name"
+                    value={categoryForm.name}
+                    onChange={(e) =>
+                      setCategoryForm({
+                        ...categoryForm,
+                        name: e.target.value,
+                      })
+                    }
+                    required
+                    placeholder="e.g., breakfast"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-color">Color</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="edit-color"
+                      type="color"
+                      value={categoryForm.color}
+                      onChange={(e) =>
+                        setCategoryForm({
+                          ...categoryForm,
+                          color: e.target.value,
+                        })
+                      }
+                      className="w-16 h-10 p-1 border rounded"
+                    />
+                    <Input
+                      value={categoryForm.color}
+                      onChange={(e) =>
+                        setCategoryForm({
+                          ...categoryForm,
+                          color: e.target.value,
+                        })
+                      }
+                      placeholder="#3B82F6"
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-description">Description</Label>
+                  <Input
+                    id="edit-description"
+                    value={categoryForm.description}
+                    onChange={(e) =>
+                      setCategoryForm({
+                        ...categoryForm,
+                        description: e.target.value,
+                      })
+                    }
+                    placeholder="Brief description of this category"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setIsEditingCategory(false);
+                      setEditingCategory(null);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={updateCategoryMutation.isPending}
+                  >
+                    {updateCategoryMutation.isPending
+                      ? "Updating..."
+                      : "Update Category"}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </SessionManager>

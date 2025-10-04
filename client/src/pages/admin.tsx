@@ -12,7 +12,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/admin/me", {
+        const response = await fetch("/api/admin/login", {
+          method: "GET",
           credentials: "include",
         });
         if (!response.ok) {
@@ -27,9 +28,13 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        body: JSON.stringify({ operation: "logout" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -65,9 +70,9 @@ export default function AdminDashboard() {
               <CardTitle>Account Management</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
                 <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg
                       className="h-6 w-6 text-primary"
                       fill="none"
@@ -82,22 +87,22 @@ export default function AdminDashboard() {
                       />
                     </svg>
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h3 className="font-semibold text-lg">Change Password</h3>
                     <p className="text-sm text-muted-foreground">
                       Update your admin account password for better security
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <div className="text-right">
+                <div className="flex items-center justify-between sm:justify-end space-x-4">
+                  <div className="text-right hidden sm:block">
                     <div className="text-2xl font-bold text-primary">🔒</div>
                     <div className="text-sm text-muted-foreground">
                       Security
                     </div>
                   </div>
                   <ChangePasswordDialog>
-                    <Button className="bg-primary hover:bg-primary/90">
+                    <Button className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
                       <i className="fas fa-key mr-2"></i>
                       Change Password
                     </Button>

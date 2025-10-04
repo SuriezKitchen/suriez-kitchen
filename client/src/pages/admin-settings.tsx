@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-// import SimpleSessionManager from "@/components/simple-session-manager";
+import SessionManager from "@/components/session-manager";
 import type { Setting } from "@shared/schema";
 
 interface SettingsForm {
@@ -62,9 +62,13 @@ export default function AdminSettings() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ operation: "logout" }),
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -83,7 +87,7 @@ export default function AdminSettings() {
 
     try {
       // Update YouTube API Key
-      await fetch("/api/settings/youtube_api_key", {
+      await fetch("/api/settings-youtube-api-key", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +101,7 @@ export default function AdminSettings() {
       });
 
       // Update YouTube Channel ID
-      await fetch("/api/settings/youtube_channel_id", {
+      await fetch("/api/settings-youtube-channel-id", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -164,18 +168,31 @@ export default function AdminSettings() {
         <div className="bg-card border-b">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button variant="outline" onClick={handleBackToDashboard}>
-                  ← Back to Dashboard
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleBackToDashboard}
+                  className="flex-shrink-0"
+                >
+                  <i className="fas fa-arrow-left"></i>
                 </Button>
-                <h1 className="text-2xl font-bold">YouTube Settings</h1>
+                <h1 className="text-lg sm:text-2xl font-bold truncate">
+                  YouTube Settings
+                </h1>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">
                   API Configuration
                 </span>
-                <Button variant="outline" onClick={handleLogout}>
-                  Logout
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex-shrink-0"
+                >
+                  <span className="hidden sm:inline">Logout</span>
+                  <i className="fas fa-sign-out-alt sm:hidden"></i>
                 </Button>
               </div>
             </div>
@@ -195,146 +212,164 @@ export default function AdminSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-card border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={handleBackToDashboard}>
-                ← Back to Dashboard
-              </Button>
-              <h1 className="text-2xl font-bold">YouTube Settings</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">
-                API Configuration
-              </span>
-              <Button variant="outline" onClick={handleLogout}>
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="mb-8">
-            <p className="text-muted-foreground">
-              Manage your YouTube API configuration for automatic data fetching.
-            </p>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>API Configuration</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Label
-                    htmlFor="youtubeApiKey"
-                    className="text-sm font-medium"
-                  >
-                    YouTube API Key
-                  </Label>
-                  <Input
-                    id="youtubeApiKey"
-                    type="password"
-                    value={formData.youtubeApiKey}
-                    onChange={(e) =>
-                      handleInputChange("youtubeApiKey", e.target.value)
-                    }
-                    placeholder="AIzaSy..."
-                    className="mt-1"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Your YouTube Data API v3 key. Get it from the Google Cloud
-                    Console.
-                  </p>
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="youtubeChannelId"
-                    className="text-sm font-medium"
-                  >
-                    YouTube Channel ID
-                  </Label>
-                  <Input
-                    id="youtubeChannelId"
-                    type="text"
-                    value={formData.youtubeChannelId}
-                    onChange={(e) =>
-                      handleInputChange("youtubeChannelId", e.target.value)
-                    }
-                    placeholder="UCsWnEV_XEevwZvSCpOLDkNw"
-                    className="mt-1"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Your YouTube channel ID (starts with UC...). Find it in your
-                    channel URL.
-                  </p>
-                </div>
-
-                <div className="flex gap-4">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    {isSubmitting ? "Saving..." : "Save Settings"}
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={testConnection}
-                    disabled={
-                      !formData.youtubeApiKey || !formData.youtubeChannelId
-                    }
-                  >
-                    Test Connection
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Current Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">API Key</span>
-                  <span
-                    className={`text-sm ${
-                      formData.youtubeApiKey ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {formData.youtubeApiKey ? "✓ Configured" : "✗ Not Set"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Channel ID</span>
-                  <span
-                    className={`text-sm ${
-                      formData.youtubeChannelId
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {formData.youtubeChannelId ? "✓ Configured" : "✗ Not Set"}
-                  </span>
-                </div>
+    <SessionManager>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <div className="bg-card border-b">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleBackToDashboard}
+                  className="flex-shrink-0"
+                >
+                  <i className="fas fa-arrow-left"></i>
+                </Button>
+                <h1 className="text-lg sm:text-2xl font-bold truncate">
+                  YouTube Settings
+                </h1>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-2 sm:gap-4">
+                <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">
+                  API Configuration
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex-shrink-0"
+                >
+                  <span className="hidden sm:inline">Logout</span>
+                  <i className="fas fa-sign-out-alt sm:hidden"></i>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="mb-8">
+              <p className="text-muted-foreground">
+                Manage your YouTube API configuration for automatic data
+                fetching.
+              </p>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>API Configuration</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <Label
+                      htmlFor="youtubeApiKey"
+                      className="text-sm font-medium"
+                    >
+                      YouTube API Key
+                    </Label>
+                    <Input
+                      id="youtubeApiKey"
+                      type="password"
+                      value={formData.youtubeApiKey}
+                      onChange={(e) =>
+                        handleInputChange("youtubeApiKey", e.target.value)
+                      }
+                      placeholder="AIzaSy..."
+                      className="mt-1"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Your YouTube Data API v3 key. Get it from the Google Cloud
+                      Console.
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="youtubeChannelId"
+                      className="text-sm font-medium"
+                    >
+                      YouTube Channel ID
+                    </Label>
+                    <Input
+                      id="youtubeChannelId"
+                      type="text"
+                      value={formData.youtubeChannelId}
+                      onChange={(e) =>
+                        handleInputChange("youtubeChannelId", e.target.value)
+                      }
+                      placeholder="UCsWnEV_XEevwZvSCpOLDkNw"
+                      className="mt-1"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Your YouTube channel ID (starts with UC...). Find it in
+                      your channel URL.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-primary hover:bg-primary/90"
+                    >
+                      {isSubmitting ? "Saving..." : "Save Settings"}
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={testConnection}
+                      disabled={
+                        !formData.youtubeApiKey || !formData.youtubeChannelId
+                      }
+                    >
+                      Test Connection
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Current Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">API Key</span>
+                    <span
+                      className={`text-sm ${
+                        formData.youtubeApiKey
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {formData.youtubeApiKey ? "✓ Configured" : "✗ Not Set"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Channel ID</span>
+                    <span
+                      className={`text-sm ${
+                        formData.youtubeChannelId
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {formData.youtubeChannelId ? "✓ Configured" : "✗ Not Set"}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </SessionManager>
   );
 }

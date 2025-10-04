@@ -3,10 +3,8 @@ import { defineConfig } from "drizzle-kit";
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
-  dialect: "sqlite",
-  driver: "d1-http",
+  dialect: "postgresql", // Changed from sqlite to postgresql for Vercel
   dbCredentials: {
-    wranglerConfigPath: "./wrangler.toml",
-    dbName: "chefvlog-db",
+    url: process.env.DATABASE_URL!,
   },
 });

@@ -15,9 +15,13 @@ export default function SessionManager({ children }: SessionManagerProps) {
   const handleInactive = async () => {
     // Session has expired, redirect to login
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ operation: "logout" }),
       });
     } catch (error) {
       console.error("Logout error:", error);
