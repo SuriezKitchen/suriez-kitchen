@@ -235,10 +235,7 @@ export default function Gallery() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <div className="flex items-center justify-between">
-                          <span className="bg-primary/80 px-3 py-1 rounded-full text-sm font-medium">
-                            {dish.category}
-                          </span>
+                        <div className="flex items-center justify-end">
                           <button className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-colors">
                             <i
                               className="fas fa-heart text-lg"
@@ -263,11 +260,7 @@ export default function Gallery() {
                       {dish.description}
                     </p>
                     <div className="mt-4 pt-4 border-t border-border flex-shrink-0">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <i className="fas fa-utensils mr-2"></i>
-                          {dish.category}
-                        </span>
+                      <div className="flex items-center justify-end text-sm text-muted-foreground">
                         <span className="flex items-center">
                           <i className="fas fa-calendar mr-2"></i>
                           {new Date(dish.createdAt).toLocaleDateString()}

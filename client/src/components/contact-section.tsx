@@ -151,7 +151,7 @@ export default function ContactSection() {
                         Instagram
                       </h3>
                       <p className="text-muted-foreground text-sm">
-                        @surez_kitchen
+                        @suriez_kitchen
                       </p>
                     </CardContent>
                   </Card>
