@@ -260,7 +260,11 @@ export default function Gallery() {
                       {dish.description}
                     </p>
                     <div className="mt-4 pt-4 border-t border-border flex-shrink-0">
-                      <div className="flex items-center justify-end text-sm text-muted-foreground">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span className="flex items-center">
+                          <i className="fas fa-utensils mr-2"></i>
+                          Dish
+                        </span>
                         <span className="flex items-center">
                           <i className="fas fa-calendar mr-2"></i>
                           {new Date(dish.createdAt).toLocaleDateString()}
