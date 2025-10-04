@@ -54,17 +54,25 @@ export default function AboutSection() {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  From a small-town kitchen to culinary school and beyond, my
-                  journey has been fueled by an insatiable passion for creating
-                  memorable dining experiences. Each dish I craft tells a story
-                  of tradition, innovation, and the pure joy of sharing
-                  exceptional food.
+                  From the heart of Tanzania to the world, my journey began far
+                  from a professional kitchen. Though I studied Business
+                  Administration, my true calling was discovered in the
+                  comforting aromas and vibrant flavors that filled my home
+                  growing up. What started as a simple curiosity soon blossomed
+                  into a deep passion for creating dishes that connect people,
+                  cultures, and memories.
                 </p>
                 <p>
-                  Through my YouTube channel, I love sharing the techniques,
-                  stories, and inspirations behind my cooking. Whether you're a
-                  fellow chef or a home cooking enthusiast, there's always
-                  something new to discover in the kitchen together.
+                  Every meal I prepare is a reflection of where I come from — a
+                  blend of African tradition, modern inspiration, and the joy of
+                  sharing food that speaks to the soul.
+                </p>
+                <p>
+                  Through my YouTube channel, I invite you into my kitchen to
+                  explore the stories, flavors, and techniques that shape my
+                  cooking. Whether you're an aspiring chef or someone who simply
+                  loves good food, there's always something new and exciting to
+                  discover together.
                 </p>
               </div>
             </div>

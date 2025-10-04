@@ -62,9 +62,8 @@ export default function ContactSection() {
               className="text-xl text-muted-foreground mb-12"
               data-testid="contact-description"
             >
-              Whether you're looking for private chef services, cooking
-              collaborations, or just want to chat about food, I'd love to hear
-              from you.
+              If you're seeking a private chef or would like to collaborate on a
+              culinary project, I'd be delighted to hear from you.
             </p>
           </div>
 
@@ -187,20 +186,6 @@ export default function ContactSection() {
                 data-testid="social-link-tiktok"
               >
                 <i className="fab fa-tiktok text-xl"></i>
-              </a>
-              <a
-                href="#"
-                className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
-                data-testid="social-link-facebook"
-              >
-                <i className="fab fa-facebook text-xl"></i>
-              </a>
-              <a
-                href="#"
-                className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
-                data-testid="social-link-twitter"
-              >
-                <i className="fab fa-twitter text-xl"></i>
               </a>
             </div>
           </div>
