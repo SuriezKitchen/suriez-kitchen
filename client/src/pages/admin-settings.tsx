@@ -87,7 +87,7 @@ export default function AdminSettings() {
 
     try {
       // Update YouTube API Key
-      await fetch("/api/settings-youtube-api-key", {
+          await fetch("/api/settings/youtube-api-key", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +101,7 @@ export default function AdminSettings() {
       });
 
       // Update YouTube Channel ID
-      await fetch("/api/settings-youtube-channel-id", {
+          await fetch("/api/settings/youtube-channel-id", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
