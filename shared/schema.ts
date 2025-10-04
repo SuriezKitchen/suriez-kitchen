@@ -10,7 +10,7 @@ export const dishes = pgTable("dishes", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
-  category: text("category").notNull(),
+  category: text("category"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
