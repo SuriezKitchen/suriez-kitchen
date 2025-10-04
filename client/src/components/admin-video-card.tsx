@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -23,43 +23,14 @@ export default function AdminVideoCard({
   onEdit, 
   onDelete 
 }: AdminVideoCardProps) {
-  const [aspectRatio, setAspectRatio] = useState<"landscape" | "portrait" | "square">("landscape");
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  // Detect aspect ratio from thumbnail
-  useEffect(() => {
-    const img = new Image();
-    img.onload = () => {
-      const ratio = img.width / img.height;
-      if (ratio > 1.2) {
-        setAspectRatio("landscape");
-      } else if (ratio < 0.8) {
-        setAspectRatio("portrait");
-      } else {
-        setAspectRatio("square");
-      }
-      setImageLoaded(true);
-    };
-    img.src = video.thumbnailUrl;
-  }, [video.thumbnailUrl]);
-
-  const getThumbnailClasses = () => {
-    if (aspectRatio === "portrait") {
-      return "w-full h-[50vh] object-cover"; // Full viewport height for portrait videos
-    } else if (aspectRatio === "square") {
-      return "w-full h-64 object-cover"; // Square videos
-    } else {
-      return "w-full h-48 object-cover"; // Standard landscape
-    }
-  };
 
   return (
-    <Card className={`overflow-hidden flex flex-col ${aspectRatio === "portrait" ? "w-full col-span-full" : ""}`}>
+    <Card className="overflow-hidden flex flex-col">
       <div className="relative">
         <img
           src={video.thumbnailUrl}
           alt={video.title}
-          className={getThumbnailClasses()}
+          className="w-full h-48 object-cover"
         />
         <div className="absolute top-2 right-2">
           <span className="bg-primary text-white px-2 py-1 rounded text-xs">
