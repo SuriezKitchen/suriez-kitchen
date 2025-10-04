@@ -42,12 +42,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Check authentication for all admin operations
-    const session = await checkAdminAuth(req);
-    if (!session) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     // Parse the URL to determine the operation
     const url = new URL(req.url, `http://${req.headers.host}`);
     const pathSegments = url.pathname.split('/').filter(Boolean);
@@ -60,6 +54,11 @@ export default async function handler(req, res) {
       // Handle login operations
       if (req.method === "GET") {
         // Check session (me)
+        const session = await checkAdminAuth(req);
+        if (!session) {
+          return res.status(401).json({ message: "No session found" });
+        }
+        
         res.status(200).json({
           user: {
             id: session.userId,
@@ -152,6 +151,12 @@ export default async function handler(req, res) {
         }
       }
     } else if (operation === "dishes") {
+      // Check authentication for dishes operations
+      const session = await checkAdminAuth(req);
+      if (!session) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       // Handle dishes operations
       if (req.method === "POST") {
         // Create new dish
@@ -205,6 +210,12 @@ export default async function handler(req, res) {
         res.status(405).json({ message: "Method not allowed" });
       }
     } else if (operation === "categories") {
+      // Check authentication for categories operations
+      const session = await checkAdminAuth(req);
+      if (!session) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       // Handle categories operations
       if (req.method === "POST") {
         // Create new category
@@ -258,6 +269,12 @@ export default async function handler(req, res) {
         res.status(405).json({ message: "Method not allowed" });
       }
     } else if (operation === "local-videos") {
+      // Check authentication for local videos operations
+      const session = await checkAdminAuth(req);
+      if (!session) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       // Handle local videos operations
       if (req.method === "POST") {
         // Create new local video
