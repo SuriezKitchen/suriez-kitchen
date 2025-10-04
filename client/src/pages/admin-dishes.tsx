@@ -122,7 +122,7 @@ export default function AdminDishes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["api", "dishes"] });
-      resetForm();
+      resetDishForm();
     },
   });
 
@@ -142,20 +142,10 @@ export default function AdminDishes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["api", "dishes"] });
-      setIsEditing(false);
-      setEditingDish(null);
+      resetDishForm();
     },
   });
 
-  const resetForm = () => {
-    setDishForm({
-      title: "",
-      description: "",
-      imageUrl: "",
-      category: "",
-    });
-    setIsAddDishOpen(false);
-  };
 
   const handleEdit = (dish: Dish) => {
     setEditingDish(dish);
@@ -166,6 +156,18 @@ export default function AdminDishes() {
       category: dish.category,
     });
     setIsEditing(true);
+  };
+
+  const resetDishForm = () => {
+    setDishForm({
+      title: "",
+      description: "",
+      imageUrl: "",
+      category: "",
+    });
+    setIsAddDishOpen(false);
+    setIsEditing(false);
+    setEditingDish(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -261,8 +263,7 @@ export default function AdminDishes() {
           <div className="mb-8">
             <Button
               onClick={() => {
-                setIsEditingDish(false);
-                setEditingDish(null);
+                resetDishForm();
                 setIsAddDishOpen(true);
               }}
               className="flex items-center gap-2"
@@ -355,9 +356,7 @@ export default function AdminDishes() {
           {/* Add/Edit Dialog */}
           <Dialog open={isAddDishOpen || isEditing} onOpenChange={(open) => {
             if (!open) {
-              setIsAddDishOpen(false);
-              setIsEditing(false);
-              setEditingDish(null);
+              resetDishForm();
             }
           }}>
             <DialogContent className="rounded-lg w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:w-auto sm:max-w-2xl">
@@ -427,11 +426,7 @@ export default function AdminDishes() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => {
-                      setIsAddDishOpen(false);
-                      setIsEditing(false);
-                      setEditingDish(null);
-                    }}
+                    onClick={resetDishForm}
                   >
                     Cancel
                   </Button>
