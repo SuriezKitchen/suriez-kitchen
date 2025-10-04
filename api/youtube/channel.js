@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         subscriberCount,
         videoCount,
         viewCount,
-        formattedSubscribers: `${subscriberCount.toLocaleString()} subscribers`,
+        formattedSubscribers: `${subscriberCount.toLocaleString()}`,
         videoCount,
         viewCount,
       };
