@@ -126,8 +126,7 @@ export default function AdminVideos() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["api", "local-videos"] });
-      setIsEditingVideo(false);
-      setEditingVideo(null);
+      resetVideoForm();
       toast({
         title: "Success!",
         description: "Video updated successfully.",
