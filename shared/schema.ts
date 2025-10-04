@@ -90,8 +90,8 @@ export const localVideos = pgTable("local_videos", {
   thumbnailUrl: text("thumbnail_url").notNull(),
   videoUrl: text("video_url").notNull(),
   duration: text("duration").notNull(),
-  views: text("views").default("0"),
-  likes: text("likes").default("0"),
+  views: integer("views").default(0),
+  likes: integer("likes").default(0),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
