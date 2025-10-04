@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 interface VideoCardProps {
   video: {
@@ -30,60 +29,8 @@ export default function VideoCard({
   onYouTubeClick,
   className = "",
 }: VideoCardProps) {
-  const [likes, setLikes] = useState(parseInt(video.likes || "0"));
-  const [views, setViews] = useState(parseInt(video.views || "0"));
-  const [isLiked, setIsLiked] = useState(false);
-  const [hasViewed, setHasViewed] = useState(false);
-
   const getCardClasses = () => {
     return "bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500";
-  };
-
-  const handleLike = async () => {
-    if (isLiked || video.platform !== "local") return;
-    
-    try {
-      const response = await fetch(`/api/videos/${video.id}/like`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setLikes(data.likes);
-        setIsLiked(true);
-      }
-    } catch (error) {
-      console.error("Failed to like video:", error);
-    }
-  };
-
-  const handleView = async () => {
-    if (hasViewed || video.platform !== "local") return;
-    
-    try {
-      const response = await fetch(`/api/videos/${video.id}/view`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setViews(data.views);
-        setHasViewed(true);
-      }
-    } catch (error) {
-      console.error("Failed to track view:", error);
-    }
-  };
-
-  const handlePlay = (id: string) => {
-    handleView(); // Track view when video is played
-    onPlay(id);
   };
 
   const getThumbnailClasses = () => {
@@ -115,7 +62,7 @@ export default function VideoCard({
             ) : (
               <div
                 className="relative cursor-pointer group"
-                onClick={() => handlePlay(video.id)}
+                onClick={() => onPlay(video.id)}
               >
                 <img
                   src={video.thumbnailUrl}
@@ -190,32 +137,18 @@ export default function VideoCard({
         </p>
 
         {/* Stats */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          {video.views && (
             <span className="flex items-center gap-1">
               <i className="fas fa-eye"></i>
-              {views.toLocaleString()} views
+              {video.views}
             </span>
+          )}
+          {video.likes && (
             <span className="flex items-center gap-1">
               <i className="fas fa-heart"></i>
-              {likes.toLocaleString()} likes
+              {video.likes}
             </span>
-          </div>
-          
-          {/* Like Button - Only for local videos */}
-          {video.platform === "local" && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLike}
-              disabled={isLiked}
-              className={`flex items-center gap-1 text-xs ${
-                isLiked ? "text-red-500" : "text-muted-foreground hover:text-red-500"
-              }`}
-            >
-              <i className={`fas fa-heart ${isLiked ? "text-red-500" : ""}`}></i>
-              {isLiked ? "Liked!" : "Like"}
-            </Button>
           )}
         </div>
       </div>
