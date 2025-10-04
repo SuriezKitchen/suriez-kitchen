@@ -43,7 +43,7 @@ export default function VideoCard({
 
   return (
     <Card
-      className={`${getCardClasses()} ${className} h-[600px] flex flex-col`}
+      className={`${getCardClasses()} ${className} h-[700px] flex flex-col`}
     >
       <div className="relative flex-shrink-0">
         {video.platform === "local" ? (
