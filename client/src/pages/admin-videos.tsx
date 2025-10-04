@@ -178,6 +178,8 @@ export default function AdminVideos() {
       likes: "0",
     });
     setIsAddVideoOpen(false);
+    setIsEditingVideo(false);
+    setEditingVideo(null);
   };
 
   const handleLogout = async () => {
