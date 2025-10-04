@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import SessionManager from "@/components/session-manager";
 
@@ -282,23 +287,13 @@ export default function AdminVideos() {
                   {videos?.length || 0} videos
                 </span>
                 <Button
-                  onClick={() => {
-                    setIsEditingVideo(false);
-                    setEditingVideo(null);
-                    setIsAddVideoOpen(true);
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <i className="fas fa-plus"></i>
-                  Add Video
-                </Button>
-                <Button
                   variant="outline"
+                  size="sm"
                   onClick={handleLogout}
-                  className="flex items-center gap-2"
+                  className="flex-shrink-0"
                 >
-                  <i className="fas fa-sign-out-alt"></i>
-                  Logout
+                  <span className="hidden sm:inline">Logout</span>
+                  <i className="fas fa-sign-out-alt sm:hidden"></i>
                 </Button>
               </div>
             </div>
@@ -306,6 +301,115 @@ export default function AdminVideos() {
         </div>
 
         <div className="container mx-auto px-4 py-8">
+          {/* Add New Video */}
+          <Collapsible open={isAddVideoOpen} onOpenChange={setIsAddVideoOpen}>
+            <Card className="mb-8">
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+                  <CardTitle className="flex items-center justify-between">
+                    Add New Video
+                    <span className="text-sm text-gray-500">
+                      {isAddVideoOpen ? "▼" : "▶"}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent>
+                  <form onSubmit={handleVideoSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="title">Title</Label>
+                      <Input
+                        id="title"
+                        value={videoForm.title}
+                        onChange={(e) => handleInputChange("title", e.target.value)}
+                        required
+                        placeholder="Enter video title"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea
+                        id="description"
+                        value={videoForm.description}
+                        onChange={(e) => handleInputChange("description", e.target.value)}
+                        required
+                        placeholder="Enter video description"
+                        rows={3}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="thumbnailUrl">Thumbnail URL</Label>
+                      <Input
+                        id="thumbnailUrl"
+                        value={videoForm.thumbnailUrl}
+                        onChange={(e) => handleInputChange("thumbnailUrl", e.target.value)}
+                        required
+                        placeholder="Enter thumbnail image URL"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="videoUrl">Video URL</Label>
+                      <Input
+                        id="videoUrl"
+                        value={videoForm.videoUrl}
+                        onChange={(e) => handleInputChange("videoUrl", e.target.value)}
+                        required
+                        placeholder="Enter video file URL"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="duration">Duration</Label>
+                      <Input
+                        id="duration"
+                        value={videoForm.duration}
+                        onChange={(e) => handleInputChange("duration", e.target.value)}
+                        required
+                        placeholder="e.g., 8:45"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="views">Views</Label>
+                        <Input
+                          id="views"
+                          value={videoForm.views}
+                          onChange={(e) => handleInputChange("views", e.target.value)}
+                          required
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="likes">Likes</Label>
+                        <Input
+                          id="likes"
+                          value={videoForm.likes}
+                          onChange={(e) => handleInputChange("likes", e.target.value)}
+                          required
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        type="submit"
+                        disabled={createVideoMutation.isPending}
+                      >
+                        {createVideoMutation.isPending ? "Adding..." : "Add Video"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+
           {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {videos?.map((video) => (
@@ -385,38 +489,32 @@ export default function AdminVideos() {
           )}
         </div>
 
-        {/* Add/Edit Video Dialog */}
-        {isAddVideoOpen && (
+        {/* Edit Video Dialog */}
+        {isEditingVideo && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
               <CardHeader>
-                <CardTitle>
-                  {isEditingVideo ? "Edit Video" : "Add New Video"}
-                </CardTitle>
+                <CardTitle>Edit Video</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleVideoSubmit} className="space-y-4">
                   <div>
-                    <Label htmlFor="title">Title</Label>
+                    <Label htmlFor="edit-title">Title</Label>
                     <Input
-                      id="title"
+                      id="edit-title"
                       value={videoForm.title}
-                      onChange={(e) =>
-                        handleInputChange("title", e.target.value)
-                      }
+                      onChange={(e) => handleInputChange("title", e.target.value)}
                       required
                       placeholder="Enter video title"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="edit-description">Description</Label>
                     <Textarea
-                      id="description"
+                      id="edit-description"
                       value={videoForm.description}
-                      onChange={(e) =>
-                        handleInputChange("description", e.target.value)
-                      }
+                      onChange={(e) => handleInputChange("description", e.target.value)}
                       required
                       placeholder="Enter video description"
                       rows={3}
@@ -424,39 +522,33 @@ export default function AdminVideos() {
                   </div>
 
                   <div>
-                    <Label htmlFor="thumbnailUrl">Thumbnail URL</Label>
+                    <Label htmlFor="edit-thumbnailUrl">Thumbnail URL</Label>
                     <Input
-                      id="thumbnailUrl"
+                      id="edit-thumbnailUrl"
                       value={videoForm.thumbnailUrl}
-                      onChange={(e) =>
-                        handleInputChange("thumbnailUrl", e.target.value)
-                      }
+                      onChange={(e) => handleInputChange("thumbnailUrl", e.target.value)}
                       required
                       placeholder="Enter thumbnail image URL"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="videoUrl">Video URL</Label>
+                    <Label htmlFor="edit-videoUrl">Video URL</Label>
                     <Input
-                      id="videoUrl"
+                      id="edit-videoUrl"
                       value={videoForm.videoUrl}
-                      onChange={(e) =>
-                        handleInputChange("videoUrl", e.target.value)
-                      }
+                      onChange={(e) => handleInputChange("videoUrl", e.target.value)}
                       required
                       placeholder="Enter video file URL"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="duration">Duration</Label>
+                    <Label htmlFor="edit-duration">Duration</Label>
                     <Input
-                      id="duration"
+                      id="edit-duration"
                       value={videoForm.duration}
-                      onChange={(e) =>
-                        handleInputChange("duration", e.target.value)
-                      }
+                      onChange={(e) => handleInputChange("duration", e.target.value)}
                       required
                       placeholder="e.g., 8:45"
                     />
@@ -464,25 +556,21 @@ export default function AdminVideos() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="views">Views</Label>
+                      <Label htmlFor="edit-views">Views</Label>
                       <Input
-                        id="views"
+                        id="edit-views"
                         value={videoForm.views}
-                        onChange={(e) =>
-                          handleInputChange("views", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange("views", e.target.value)}
                         required
                         placeholder="0"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="likes">Likes</Label>
+                      <Label htmlFor="edit-likes">Likes</Label>
                       <Input
-                        id="likes"
+                        id="edit-likes"
                         value={videoForm.likes}
-                        onChange={(e) =>
-                          handleInputChange("likes", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange("likes", e.target.value)}
                         required
                         placeholder="0"
                       />
@@ -492,18 +580,18 @@ export default function AdminVideos() {
                   <div className="flex gap-4 pt-4">
                     <Button
                       type="submit"
-                      disabled={
-                        createVideoMutation.isPending ||
-                        updateVideoMutation.isPending
-                      }
+                      disabled={updateVideoMutation.isPending}
                       className="flex-1"
                     >
-                      {isEditingVideo ? "Update Video" : "Add Video"}
+                      {updateVideoMutation.isPending ? "Updating..." : "Update Video"}
                     </Button>
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={resetVideoForm}
+                      onClick={() => {
+                        setIsEditingVideo(false);
+                        setEditingVideo(null);
+                      }}
                       className="flex-1"
                     >
                       Cancel
