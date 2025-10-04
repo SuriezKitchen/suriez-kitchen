@@ -312,8 +312,8 @@ export default function Gallery() {
           {/* Stats */}
           {dishes && dishes.length > 0 && (
             <div className="mt-20 text-center">
-              <div className="bg-card rounded-xl p-8 max-w-2xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-card rounded-xl p-8 max-w-lg mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <div className="text-3xl font-bold text-primary mb-2">
                       {dishes.length}
