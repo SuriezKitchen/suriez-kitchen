@@ -21,25 +21,24 @@ interface VideoCardProps {
   className?: string;
 }
 
-export default function VideoCard({ 
-  video, 
-  isPlaying, 
-  onPlay, 
-  onPause, 
+export default function VideoCard({
+  video,
+  isPlaying,
+  onPlay,
+  onPause,
   onYouTubeClick,
-  className = "" 
+  className = "",
 }: VideoCardProps) {
-
   const getCardClasses = () => {
     return "bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500";
   };
 
   const getThumbnailClasses = () => {
-    return "w-full h-[300px] object-cover"; // Reduced height to 300px
+    return "w-full h-[600px] object-cover"; // Reduced height to 300px
   };
 
   const getVideoClasses = () => {
-    return "w-full h-[300px] object-cover"; // Reduced height to 300px
+    return "w-full h-[600px] object-cover"; // Reduced height to 300px
   };
 
   return (
@@ -136,7 +135,7 @@ export default function VideoCard({
         <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
           {video.description}
         </p>
-        
+
         {/* Stats */}
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
           {video.views && (

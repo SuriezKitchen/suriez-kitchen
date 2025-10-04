@@ -18,19 +18,18 @@ interface AdminVideoCardProps {
   onDelete: (id: string) => void;
 }
 
-export default function AdminVideoCard({ 
-  video, 
-  onEdit, 
-  onDelete 
+export default function AdminVideoCard({
+  video,
+  onEdit,
+  onDelete,
 }: AdminVideoCardProps) {
-
   return (
     <Card className="overflow-hidden flex flex-col">
       <div className="relative">
         <img
           src={video.thumbnailUrl}
           alt={video.title}
-          className="w-full h-[300px] object-cover"
+          className="w-full h-[600px] object-cover"
         />
         <div className="absolute top-2 right-2">
           <span className="bg-primary text-white px-2 py-1 rounded text-xs">
@@ -39,9 +38,7 @@ export default function AdminVideoCard({
         </div>
       </div>
       <CardContent className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold mb-2 line-clamp-2">
-          {video.title}
-        </h3>
+        <h3 className="font-semibold mb-2 line-clamp-2">{video.title}</h3>
         <p className="text-sm text-muted-foreground mb-3 line-clamp-3 flex-1">
           {video.description}
         </p>
