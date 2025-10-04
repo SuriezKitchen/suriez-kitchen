@@ -48,21 +48,92 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
+    // Parse URL to get video ID if present
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const pathSegments = url.pathname.split('/').filter(Boolean);
+    const videoId = pathSegments[3]; // admin/local-videos/[id]
+    
+    // Also check if the ID is in the query parameters (for dynamic routes)
+    const { id: queryId } = req.query;
+    const finalVideoId = videoId || queryId;
+
     if (req.method === "POST") {
       // Create new local video
-      const { title, description, thumbnailUrl, videoUrl, duration, views, likes } = req.body;
+      const {
+        title,
+        description,
+        thumbnailUrl,
+        videoUrl,
+        duration,
+        views,
+        likes,
+      } = req.body;
 
       if (!title || !description || !thumbnailUrl || !videoUrl || !duration) {
-        return res.status(400).json({ message: "All required fields must be provided" });
+        return res
+          .status(400)
+          .json({ message: "All required fields must be provided" });
       }
 
       const newVideo = await sql`
         INSERT INTO local_videos (id, title, description, thumbnail_url, video_url, duration, views, likes, created_at)
-        VALUES (gen_random_uuid(), ${title}, ${description}, ${thumbnailUrl}, ${videoUrl}, ${duration}, ${views || "0"}, ${likes || "0"}, NOW())
+        VALUES (gen_random_uuid(), ${title}, ${description}, ${thumbnailUrl}, ${videoUrl}, ${duration}, ${
+        views || "0"
+      }, ${likes || "0"}, NOW())
         RETURNING id, title, description, thumbnail_url as "thumbnailUrl", video_url as "videoUrl", duration, views, likes, created_at as "createdAt"
       `;
 
       res.status(201).json(newVideo[0]);
+    } else if (req.method === "PUT" && finalVideoId) {
+      // Update local video
+      const {
+        title,
+        description,
+        thumbnailUrl,
+        videoUrl,
+        duration,
+        views,
+        likes,
+      } = req.body;
+
+      if (!title || !description || !thumbnailUrl || !videoUrl || !duration) {
+        return res
+          .status(400)
+          .json({ message: "All required fields must be provided" });
+      }
+
+      const updatedVideo = await sql`
+        UPDATE local_videos 
+        SET title = ${title}, description = ${description}, thumbnail_url = ${thumbnailUrl}, video_url = ${videoUrl}, duration = ${duration}, views = ${
+        views || "0"
+      }, likes = ${likes || "0"}
+        WHERE id = ${finalVideoId}
+        RETURNING id, title, description, thumbnail_url as "thumbnailUrl", video_url as "videoUrl", duration, views, likes, created_at as "createdAt"
+      `;
+
+      if (updatedVideo.length === 0) {
+        return res.status(404).json({ message: "Video not found" });
+      }
+
+      res.status(200).json(updatedVideo[0]);
+    } else if (req.method === "DELETE" && finalVideoId) {
+      // Delete local video
+      const deletedVideo = await sql`
+        DELETE FROM local_videos 
+        WHERE id = ${finalVideoId}
+        RETURNING id, title
+      `;
+
+      if (deletedVideo.length === 0) {
+        return res.status(404).json({ message: "Video not found" });
+      }
+
+      res
+        .status(200)
+        .json({
+          message: "Video deleted successfully",
+          video: deletedVideo[0],
+        });
     } else {
       res.status(405).json({ message: "Method not allowed" });
     }
