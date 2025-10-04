@@ -42,8 +42,10 @@ export default function VideoCard({
   };
 
   return (
-    <Card className={`${getCardClasses()} ${className}`}>
-      <div className="relative">
+    <Card
+      className={`${getCardClasses()} ${className} h-[600px] flex flex-col`}
+    >
+      <div className="relative flex-shrink-0">
         {video.platform === "local" ? (
           // Local video player
           <div className="relative">
@@ -129,16 +131,16 @@ export default function VideoCard({
       </div>
 
       {/* Video Info */}
-      <div className="p-4">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+      <div className="p-4 flex flex-col flex-grow">
+        <h3 className="font-semibold text-lg mb-2 line-clamp-2 flex-shrink-0">
           {video.title}
         </h3>
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-3 flex-grow">
           {video.description}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground flex-shrink-0">
           {video.views && (
             <span className="flex items-center gap-1">
               <i className="fas fa-eye"></i>
