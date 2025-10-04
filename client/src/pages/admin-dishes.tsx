@@ -14,11 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -262,100 +257,20 @@ export default function AdminDishes() {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          {/* Add New Dish */}
-          <Collapsible open={isAddDishOpen} onOpenChange={setIsAddDishOpen}>
-            <Card className="mb-8">
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
-                  <CardTitle className="flex items-center justify-between">
-                    Add New Dish
-                    <span className="text-sm text-gray-500">
-                      {isAddDishOpen ? "▼" : "▶"}
-                    </span>
-                  </CardTitle>
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent>
-                  <form
-                    onSubmit={handleSubmit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        id="title"
-                        value={dishForm.title}
-                        onChange={(e) =>
-                          setDishForm({ ...dishForm, title: e.target.value })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Category</Label>
-                      <Select
-                        value={dishForm.category}
-                        onValueChange={(value) =>
-                          setDishForm({ ...dishForm, category: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories?.map((category) => (
-                            <SelectItem
-                              key={category.name}
-                              value={category.name}
-                            >
-                              {category.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={dishForm.description}
-                        onChange={(e) =>
-                          setDishForm({
-                            ...dishForm,
-                            description: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="imageUrl">Image URL</Label>
-                      <Input
-                        id="imageUrl"
-                        value={dishForm.imageUrl}
-                        onChange={(e) =>
-                          setDishForm({ ...dishForm, imageUrl: e.target.value })
-                        }
-                        required
-                        placeholder="https://example.com/image.jpg"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Button
-                        type="submit"
-                        disabled={createDishMutation.isPending}
-                      >
-                        {createDishMutation.isPending
-                          ? "Adding..."
-                          : "Add Dish"}
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </CollapsibleContent>
-            </Card>
-          </Collapsible>
+          {/* Add Dish Button */}
+          <div className="mb-8">
+            <Button
+              onClick={() => {
+                setIsEditingDish(false);
+                setEditingDish(null);
+                setIsAddDishOpen(true);
+              }}
+              className="flex items-center gap-2"
+            >
+              <i className="fas fa-plus"></i>
+              Add New Dish
+            </Button>
+          </div>
 
           {/* Dishes List */}
           <div className="space-y-4">
@@ -437,11 +352,17 @@ export default function AdminDishes() {
                 ))}
           </div>
 
-          {/* Edit Dialog */}
-          <Dialog open={isEditing} onOpenChange={setIsEditing}>
+          {/* Add/Edit Dialog */}
+          <Dialog open={isAddDishOpen || isEditing} onOpenChange={(open) => {
+            if (!open) {
+              setIsAddDishOpen(false);
+              setIsEditing(false);
+              setEditingDish(null);
+            }
+          }}>
             <DialogContent className="rounded-lg w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:w-auto sm:max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Edit Dish</DialogTitle>
+                <DialogTitle>{isEditing ? "Edit Dish" : "Add New Dish"}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -506,14 +427,19 @@ export default function AdminDishes() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setIsEditing(false)}
+                    onClick={() => {
+                      setIsAddDishOpen(false);
+                      setIsEditing(false);
+                      setEditingDish(null);
+                    }}
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={updateDishMutation.isPending}>
-                    {updateDishMutation.isPending
-                      ? "Updating..."
-                      : "Update Dish"}
+                  <Button type="submit" disabled={createDishMutation.isPending || updateDishMutation.isPending}>
+                    {isEditing 
+                      ? (updateDishMutation.isPending ? "Updating..." : "Update Dish")
+                      : (createDishMutation.isPending ? "Adding..." : "Add Dish")
+                    }
                   </Button>
                 </div>
               </form>
