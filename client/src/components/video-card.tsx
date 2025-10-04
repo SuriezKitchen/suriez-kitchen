@@ -52,6 +52,7 @@ export default function VideoCard({
                 className={getVideoClasses()}
                 controls
                 autoPlay
+                muted
                 onPause={onPause}
                 onEnded={onPause}
                 data-testid={`video-player-${video.id}`}
