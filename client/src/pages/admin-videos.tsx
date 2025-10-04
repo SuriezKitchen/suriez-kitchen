@@ -275,7 +275,11 @@ export default function AdminVideos() {
                   Back to Dashboard
                 </Button>
                 <Button
-                  onClick={() => setIsAddVideoOpen(true)}
+                  onClick={() => {
+                    setIsEditingVideo(false);
+                    setEditingVideo(null);
+                    setIsAddVideoOpen(true);
+                  }}
                   className="flex items-center gap-2"
                 >
                   <i className="fas fa-plus"></i>
@@ -356,7 +360,11 @@ export default function AdminVideos() {
                 <p className="text-muted-foreground mb-6">
                   Start by adding your first local video to showcase your content.
                 </p>
-                <Button onClick={() => setIsAddVideoOpen(true)}>
+                <Button onClick={() => {
+                  setIsEditingVideo(false);
+                  setEditingVideo(null);
+                  setIsAddVideoOpen(true);
+                }}>
                   <i className="fas fa-plus mr-2"></i>
                   Add Your First Video
                 </Button>
