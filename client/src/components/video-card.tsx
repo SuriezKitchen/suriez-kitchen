@@ -53,7 +53,7 @@ export default function VideoCard({
     const baseClasses = "bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500";
     
     if (aspectRatio === "portrait") {
-      return `${baseClasses} max-w-sm mx-auto`;
+      return `${baseClasses} w-full col-span-full`; // Full width and span all columns
     }
     
     return baseClasses;
@@ -61,7 +61,7 @@ export default function VideoCard({
 
   const getThumbnailClasses = () => {
     if (aspectRatio === "portrait") {
-      return "w-full h-80 object-cover"; // Taller for portrait videos
+      return "w-full h-[60vh] object-cover"; // Full viewport height for portrait videos
     } else if (aspectRatio === "square") {
       return "w-full h-64 object-cover"; // Square videos
     } else {
@@ -71,7 +71,7 @@ export default function VideoCard({
 
   const getVideoClasses = () => {
     if (aspectRatio === "portrait") {
-      return "w-full h-80 object-contain bg-black"; // Use object-contain for portrait videos
+      return "w-full h-[60vh] object-contain bg-black"; // Full viewport height for portrait videos
     } else if (aspectRatio === "square") {
       return "w-full h-64 object-cover";
     } else {

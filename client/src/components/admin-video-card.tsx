@@ -45,7 +45,7 @@ export default function AdminVideoCard({
 
   const getThumbnailClasses = () => {
     if (aspectRatio === "portrait") {
-      return "w-full h-80 object-cover"; // Taller for portrait videos
+      return "w-full h-[50vh] object-cover"; // Full viewport height for portrait videos
     } else if (aspectRatio === "square") {
       return "w-full h-64 object-cover"; // Square videos
     } else {
@@ -54,7 +54,7 @@ export default function AdminVideoCard({
   };
 
   return (
-    <Card className="overflow-hidden flex flex-col">
+    <Card className={`overflow-hidden flex flex-col ${aspectRatio === "portrait" ? "w-full col-span-full" : ""}`}>
       <div className="relative">
         <img
           src={video.thumbnailUrl}
