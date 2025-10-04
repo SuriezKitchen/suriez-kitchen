@@ -322,12 +322,6 @@ export default function Gallery() {
                   </div>
                   <div>
                     <div className="text-3xl font-bold text-primary mb-2">
-                      {categories?.length || 0}
-                    </div>
-                    <div className="text-muted-foreground">Categories</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-primary mb-2">
                       100%
                     </div>
                     <div className="text-muted-foreground">Made with Love</div>

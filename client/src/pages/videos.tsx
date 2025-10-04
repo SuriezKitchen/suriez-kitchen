@@ -266,7 +266,7 @@ export default function Videos() {
                   <div className="text-3xl font-bold text-primary mb-2">
                     {`${channelStats?.formattedSubscribers || "0"}+`}
                   </div>
-                  <div className="text-muted-foreground">YouTube</div>
+                  <div className="text-muted-foreground">YouTube Subscribers</div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-primary mb-2">
