@@ -81,6 +81,22 @@ export const adminUsers = pgTable("admin_users", {
     .notNull(),
 });
 
+export const localVideos = pgTable("local_videos", {
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  thumbnailUrl: text("thumbnail_url").notNull(),
+  videoUrl: text("video_url").notNull(),
+  duration: text("duration").notNull(),
+  views: text("views").default("0"),
+  likes: text("likes").default("0"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
 export const insertDishSchema = createInsertSchema(dishes).omit({
   id: true,
   createdAt: true,
@@ -110,6 +126,11 @@ export const insertAdminUserSchema = createInsertSchema(adminUsers).omit({
   createdAt: true,
 });
 
+export const insertLocalVideoSchema = createInsertSchema(localVideos).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertDish = z.infer<typeof insertDishSchema>;
 export type Dish = typeof dishes.$inferSelect;
 
@@ -127,3 +148,6 @@ export type Setting = typeof settings.$inferSelect;
 
 export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
 export type AdminUser = typeof adminUsers.$inferSelect;
+
+export type InsertLocalVideo = z.infer<typeof insertLocalVideoSchema>;
+export type LocalVideo = typeof localVideos.$inferSelect;

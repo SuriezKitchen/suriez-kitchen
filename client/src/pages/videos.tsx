@@ -6,12 +6,23 @@ import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { useYouTube, useYouTubeChannelStats } from "@/hooks/use-youtube";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Videos() {
   const sectionRef = useRef<HTMLElement>(null);
   const { videos: youtubeVideos, isLoading, error } = useYouTube();
   const { channelStats } = useYouTubeChannelStats();
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+
+  // Fetch local videos from database
+  const { data: localVideos, isLoading: isLoadingLocalVideos } = useQuery({
+    queryKey: ["api", "local-videos"],
+    queryFn: async () => {
+      const response = await fetch("/api/local-videos");
+      if (!response.ok) throw new Error("Failed to fetch local videos");
+      return response.json();
+    },
+  });
 
   // Ensure page scrolls to top when component mounts
   useEffect(() => {
@@ -57,44 +68,20 @@ export default function Videos() {
     likes: video.likeCount ? `${video.likeCount.toLocaleString()}` : "N/A",
   }));
 
-  // Custom local video cards
-  const customVideos = [
-    {
-      id: "custom-1",
-      platform: "local",
-      title: "Perfect Jollof Rice Recipe",
-      description: "Learn the secret to making the most delicious Nigerian jollof rice with this step-by-step tutorial. From choosing the right rice to achieving that perfect smoky flavor.",
-      thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
-      videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
-      duration: "8:45",
-      views: "2,450",
-      likes: "156",
-    },
-    {
-      id: "custom-2", 
-      platform: "local",
-      title: "Chicken Curry Masterclass",
-      description: "Discover the art of making aromatic and flavorful chicken curry that will transport you to the streets of India. Perfect blend of spices and techniques.",
-      thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
-      videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
-      duration: "12:30",
-      views: "1,890",
-      likes: "134",
-    },
-    {
-      id: "custom-3",
-      platform: "local", 
-      title: "Pasta Making from Scratch",
-      description: "From flour to fork - learn how to make fresh pasta that will impress your family and friends. Complete guide to traditional Italian pasta techniques.",
-      thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
-      videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
-      duration: "15:20",
-      views: "3,120",
-      likes: "189",
-    }
-  ];
+  // Transform local videos to match our format
+  const formattedLocalVideos = (localVideos || []).map((video) => ({
+    id: video.id,
+    platform: "local",
+    title: video.title,
+    description: video.description,
+    thumbnailUrl: video.thumbnailUrl,
+    videoUrl: video.videoUrl,
+    duration: video.duration,
+    views: video.views,
+    likes: video.likes,
+  }));
 
-  const allVideos = [...customVideos, ...formattedYouTubeVideos];
+  const allVideos = [...formattedLocalVideos, ...formattedYouTubeVideos];
 
   const openVideo = (url: string) => {
     window.open(url, "_blank");
@@ -108,7 +95,7 @@ export default function Videos() {
     setPlayingVideo(null);
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingLocalVideos) {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
@@ -230,7 +217,7 @@ export default function Videos() {
                               className="w-full h-48 object-cover"
                               data-testid={`video-thumbnail-${video.id}`}
                             />
-                            
+
                             {/* Play Button Overlay */}
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                               <button
@@ -279,8 +266,17 @@ export default function Videos() {
                             : "bg-gradient-to-r from-purple-600 to-pink-600"
                         }`}
                       >
-                        <i className={`${video.platform === "local" ? "fas fa-video" : `fab fa-${video.platform}`} mr-1`}></i>
-                        {video.platform === "local" ? "Local" : video.platform.charAt(0).toUpperCase() + video.platform.slice(1)}
+                        <i
+                          className={`${
+                            video.platform === "local"
+                              ? "fas fa-video"
+                              : `fab fa-${video.platform}`
+                          } mr-1`}
+                        ></i>
+                        {video.platform === "local"
+                          ? "Local"
+                          : video.platform.charAt(0).toUpperCase() +
+                            video.platform.slice(1)}
                       </span>
                     </div>
 

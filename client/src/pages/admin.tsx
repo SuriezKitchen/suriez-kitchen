@@ -230,6 +230,64 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
+          {/* Video Management */}
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle>Video Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                onClick={() => setLocation("/admin/videos")}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <svg
+                      className="h-6 w-6 text-primary"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Manage Local Videos</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Add, edit, and delete your custom local videos - showcase your cooking tutorials
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-primary">→</div>
+                    <div className="text-sm text-muted-foreground">
+                      Manage Videos
+                    </div>
+                  </div>
+                  <svg
+                    className="h-5 w-5 text-muted-foreground"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* YouTube Settings */}
           <Card className="mt-8">
             <CardHeader>
