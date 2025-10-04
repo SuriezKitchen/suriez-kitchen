@@ -11,6 +11,7 @@ export default function Videos() {
   const sectionRef = useRef<HTMLElement>(null);
   const { videos: youtubeVideos, isLoading, error } = useYouTube();
   const { channelStats } = useYouTubeChannelStats();
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   // Ensure page scrolls to top when component mounts
   useEffect(() => {
@@ -56,10 +57,55 @@ export default function Videos() {
     likes: video.likeCount ? `${video.likeCount.toLocaleString()}` : "N/A",
   }));
 
-  const allVideos = [...formattedYouTubeVideos];
+  // Custom local video cards
+  const customVideos = [
+    {
+      id: "custom-1",
+      platform: "local",
+      title: "Perfect Jollof Rice Recipe",
+      description: "Learn the secret to making the most delicious Nigerian jollof rice with this step-by-step tutorial. From choosing the right rice to achieving that perfect smoky flavor.",
+      thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
+      videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
+      duration: "8:45",
+      views: "2,450",
+      likes: "156",
+    },
+    {
+      id: "custom-2", 
+      platform: "local",
+      title: "Chicken Curry Masterclass",
+      description: "Discover the art of making aromatic and flavorful chicken curry that will transport you to the streets of India. Perfect blend of spices and techniques.",
+      thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
+      videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
+      duration: "12:30",
+      views: "1,890",
+      likes: "134",
+    },
+    {
+      id: "custom-3",
+      platform: "local", 
+      title: "Pasta Making from Scratch",
+      description: "From flour to fork - learn how to make fresh pasta that will impress your family and friends. Complete guide to traditional Italian pasta techniques.",
+      thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
+      videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
+      duration: "15:20",
+      views: "3,120",
+      likes: "189",
+    }
+  ];
+
+  const allVideos = [...customVideos, ...formattedYouTubeVideos];
 
   const openVideo = (url: string) => {
     window.open(url, "_blank");
+  };
+
+  const handleVideoPlay = (videoId: string) => {
+    setPlayingVideo(videoId);
+  };
+
+  const handleVideoPause = () => {
+    setPlayingVideo(null);
   };
 
   if (isLoading) {
@@ -157,16 +203,70 @@ export default function Videos() {
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                  <div
-                    className="relative cursor-pointer"
-                    onClick={() => openVideo(video.url)}
-                  >
-                    <img
-                      src={video.thumbnailUrl}
-                      alt={video.title}
-                      className="w-full h-48 object-cover"
-                      data-testid={`video-thumbnail-${video.id}`}
-                    />
+                  <div className="relative">
+                    {video.platform === "local" ? (
+                      // Local video player
+                      <div className="relative">
+                        {playingVideo === video.id ? (
+                          <video
+                            className="w-full h-48 object-cover"
+                            controls
+                            autoPlay
+                            onPause={handleVideoPause}
+                            onEnded={handleVideoPause}
+                            data-testid={`video-player-${video.id}`}
+                          >
+                            <source src={video.videoUrl} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <div
+                            className="relative cursor-pointer"
+                            onClick={() => handleVideoPlay(video.id)}
+                          >
+                            <img
+                              src={video.thumbnailUrl}
+                              alt={video.title}
+                              className="w-full h-48 object-cover"
+                              data-testid={`video-thumbnail-${video.id}`}
+                            />
+                            
+                            {/* Play Button Overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button
+                                className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-primary hover:bg-primary/90"
+                                data-testid={`video-play-${video.id}`}
+                              >
+                                <i className="fas fa-play text-xl ml-1"></i>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      // YouTube video (existing behavior)
+                      <div
+                        className="relative cursor-pointer"
+                        onClick={() => openVideo(video.url)}
+                      >
+                        <img
+                          src={video.thumbnailUrl}
+                          alt={video.title}
+                          className="w-full h-48 object-cover"
+                          data-testid={`video-thumbnail-${video.id}`}
+                        />
+
+                        {/* Play Button Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-red-600 hover:bg-red-700"
+                            data-testid={`video-play-${video.id}`}
+                          >
+                            <i className="fas fa-play text-xl ml-1"></i>
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Platform Badge */}
                     <div className="absolute top-4 left-4">
@@ -174,12 +274,13 @@ export default function Videos() {
                         className={`px-3 py-1 rounded-full text-xs font-medium text-white ${
                           video.platform === "youtube"
                             ? "bg-red-600"
+                            : video.platform === "local"
+                            ? "bg-primary"
                             : "bg-gradient-to-r from-purple-600 to-pink-600"
                         }`}
                       >
-                        <i className={`fab fa-${video.platform} mr-1`}></i>
-                        {video.platform.charAt(0).toUpperCase() +
-                          video.platform.slice(1)}
+                        <i className={`${video.platform === "local" ? "fas fa-video" : `fab fa-${video.platform}`} mr-1`}></i>
+                        {video.platform === "local" ? "Local" : video.platform.charAt(0).toUpperCase() + video.platform.slice(1)}
                       </span>
                     </div>
 
@@ -188,20 +289,6 @@ export default function Videos() {
                       <span className="bg-black/70 text-white px-2 py-1 rounded text-sm">
                         {video.duration}
                       </span>
-                    </div>
-
-                    {/* Play Button Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        className={`rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 ${
-                          video.platform === "youtube"
-                            ? "bg-red-600 hover:bg-red-700"
-                            : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                        }`}
-                        data-testid={`video-play-${video.id}`}
-                      >
-                        <i className="fas fa-play text-xl ml-1"></i>
-                      </button>
                     </div>
                   </div>
 
