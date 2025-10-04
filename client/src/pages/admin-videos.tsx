@@ -264,16 +264,23 @@ export default function AdminVideos() {
         <div className="bg-card border-b">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Video Management</h1>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <Button
                   variant="outline"
+                  size="icon"
                   onClick={handleBackToDashboard}
-                  className="flex items-center gap-2"
+                  className="flex-shrink-0"
                 >
                   <i className="fas fa-arrow-left"></i>
-                  Back to Dashboard
                 </Button>
+                <h1 className="text-lg sm:text-2xl font-bold truncate">
+                  Video Management
+                </h1>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-4">
+                <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">
+                  {videos?.length || 0} videos
+                </span>
                 <Button
                   onClick={() => {
                     setIsEditingVideo(false);
@@ -316,7 +323,9 @@ export default function AdminVideos() {
                   </div>
                 </div>
                 <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2 line-clamp-2">{video.title}</h3>
+                  <h3 className="font-semibold mb-2 line-clamp-2">
+                    {video.title}
+                  </h3>
                   <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
                     {video.description}
                   </p>
@@ -358,13 +367,16 @@ export default function AdminVideos() {
                   No Videos Found
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  Start by adding your first local video to showcase your content.
+                  Start by adding your first local video to showcase your
+                  content.
                 </p>
-                <Button onClick={() => {
-                  setIsEditingVideo(false);
-                  setEditingVideo(null);
-                  setIsAddVideoOpen(true);
-                }}>
+                <Button
+                  onClick={() => {
+                    setIsEditingVideo(false);
+                    setEditingVideo(null);
+                    setIsAddVideoOpen(true);
+                  }}
+                >
                   <i className="fas fa-plus mr-2"></i>
                   Add Your First Video
                 </Button>
@@ -389,7 +401,9 @@ export default function AdminVideos() {
                     <Input
                       id="title"
                       value={videoForm.title}
-                      onChange={(e) => handleInputChange("title", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("title", e.target.value)
+                      }
                       required
                       placeholder="Enter video title"
                     />
@@ -400,7 +414,9 @@ export default function AdminVideos() {
                     <Textarea
                       id="description"
                       value={videoForm.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("description", e.target.value)
+                      }
                       required
                       placeholder="Enter video description"
                       rows={3}
@@ -412,7 +428,9 @@ export default function AdminVideos() {
                     <Input
                       id="thumbnailUrl"
                       value={videoForm.thumbnailUrl}
-                      onChange={(e) => handleInputChange("thumbnailUrl", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("thumbnailUrl", e.target.value)
+                      }
                       required
                       placeholder="Enter thumbnail image URL"
                     />
@@ -423,7 +441,9 @@ export default function AdminVideos() {
                     <Input
                       id="videoUrl"
                       value={videoForm.videoUrl}
-                      onChange={(e) => handleInputChange("videoUrl", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("videoUrl", e.target.value)
+                      }
                       required
                       placeholder="Enter video file URL"
                     />
@@ -434,7 +454,9 @@ export default function AdminVideos() {
                     <Input
                       id="duration"
                       value={videoForm.duration}
-                      onChange={(e) => handleInputChange("duration", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("duration", e.target.value)
+                      }
                       required
                       placeholder="e.g., 8:45"
                     />
@@ -446,7 +468,9 @@ export default function AdminVideos() {
                       <Input
                         id="views"
                         value={videoForm.views}
-                        onChange={(e) => handleInputChange("views", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("views", e.target.value)
+                        }
                         required
                         placeholder="0"
                       />
@@ -456,7 +480,9 @@ export default function AdminVideos() {
                       <Input
                         id="likes"
                         value={videoForm.likes}
-                        onChange={(e) => handleInputChange("likes", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("likes", e.target.value)
+                        }
                         required
                         placeholder="0"
                       />
@@ -466,7 +492,10 @@ export default function AdminVideos() {
                   <div className="flex gap-4 pt-4">
                     <Button
                       type="submit"
-                      disabled={createVideoMutation.isPending || updateVideoMutation.isPending}
+                      disabled={
+                        createVideoMutation.isPending ||
+                        updateVideoMutation.isPending
+                      }
                       className="flex-1"
                     >
                       {isEditingVideo ? "Update Video" : "Add Video"}
