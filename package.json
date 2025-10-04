@@ -11,7 +11,9 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/migrate-neon.js",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "deploy:sandbox": "./scripts/deploy-sandbox.sh",
+    "deploy:production": "./scripts/deploy-production.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
