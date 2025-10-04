@@ -48,21 +48,45 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    if (req.method === "POST") {
-      // Create new local video
+    const { id: videoId } = req.query;
+
+    if (!videoId) {
+      return res.status(400).json({ message: "Video ID is required" });
+    }
+
+    if (req.method === "PUT") {
+      // Update local video
       const { title, description, thumbnailUrl, videoUrl, duration, views, likes } = req.body;
 
       if (!title || !description || !thumbnailUrl || !videoUrl || !duration) {
         return res.status(400).json({ message: "All required fields must be provided" });
       }
 
-      const newVideo = await sql`
-        INSERT INTO local_videos (id, title, description, thumbnail_url, video_url, duration, views, likes, created_at)
-        VALUES (gen_random_uuid(), ${title}, ${description}, ${thumbnailUrl}, ${videoUrl}, ${duration}, ${views || "0"}, ${likes || "0"}, NOW())
+      const updatedVideo = await sql`
+        UPDATE local_videos 
+        SET title = ${title}, description = ${description}, thumbnail_url = ${thumbnailUrl}, video_url = ${videoUrl}, duration = ${duration}, views = ${views || "0"}, likes = ${likes || "0"}
+        WHERE id = ${videoId}
         RETURNING id, title, description, thumbnail_url as "thumbnailUrl", video_url as "videoUrl", duration, views, likes, created_at as "createdAt"
       `;
 
-      res.status(201).json(newVideo[0]);
+      if (updatedVideo.length === 0) {
+        return res.status(404).json({ message: "Video not found" });
+      }
+
+      res.status(200).json(updatedVideo[0]);
+    } else if (req.method === "DELETE") {
+      // Delete local video
+      const deletedVideo = await sql`
+        DELETE FROM local_videos 
+        WHERE id = ${videoId}
+        RETURNING id, title
+      `;
+
+      if (deletedVideo.length === 0) {
+        return res.status(404).json({ message: "Video not found" });
+      }
+
+      res.status(200).json({ message: "Video deleted successfully", video: deletedVideo[0] });
     } else {
       res.status(405).json({ message: "Method not allowed" });
     }
