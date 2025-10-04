@@ -48,7 +48,7 @@ export default function AdminLogin() {
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Hero Background Video */}
       <video
-        className="absolute inset-0 w-full h-full object-contain md:object-cover"
+        className="absolute inset-0 w-full h-full object-cover"
         autoPlay
         muted
         loop
