@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { ueEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useYouTubeChannelStats } from "@/hooks/use-youtube";

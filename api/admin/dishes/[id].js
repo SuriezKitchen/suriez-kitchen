@@ -48,47 +48,93 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const { id: dishId } = req.query; // Get ID from dynamic route
+    const { id: itemId } = req.query; // Get ID from dynamic route
 
-    if (!dishId) {
-      return res.status(400).json({ message: "Dish ID is required" });
+    if (!itemId) {
+      return res.status(400).json({ message: "ID is required" });
     }
 
-    if (req.method === "PUT") {
-      // Update dish
-      const { title, description, imageUrl, category } = req.body;
+    // Parse the URL to determine if this is for dishes or categories
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const pathSegments = url.pathname.split('/').filter(Boolean);
+    const operation = pathSegments[2]; // admin/dishes or admin/categories
 
-      if (!title || !description || !imageUrl || !category) {
-        return res.status(400).json({ message: "All fields are required" });
+    if (operation === "categories") {
+      // Handle categories operations
+      if (req.method === "PUT") {
+        // Update category
+        const { name, description, color, isActive } = req.body;
+
+        if (!name) {
+          return res.status(400).json({ message: "Category name is required" });
+        }
+
+        const updatedCategory = await sql`
+          UPDATE categories 
+          SET name = ${name}, description = ${description || ""}, color = ${color || "#3B82F6"}, is_active = ${isActive !== false}
+          WHERE id = ${itemId}
+          RETURNING id, name, description, color, is_active as "isActive", created_at as "createdAt"
+        `;
+
+        if (updatedCategory.length === 0) {
+          return res.status(404).json({ message: "Category not found" });
+        }
+
+        res.status(200).json(updatedCategory[0]);
+      } else if (req.method === "DELETE") {
+        // Delete category
+        const deletedCategory = await sql`
+          DELETE FROM categories 
+          WHERE id = ${itemId}
+          RETURNING id, name
+        `;
+
+        if (deletedCategory.length === 0) {
+          return res.status(404).json({ message: "Category not found" });
+        }
+
+        res.status(200).json({ message: "Category deleted successfully", category: deletedCategory[0] });
+      } else {
+        res.status(405).json({ message: "Method not allowed" });
       }
-
-      const updatedDish = await sql`
-        UPDATE dishes 
-        SET title = ${title}, description = ${description}, image_url = ${imageUrl}, category = ${category}
-        WHERE id = ${dishId}
-        RETURNING id, title, description, image_url as "imageUrl", category, created_at as "createdAt"
-      `;
-
-      if (updatedDish.length === 0) {
-        return res.status(404).json({ message: "Dish not found" });
-      }
-
-      res.status(200).json(updatedDish[0]);
-    } else if (req.method === "DELETE") {
-      // Delete dish
-      const deletedDish = await sql`
-        DELETE FROM dishes 
-        WHERE id = ${dishId}
-        RETURNING id, title
-      `;
-
-      if (deletedDish.length === 0) {
-        return res.status(404).json({ message: "Dish not found" });
-      }
-
-      res.status(200).json({ message: "Dish deleted successfully", dish: deletedDish[0] });
     } else {
-      res.status(405).json({ message: "Method not allowed" });
+      // Handle dishes operations (default)
+      if (req.method === "PUT") {
+        // Update dish
+        const { title, description, imageUrl, category } = req.body;
+
+        if (!title || !description || !imageUrl || !category) {
+          return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const updatedDish = await sql`
+          UPDATE dishes 
+          SET title = ${title}, description = ${description}, image_url = ${imageUrl}, category = ${category}
+          WHERE id = ${itemId}
+          RETURNING id, title, description, image_url as "imageUrl", category, created_at as "createdAt"
+        `;
+
+        if (updatedDish.length === 0) {
+          return res.status(404).json({ message: "Dish not found" });
+        }
+
+        res.status(200).json(updatedDish[0]);
+      } else if (req.method === "DELETE") {
+        // Delete dish
+        const deletedDish = await sql`
+          DELETE FROM dishes 
+          WHERE id = ${itemId}
+          RETURNING id, title
+        `;
+
+        if (deletedDish.length === 0) {
+          return res.status(404).json({ message: "Dish not found" });
+        }
+
+        res.status(200).json({ message: "Dish deleted successfully", dish: deletedDish[0] });
+      } else {
+        res.status(405).json({ message: "Method not allowed" });
+      }
     }
   } catch (error) {
     console.error("Admin Dishes API Error:", error);
