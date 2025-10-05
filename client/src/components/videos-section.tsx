@@ -157,7 +157,7 @@ export default function VideosSection() {
   return (
     <section id="videos" className="py-20 bg-muted" ref={sectionRef}>
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 scroll-reveal">
+        <div className="text-center mb-16">
           <h2
             className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
             data-testid="videos-title"
