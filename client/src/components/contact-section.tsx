@@ -1,14 +1,11 @@
 import { useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
-import type { SocialLink } from "@shared/schema";
+import { useSocialLinks } from "@/hooks/use-social-links";
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  const { data: socialLinks } = useQuery<SocialLink[]>({
-    queryKey: ["api", "social-links"],
-  });
+  const { data: socialLinks } = useSocialLinks();
 
   useEffect(() => {
     const observerOptions = {

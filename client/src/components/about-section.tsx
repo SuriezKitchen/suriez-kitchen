@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useYouTubeChannelStats } from "@/hooks/use-youtube";
+import ResponsiveImage from "@/components/responsive-image";
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -33,12 +34,14 @@ export default function AboutSection() {
           {/* Left Column - Image */}
           <div className="scroll-reveal">
             <div className="relative max-w-2xl">
-              <img
+              <ResponsiveImage
                 src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=500&h=600&fit=crop"
                 alt="Suriez Kitchen"
                 className="w-full h-[400px] lg:h-[600px] object-cover rounded-2xl shadow-2xl"
                 width={500}
                 height={600}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={85}
               />
               {/* Experience Badge */}
               <div className="absolute -bottom-4 -right-4 bg-green-600 text-white px-4 py-3 rounded-lg text-center">

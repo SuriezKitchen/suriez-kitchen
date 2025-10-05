@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import OptimizedImage from "./optimized-image";
+import ResponsiveImage from "./responsive-image";
 
 interface SuriezLogoProps {
   className?: string;
@@ -25,7 +25,7 @@ export default function SuriezLogo({
 
   return (
     <div className={`flex items-center ${className}`}>
-      <OptimizedImage
+      <ResponsiveImage
         src={logoUrlWebP}
         alt="Suriez - Taste Flavors"
         className={`${sizeClasses[size]} object-contain rounded-lg`}
@@ -34,6 +34,7 @@ export default function SuriezLogo({
         width={size === "sm" ? 32 : size === "md" ? 48 : 64}
         height={size === "sm" ? 32 : size === "md" ? 48 : 64}
         fallbackSrc={logoUrlPNG}
+        quality={90}
       />
     </div>
   );

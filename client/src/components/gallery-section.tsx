@@ -3,15 +3,21 @@ import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import ResponsiveImage from "@/components/responsive-image";
 import type { Dish } from "@shared/schema";
 
 export default function GallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
 
-  const { data: dishes, isLoading } = useQuery<Dish[]>({
+  const { data: dishes, isLoading, error } = useQuery<Dish[]>({
     queryKey: ["api", "dishes"],
   });
+
+  // Debug logging
+  console.log("Gallery Section - dishes:", dishes);
+  console.log("Gallery Section - isLoading:", isLoading);
+  console.log("Gallery Section - error:", error);
 
   // Compute dishes early so hooks below can depend on them
   const visibleDishes = (dishes || []).slice(0, 10);
@@ -137,13 +143,15 @@ export default function GallerySection() {
               >
                 <Card className="bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-96 min-w-[14rem] sm:min-w-[16rem] md:min-w-[18rem] flex-shrink-0 flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
-                    <img
+                    <ResponsiveImage
                       src={dish.imageUrl}
                       alt={dish.title}
                       className="w-full h-48 object-cover image-hover"
-                      data-testid={`dish-image-${dish.id}`}
+                      dataTestId={`dish-image-${dish.id}`}
                       width={288}
                       height={192}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      quality={75}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="absolute bottom-4 left-4 text-white">

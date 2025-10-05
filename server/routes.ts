@@ -40,6 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const dishes = await storage.getDishes();
       res.json(dishes);
     } catch (error) {
+      console.error("Error fetching dishes:", error);
       res.status(500).json({ message: "Failed to fetch dishes" });
     }
   });
