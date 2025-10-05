@@ -174,7 +174,7 @@ export default function Gallery() {
           {/* Header */}
           <div className="text-center mb-[35px] mt-8">
             <h1
-              className="font-serif text-4xl md:text-5xl font-bold text-gray-600 mb-6"
+              className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
               data-testid="gallery-page-title"
             >
               Culinary Gallery

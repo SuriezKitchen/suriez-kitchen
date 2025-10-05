@@ -116,7 +116,7 @@ export default function AboutSection() {
               </Link>
               <Button
                 variant="outline"
-                className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-2 rounded-xl font-medium w-auto"
+                className="border-2 border-border hover:border-primary text-foreground px-6 py-2 rounded-xl font-medium w-auto"
                 onClick={() => {
                   // You can add resume download functionality here
                   window.open("#", "_blank");

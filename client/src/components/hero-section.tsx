@@ -55,7 +55,7 @@ export default function HeroSection() {
           <span className="block text-secondary">Meets Passion</span>
         </h1>
         <p
-          className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed font-sans"
+          className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-sans"
           data-testid="hero-description"
           style={{
             fontFamily:

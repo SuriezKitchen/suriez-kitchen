@@ -94,7 +94,7 @@ export default function SessionTimeoutDialog({
             <Button
               variant="outline"
               onClick={handleLogout}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-muted-foreground hover:text-foreground"
             >
               <i className="fas fa-sign-out-alt mr-2"></i>
               Logout Now

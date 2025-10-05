@@ -239,7 +239,7 @@ export default function AdminCategories() {
                 <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
                   <CardTitle className="flex items-center justify-between">
                     Add New Category
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-muted-foreground">
                       {isAddCategoryOpen ? "▼" : "▶"}
                     </span>
                   </CardTitle>
