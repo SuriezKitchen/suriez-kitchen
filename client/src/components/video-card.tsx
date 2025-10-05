@@ -141,9 +141,9 @@ export default function VideoCard({
 
       {/* Video Info */}
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2 flex-shrink-0">
+        <h2 className="font-semibold text-lg mb-2 line-clamp-2 flex-shrink-0">
           {video.title}
-        </h3>
+        </h2>
         <p className="text-sm text-muted-foreground mb-3 line-clamp-3 flex-grow">
           {video.description}
         </p>
