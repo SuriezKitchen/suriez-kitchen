@@ -601,12 +601,9 @@ export class NeonStorage implements IStorage {
 
     const sql = neon(connectionString);
     this.db = drizzle(sql);
-    
-    // Initialize tables if they don't exist
-    this.initializeTables();
   }
 
-  private async initializeTables() {
+  private async ensureSocialLinksTable() {
     try {
       // Create social_links table if it doesn't exist
       await this.db.execute(sql`
@@ -632,7 +629,7 @@ export class NeonStorage implements IStorage {
         `);
       }
     } catch (error) {
-      console.error("Error initializing tables:", error);
+      console.error("Error ensuring social_links table:", error);
     }
   }
 
@@ -698,10 +695,19 @@ export class NeonStorage implements IStorage {
   }
 
   async getSocialLinks(): Promise<SocialLink[]> {
-    return await this.db
-      .select()
-      .from(socialLinks)
-      .where(eq(socialLinks.isActive, true));
+    try {
+      // Ensure table exists before querying
+      await this.ensureSocialLinksTable();
+      
+      return await this.db
+        .select()
+        .from(socialLinks)
+        .where(eq(socialLinks.isActive, true));
+    } catch (error) {
+      console.error("Error fetching social links:", error);
+      // Return empty array if there's an error
+      return [];
+    }
   }
 
   async createSocialLink(
