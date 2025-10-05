@@ -1,12 +1,7 @@
 import { useEffect } from "react";
 import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
-import GallerySection from "@/components/gallery-section";
-import VideosSection from "@/components/videos-section";
-import TestimonialsSection from "@/components/testimonials-section";
-import AboutSection from "@/components/about-section";
-import ContactSection from "@/components/contact-section";
-import Footer from "@/components/footer";
+import LazySection from "@/components/lazy-section";
 
 export default function Home() {
   useEffect(() => {
@@ -44,12 +39,14 @@ export default function Home() {
     <div className="min-h-screen">
       <Navigation />
       <HeroSection />
-      <GallerySection />
-      <VideosSection />
-      <TestimonialsSection />
-      <AboutSection />
-      <ContactSection />
-      <Footer />
+      <LazySection importFunc={() => import("@/components/gallery-section")} />
+      <LazySection importFunc={() => import("@/components/videos-section")} />
+      <LazySection
+        importFunc={() => import("@/components/testimonials-section")}
+      />
+      <LazySection importFunc={() => import("@/components/about-section")} />
+      <LazySection importFunc={() => import("@/components/contact-section")} />
+      <LazySection importFunc={() => import("@/components/footer")} />
     </div>
   );
 }

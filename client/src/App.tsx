@@ -1,21 +1,33 @@
 import { Switch, Route } from "wouter";
+import { Suspense, lazy } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import Home from "@/pages/home";
-import Gallery from "@/pages/gallery";
-import Videos from "@/pages/videos";
-import Contact from "@/pages/contact";
-import AdminLogin from "@/pages/admin-login";
-import AdminDashboard from "@/pages/admin";
-import AdminDishes from "@/pages/admin-dishes";
-import AdminCategories from "@/pages/admin-categories";
-import AdminVideos from "@/pages/admin-videos";
-import AdminSettings from "@/pages/admin-settings";
-import NotFound from "@/pages/not-found";
+
+// Lazy load pages for code splitting
+const Home = lazy(() => import("@/pages/home"));
+const Gallery = lazy(() => import("@/pages/gallery"));
+const Videos = lazy(() => import("@/pages/videos"));
+const Contact = lazy(() => import("@/pages/contact"));
+const AdminLogin = lazy(() => import("@/pages/admin-login"));
+const AdminDashboard = lazy(() => import("@/pages/admin"));
+const AdminDishes = lazy(() => import("@/pages/admin-dishes"));
+const AdminCategories = lazy(() => import("@/pages/admin-categories"));
+const AdminVideos = lazy(() => import("@/pages/admin-videos"));
+const AdminSettings = lazy(() => import("@/pages/admin-settings"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+
+// Loading component for Suspense
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+    </div>
+  );
+}
 
 function Router() {
   return (
@@ -40,7 +52,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <Suspense fallback={<PageLoader />}>
+          <Router />
+        </Suspense>
         <Analytics />
         <SpeedInsights />
       </TooltipProvider>
