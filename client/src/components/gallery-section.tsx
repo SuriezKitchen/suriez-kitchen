@@ -22,6 +22,11 @@ export default function GallerySection() {
   // Compute dishes early so hooks below can depend on them
   const visibleDishes = (dishes || []).slice(0, 10);
   const loopDishes = [...visibleDishes, ...visibleDishes];
+  
+  // Debug rendering
+  console.log("Gallery Section - visibleDishes:", visibleDishes);
+  console.log("Gallery Section - loopDishes:", loopDishes);
+  console.log("Gallery Section - loopDishes.length:", loopDishes.length);
 
   useEffect(() => {
     const observerOptions = {
@@ -143,15 +148,13 @@ export default function GallerySection() {
               >
                 <Card className="bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-96 min-w-[14rem] sm:min-w-[16rem] md:min-w-[18rem] flex-shrink-0 flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
-                    <ResponsiveImage
+                    <img
                       src={dish.imageUrl}
                       alt={dish.title}
                       className="w-full h-48 object-cover image-hover"
-                      dataTestId={`dish-image-${dish.id}`}
+                      data-testid={`dish-image-${dish.id}`}
                       width={288}
                       height={192}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      quality={75}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="absolute bottom-4 left-4 text-white">
