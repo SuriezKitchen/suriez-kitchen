@@ -83,8 +83,9 @@ export default function VideoCard({
                   <button
                     className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-primary hover:bg-primary/90"
                     data-testid={`video-play-${video.id}`}
+                    aria-label={`Play video: ${video.title}`}
                   >
-                    <i className="fas fa-play text-xl ml-1"></i>
+                    <i className="fas fa-play text-xl ml-1" aria-hidden="true"></i>
                   </button>
                 </div>
 
@@ -120,8 +121,9 @@ export default function VideoCard({
               <button
                 className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-red-600 hover:bg-red-700"
                 data-testid={`video-play-${video.id}`}
+                aria-label={`Play video: ${video.title}`}
               >
-                <i className="fas fa-play text-xl ml-1"></i>
+                <i className="fas fa-play text-xl ml-1" aria-hidden="true"></i>
               </button>
             </div>
 
