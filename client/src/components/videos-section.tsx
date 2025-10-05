@@ -294,14 +294,14 @@ export default function VideosSection() {
                       key={index}
                       onClick={() => goToVideo(index)}
                       disabled={isTransitioning}
-                      className={`w-4 h-4 rounded-full transition-all p-2 ${
+                      className={`w-2 h-2 rounded-full transition-all p-1 ${
                         index === currentVideoIndex
                           ? "bg-primary"
                           : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       }`}
                       aria-label={`Go to video ${index + 1} of ${videos.length}`}
                       aria-current={index === currentVideoIndex ? "true" : "false"}
-                      style={{ minWidth: '44px', minHeight: '44px' }}
+                      style={{ minWidth: '22px', minHeight: '22px' }}
                     />
                   ))}
                 </div>
