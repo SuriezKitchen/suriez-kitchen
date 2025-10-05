@@ -257,12 +257,12 @@ export default function Gallery() {
                     </div>
                   </div>
                   <CardContent className="p-6 flex-1 flex flex-col">
-                    <h3
+                    <h2
                       className="font-serif text-xl font-semibold mb-3"
                       data-testid={`gallery-dish-title-${dish.id}`}
                     >
                       {dish.title}
-                    </h3>
+                    </h2>
                     <p
                       className="text-muted-foreground leading-relaxed flex-1"
                       data-testid={`gallery-dish-description-${dish.id}`}
