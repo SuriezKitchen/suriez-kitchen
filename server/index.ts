@@ -15,10 +15,10 @@ const SQLiteStoreSession = SQLiteStore(session);
 
 const app = express();
 
-// Apply performance optimizations first
-applyPerformanceOptimizations(app);
-addResponseTimeOptimization(app);
-optimizeDatabaseConnection();
+// Temporarily disable performance optimizations to fix blank page
+// applyPerformanceOptimizations(app);
+// addResponseTimeOptimization(app);
+// optimizeDatabaseConnection();
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));

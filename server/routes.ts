@@ -12,39 +12,32 @@ import {
   validatePasswordStrength,
 } from "./auth";
 
-// Simple in-memory cache for API responses
-const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+// Temporarily disable caching to fix blank page
+// const cache = new Map<string, { data: any; timestamp: number }>();
+// const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-function getCachedData(key: string) {
-  const cached = cache.get(key);
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return cached.data;
-  }
-  cache.delete(key);
-  return null;
-}
+// function getCachedData(key: string) {
+//   const cached = cache.get(key);
+//   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+//     return cached.data;
+//   }
+//   cache.delete(key);
+//   return null;
+// }
 
-function setCachedData(key: string, data: any) {
-  cache.set(key, { data, timestamp: Date.now() });
-}
+// function setCachedData(key: string, data: any) {
+//   cache.set(key, { data, timestamp: Date.now() });
+// }
 
-function clearCache() {
-  cache.clear();
-}
+// function clearCache() {
+//   cache.clear();
+// }
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all dishes
   app.get("/api/dishes", async (req, res) => {
     try {
-      const cacheKey = "dishes";
-      let dishes = getCachedData(cacheKey);
-
-      if (!dishes) {
-        dishes = await storage.getDishes();
-        setCachedData(cacheKey, dishes);
-      }
-
+      const dishes = await storage.getDishes();
       res.json(dishes);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch dishes" });
@@ -54,14 +47,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all videos
   app.get("/api/videos", async (req, res) => {
     try {
-      const cacheKey = "videos";
-      let videos = getCachedData(cacheKey);
-
-      if (!videos) {
-        videos = await storage.getVideos();
-        setCachedData(cacheKey, videos);
-      }
-
+      const videos = await storage.getVideos();
       res.json(videos);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch videos" });
@@ -71,14 +57,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get social links
   app.get("/api/social-links", async (req, res) => {
     try {
-      const cacheKey = "social-links";
-      let links = getCachedData(cacheKey);
-
-      if (!links) {
-        links = await storage.getSocialLinks();
-        setCachedData(cacheKey, links);
-      }
-
+      const links = await storage.getSocialLinks();
       res.json(links);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch social links" });
@@ -88,14 +67,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all categories
   app.get("/api/categories", async (req, res) => {
     try {
-      const cacheKey = "categories";
-      let categories = getCachedData(cacheKey);
-
-      if (!categories) {
-        categories = await storage.getCategories();
-        setCachedData(cacheKey, categories);
-      }
-
+      const categories = await storage.getCategories();
       res.json(categories);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch categories" });
@@ -427,7 +399,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/dishes", requireAuth, async (req, res) => {
     try {
       const dish = await storage.createDish(req.body);
-      clearCache(); // Clear cache when data changes
       res.json(dish);
     } catch (error) {
       res.status(500).json({ message: "Failed to create dish" });
@@ -438,7 +409,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const dish = await storage.updateDish(id, req.body);
-      clearCache(); // Clear cache when data changes
       res.json(dish);
     } catch (error) {
       res.status(500).json({ message: "Failed to update dish" });
@@ -449,7 +419,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       await storage.deleteDish(id);
-      clearCache(); // Clear cache when data changes
       res.json({ message: "Dish deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete dish" });
