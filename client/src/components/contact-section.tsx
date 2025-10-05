@@ -165,8 +165,9 @@ export default function ContactSection() {
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
                 data-testid="social-link-youtube"
+                aria-label="Visit our YouTube channel"
               >
-                <i className="fab fa-youtube text-xl"></i>
+                <i className="fab fa-youtube text-xl" aria-hidden="true"></i>
               </a>
               <a
                 href="https://instagram.com/suriez_kitchen"
@@ -174,15 +175,17 @@ export default function ContactSection() {
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
                 data-testid="social-link-instagram"
+                aria-label="Follow us on Instagram"
               >
-                <i className="fab fa-instagram text-xl"></i>
+                <i className="fab fa-instagram text-xl" aria-hidden="true"></i>
               </a>
               <a
                 href="#"
                 className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
                 data-testid="social-link-tiktok"
+                aria-label="Follow us on TikTok (coming soon)"
               >
-                <i className="fab fa-tiktok text-xl"></i>
+                <i className="fab fa-tiktok text-xl" aria-hidden="true"></i>
               </a>
             </div>
           </div>

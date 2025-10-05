@@ -73,8 +73,9 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-primary transition-colors"
                 data-testid="footer-social-youtube"
+                aria-label="Visit our YouTube channel"
               >
-                <i className="fab fa-youtube text-xl"></i>
+                <i className="fab fa-youtube text-xl" aria-hidden="true"></i>
               </a>
               <a
                 href="https://instagram.com/suriez_kitchen"
@@ -82,15 +83,17 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-primary transition-colors"
                 data-testid="footer-social-instagram"
+                aria-label="Follow us on Instagram"
               >
-                <i className="fab fa-instagram text-xl"></i>
+                <i className="fab fa-instagram text-xl" aria-hidden="true"></i>
               </a>
               <a
                 href="#"
                 className="text-gray-300 hover:text-primary transition-colors"
                 data-testid="footer-social-tiktok"
+                aria-label="Follow us on TikTok (coming soon)"
               >
-                <i className="fab fa-tiktok text-xl"></i>
+                <i className="fab fa-tiktok text-xl" aria-hidden="true"></i>
               </a>
             </div>
           </div>
