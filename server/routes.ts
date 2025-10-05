@@ -55,17 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get social links
-  app.get("/api/social-links", async (req, res) => {
-    try {
-      const links = await storage.getSocialLinks();
-      res.json(links);
-    } catch (error) {
-      console.error("Error fetching social links:", error);
-      // Return empty array instead of error to prevent 404s
-      res.json([]);
-    }
-  });
+  // Social links are now hardcoded in the frontend - no API needed
 
   // Get all categories
   app.get("/api/categories", async (req, res) => {
