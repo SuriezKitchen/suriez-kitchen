@@ -6,18 +6,25 @@ const STATIC_CACHE = "suriez-static-v1";
 const IMAGE_CACHE = "suriez-images-v1";
 const VIDEO_CACHE = "suriez-videos-v1";
 
-// Assets to cache immediately
+// Assets to cache immediately (excluding HTML to avoid routing issues)
 const STATIC_ASSETS = [
-  "/",
   "/src/assets/fontawesome-custom.css",
   "/src/assets/suriez-logo.png",
 ];
 
 // Cache strategies
 const CACHE_STRATEGIES = {
+  // HTML files - network first to avoid routing issues
+  html: {
+    pattern: /\.html$/,
+    strategy: "network-first",
+    cacheName: STATIC_CACHE,
+    maxAge: 86400, // 1 day
+  },
+
   // Static assets - cache first
   static: {
-    pattern: /\.(css|js|html)$/,
+    pattern: /\.(css|js)$/,
     strategy: "cache-first",
     cacheName: STATIC_CACHE,
     maxAge: 86400 * 30, // 30 days
@@ -106,6 +113,12 @@ self.addEventListener("fetch", (event) => {
 
   // Skip chrome-extension and other non-http requests
   if (!url.protocol.startsWith("http")) {
+    return;
+  }
+
+  // Skip the main HTML file to avoid routing conflicts
+  if (url.pathname === "/" || url.pathname === "/index.html") {
+    console.log("Skipping HTML file caching:", url.pathname);
     return;
   }
 

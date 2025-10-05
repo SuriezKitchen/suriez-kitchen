@@ -131,8 +131,20 @@
         "undefined" != typeof exports ? (exports.loadCSS = t) : (e.loadCSS = t);
       })("undefined" != typeof global ? global : this);
 
-      // Register Service Worker for caching
+      // Clear any existing service worker cache (debugging fix)
       if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister();
+              console.log("Unregistered service worker:", registration.scope);
+            }
+          });
+      }
+
+      // Register Service Worker for caching (temporarily disabled for debugging)
+      if ("serviceWorker" in navigator && false) {
         window.addEventListener("load", function () {
           navigator.serviceWorker
             .register("/sw.js")
