@@ -90,29 +90,35 @@ export default function GallerySection() {
     requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
-  if (isLoading) {
-    return (
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Skeleton className="h-12 w-96 mx-auto mb-6" />
-            <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i}>
-                <Skeleton className="h-64 w-full" />
-                <CardContent className="p-6">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
+  console.log("Gallery Section - About to render, isLoading:", isLoading, "dishes:", dishes?.length);
+
+  // Temporarily disable loading state to test main content rendering
+  // if (isLoading) {
+  //   console.log("Gallery Section - Rendering loading state");
+  //   return (
+  //     <section className="py-20 bg-background">
+  //       <div className="container mx-auto px-4">
+  //         <div className="text-center mb-16">
+  //           <Skeleton className="h-12 w-96 mx-auto mb-6" />
+  //           <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
+  //         </div>
+  //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  //           {Array.from({ length: 8 }).map((_, i) => (
+  //             <Card key={i}>
+  //               <Skeleton className="h-64 w-full" />
+  //               <CardContent className="p-6">
+  //                 <Skeleton className="h-6 w-3/4 mb-2" />
+  //                 <Skeleton className="h-4 w-full" />
+  //               </CardContent>
+  //             </Card>
+  //           ))}
+  //         </div>
+  //       </div>
+  //     </section>
+  //   );
+  // }
+
+  console.log("Gallery Section - Rendering main content");
 
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
