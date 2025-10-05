@@ -35,7 +35,7 @@ export default function AboutSection() {
           <div className="scroll-reveal">
             <div className="relative max-w-2xl">
               <ResponsiveImage
-                src="https://via.placeholder.com/500x600/22c55e/ffffff?text=Suriez+Kitchen"
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=600&q=80"
                 alt="Suriez Kitchen"
                 className="w-full h-[400px] lg:h-[600px] object-cover rounded-2xl shadow-2xl"
                 width={500}
