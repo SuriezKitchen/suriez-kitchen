@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import type { SocialLink } from "@shared/schema";
 
 // Hardcoded social links - no database needed

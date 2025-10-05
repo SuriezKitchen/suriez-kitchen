@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -37,9 +36,21 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const { data: socialLinks } = useQuery<SocialLink[]>({
-    queryKey: ["api", "social-links"],
-  });
+  // Hardcoded social links - no API needed
+  const socialLinks: SocialLink[] = [
+    {
+      id: "youtube",
+      platform: "youtube",
+      username: "@Sureiyahsaid",
+      url: "https://youtube.com/@Sureiyahsaid",
+    },
+    {
+      id: "instagram",
+      platform: "instagram",
+      username: "@suriezkitchen",
+      url: "https://instagram.com/suriezkitchen",
+    },
+  ];
 
   // Ensure page scrolls to top when component mounts
   useEffect(() => {
@@ -409,51 +420,26 @@ ${formData.message}`;
                       </h3>
 
                       <div className="grid grid-cols-2 gap-4">
-                        {socialLinks && socialLinks.length > 0 ? (
-                          socialLinks.map((link) => (
-                            <a
-                              key={link.id}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <i
-                                className={`${getSocialIcon(
-                                  link.platform
-                                )} text-primary text-lg`}
-                              ></i>
-                              <span className="text-sm font-medium capitalize">
-                                {link.platform}
-                              </span>
-                            </a>
-                          ))
-                        ) : (
-                          <>
-                            <a
-                              href="https://youtube.com/@Sureiyahsaid"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <i className="fab fa-youtube text-primary text-lg"></i>
-                              <span className="text-sm font-medium">
-                                YouTube
-                              </span>
-                            </a>
-                            <a
-                              href="https://instagram.com/suriez_kitchen"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <i className="fab fa-instagram text-primary text-lg"></i>
-                              <span className="text-sm font-medium">
-                                Instagram
-                              </span>
-                            </a>
-                          </>
-                        )}
+                        {socialLinks.map((link) => (
+                          <a
+                            key={link.id}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
+                            aria-label={`Visit our ${link.platform} page`}
+                          >
+                            <i
+                              className={`${getSocialIcon(
+                                link.platform
+                              )} text-primary text-lg`}
+                              aria-hidden="true"
+                            ></i>
+                            <span className="text-sm font-medium capitalize">
+                              {link.platform}
+                            </span>
+                          </a>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
