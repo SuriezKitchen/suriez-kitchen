@@ -208,7 +208,7 @@ export default function Gallery() {
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" aria-label="Filter dishes by category">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
