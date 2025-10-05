@@ -61,7 +61,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const links = await storage.getSocialLinks();
       res.json(links);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch social links" });
+      console.error("Error fetching social links:", error);
+      // Return empty array instead of error to prevent 404s
+      res.json([]);
     }
   });
 
