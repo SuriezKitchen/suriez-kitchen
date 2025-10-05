@@ -1,0 +1,169 @@
+/* Custom FontAwesome CSS - Only used icons */
+/* This reduces the CSS from 18.3 KiB to ~2-3 KiB */
+
+/* Font Face Declarations */
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-regular-400.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2")
+    format("woff2");
+}
+
+/* Solid Icons */
+.fas.fa-play:before {
+  content: "\f04b";
+}
+.fas.fa-utensils:before {
+  content: "\f2e7";
+}
+.fas.fa-chevron-down:before {
+  content: "\f078";
+}
+.fas.fa-chevron-left:before {
+  content: "\f053";
+}
+.fas.fa-chevron-right:before {
+  content: "\f054";
+}
+.fas.fa-eye:before {
+  content: "\f06e";
+}
+.fas.fa-heart:before {
+  content: "\f004";
+}
+.fas.fa-arrow-left:before {
+  content: "\f060";
+}
+.fas.fa-video:before {
+  content: "\f03d";
+}
+.fas.fa-exclamation-triangle:before {
+  content: "\f071";
+}
+.fas.fa-refresh:before {
+  content: "\f021";
+}
+.fas.fa-calendar:before {
+  content: "\f133";
+}
+.fas.fa-spinner:before {
+  content: "\f110";
+}
+.fas.fa-paper-plane:before {
+  content: "\f1d8";
+}
+.fas.fa-envelope:before {
+  content: "\f0e0";
+}
+.fas.fa-clock:before {
+  content: "\f017";
+}
+.fas.fa-key:before {
+  content: "\f084";
+}
+.fas.fa-sign-out-alt:before {
+  content: "\f2f5";
+}
+.fas.fa-plus:before {
+  content: "\f067";
+}
+.fas.fa-edit:before {
+  content: "\f044";
+}
+.fas.fa-trash:before {
+  content: "\f1f8";
+}
+.fas.fa-user-shield:before {
+  content: "\f505";
+}
+.fas.fa-bars:before {
+  content: "\f0c9";
+}
+
+/* Brand Icons */
+.fab.fa-youtube:before {
+  content: "\f167";
+}
+.fab.fa-instagram:before {
+  content: "\f16d";
+}
+.fab.fa-tiktok:before {
+  content: "\f97b";
+}
+.fab.fa-facebook:before {
+  content: "\f09a";
+}
+.fab.fa-twitter:before {
+  content: "\f099";
+}
+.fab.fa-whatsapp:before {
+  content: "\f232";
+}
+
+/* Regular Icons */
+.far.fa-eye:before {
+  content: "\f06e";
+}
+.far.fa-heart:before {
+  content: "\f004";
+}
+
+/* Animation for spinner */
+.fa-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Base styles */
+.fas,
+.far,
+.fab {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.fas,
+.far {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+.far {
+  font-weight: 400;
+}
+
+.fab {
+  font-family: "Font Awesome 6 Brands";
+  font-weight: 400;
+}

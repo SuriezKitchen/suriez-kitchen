@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
+import OptimizedImage from "./optimized-image";
 
 interface VideoCardProps {
   video: {
@@ -67,11 +68,14 @@ export default function VideoCard({
                 className="relative cursor-pointer group"
                 onClick={() => onPlay(video.id)}
               >
-                <img
+                <OptimizedImage
                   src={video.thumbnailUrl}
                   alt={video.title}
                   className={getThumbnailClasses()}
-                  data-testid={`video-thumbnail-${video.id}`}
+                  dataTestId={`video-thumbnail-${video.id}`}
+                  width={320}
+                  height={180}
+                  fallbackSrc={video.thumbnailUrl}
                 />
 
                 {/* Play Button Overlay */}
@@ -101,11 +105,14 @@ export default function VideoCard({
             className="relative cursor-pointer group"
             onClick={() => onYouTubeClick?.(video.url!)}
           >
-            <img
+            <OptimizedImage
               src={video.thumbnailUrl}
               alt={video.title}
               className={getThumbnailClasses()}
-              data-testid={`video-thumbnail-${video.id}`}
+              dataTestId={`video-thumbnail-${video.id}`}
+              width={320}
+              height={180}
+              fallbackSrc={video.thumbnailUrl}
             />
 
             {/* Play Button Overlay */}

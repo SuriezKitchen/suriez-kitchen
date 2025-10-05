@@ -128,6 +128,8 @@ export default function GallerySection() {
                       alt={dish.title}
                       className="w-full h-48 object-cover image-hover"
                       data-testid={`dish-image-${dish.id}`}
+                      width={288}
+                      height={192}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="absolute bottom-4 left-4 text-white">

@@ -55,8 +55,12 @@ export default function HeroSection() {
           <span className="block text-secondary">Meets Passion</span>
         </h1>
         <p
-          className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed"
+          className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed font-sans"
           data-testid="hero-description"
+          style={{
+            fontFamily:
+              'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          }}
         >
           Join Suriez Kitchen on a journey through flavors, techniques, and the
           stories behind every dish. From gourmet creations to behind-the-scenes

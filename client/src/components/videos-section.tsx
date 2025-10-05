@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useYouTube } from "@/hooks/use-youtube";
+import OptimizedImage from "./optimized-image";
 
 export default function VideosSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -219,11 +220,14 @@ export default function VideosSection() {
                             className="relative cursor-pointer group"
                             onClick={() => openVideo(video.youtubeId)}
                           >
-                            <img
+                            <OptimizedImage
                               src={video.thumbnailUrl}
                               alt={video.title}
                               className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                              data-testid={`video-thumbnail-${video.youtubeId}`}
+                              dataTestId={`video-thumbnail-${video.youtubeId}`}
+                              width={400}
+                              height={320}
+                              fallbackSrc={video.thumbnailUrl}
                             />
                             <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
                               <button

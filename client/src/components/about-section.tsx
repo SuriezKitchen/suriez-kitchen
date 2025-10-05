@@ -37,6 +37,8 @@ export default function AboutSection() {
                 src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=500&h=600&fit=crop"
                 alt="Suriez Kitchen"
                 className="w-full h-[400px] lg:h-[600px] object-cover rounded-2xl shadow-2xl"
+                width={500}
+                height={600}
               />
               {/* Experience Badge */}
               <div className="absolute -bottom-4 -right-4 bg-green-600 text-white px-4 py-3 rounded-lg text-center">

@@ -80,7 +80,6 @@ export default function AdminDishes() {
     },
   });
 
-
   // Delete dish mutation
   const deleteDishMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -319,6 +318,8 @@ export default function AdminDishes() {
                         src={dish.imageUrl}
                         alt={dish.title}
                         className="w-full h-full object-cover"
+                        width={64}
+                        height={64}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
