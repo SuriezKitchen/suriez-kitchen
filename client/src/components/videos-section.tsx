@@ -233,8 +233,9 @@ export default function VideosSection() {
                               <button
                                 className="bg-red-600 text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-red-700 transition-all transform group-hover:scale-110"
                                 data-testid={`video-play-${video.youtubeId}`}
+                                aria-label={`Play video: ${video.title}`}
                               >
-                                <i className="fas fa-play text-2xl ml-1"></i>
+                                <i className="fas fa-play text-2xl ml-1" aria-hidden="true"></i>
                               </button>
                             </div>
                           </div>
@@ -298,6 +299,8 @@ export default function VideosSection() {
                           ? "bg-primary"
                           : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       }`}
+                      aria-label={`Go to video ${index + 1} of ${videos.length}`}
+                      aria-current={index === currentVideoIndex ? "true" : "false"}
                     />
                   ))}
                 </div>

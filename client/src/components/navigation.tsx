@@ -145,8 +145,10 @@ export default function Navigation() {
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="mobile-menu-button"
+            aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
+            aria-expanded={isMobileMenuOpen}
           >
-            <i className="fas fa-bars text-xl"></i>
+            <i className="fas fa-bars text-xl" aria-hidden="true"></i>
           </button>
         </div>
 
