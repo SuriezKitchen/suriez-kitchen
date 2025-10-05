@@ -14,7 +14,7 @@ const testimonials: Testimonial[] = [
     quote:
       "Suriez Kitchen elevates familiar flavors with incredible finesse. Every plate feels thoughtful and balanced.",
     avatar:
-      "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop",
+      "https://via.placeholder.com/120x120/22c55e/ffffff?text=Sarah",
   },
   {
     name: "Daniel K.",
@@ -22,7 +22,7 @@ const testimonials: Testimonial[] = [
     quote:
       "The textures and aromas are unforgettable. You can taste the precision and love in each bite.",
     avatar:
-      "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop",
+      "https://via.placeholder.com/120x120/16a34a/ffffff?text=Daniel",
   },
   {
     name: "Lola A.",
@@ -30,7 +30,7 @@ const testimonials: Testimonial[] = [
     quote:
       "Elegant presentation, calm and natural palette, and remarkable consistency. Guests were delighted!",
     avatar:
-      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop",
+      "https://via.placeholder.com/120x120/15803d/ffffff?text=Lola",
   },
 ];
 
