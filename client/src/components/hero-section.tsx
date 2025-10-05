@@ -31,7 +31,7 @@ export default function HeroSection() {
       >
         {/* Carrot video - Primary source */}
         <source
-          src="https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4"
+          src="https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4"
           type="video/mp4"
         />
         {/* Fallback message */}

@@ -38,35 +38,44 @@ async function createLocalVideosTable() {
 
     // Insert some sample data
     console.log("📝 Inserting sample local videos...");
-    
+
     const sampleVideos = [
       {
         title: "Perfect Jollof Rice Recipe",
-        description: "Learn the secret to making the most delicious Nigerian jollof rice with this step-by-step tutorial. From choosing the right rice to achieving that perfect smoky flavor.",
-        thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
-        videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
+        description:
+          "Learn the secret to making the most delicious Nigerian jollof rice with this step-by-step tutorial. From choosing the right rice to achieving that perfect smoky flavor.",
+        thumbnailUrl:
+          "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
+        videoUrl:
+          "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
         duration: "8:45",
         views: "2,450",
         likes: "156",
       },
       {
         title: "Chicken Curry Masterclass",
-        description: "Discover the art of making aromatic and flavorful chicken curry that will transport you to the streets of India. Perfect blend of spices and techniques.",
-        thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
-        videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
+        description:
+          "Discover the art of making aromatic and flavorful chicken curry that will transport you to the streets of India. Perfect blend of spices and techniques.",
+        thumbnailUrl:
+          "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
+        videoUrl:
+          "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
         duration: "12:30",
         views: "1,890",
         likes: "134",
       },
       {
         title: "Pasta Making from Scratch",
-        description: "From flour to fork - learn how to make fresh pasta that will impress your family and friends. Complete guide to traditional Italian pasta techniques.",
-        thumbnailUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
-        videoUrl: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4",
+        description:
+          "From flour to fork - learn how to make fresh pasta that will impress your family and friends. Complete guide to traditional Italian pasta techniques.",
+        thumbnailUrl:
+          "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
+        videoUrl:
+          "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
         duration: "15:20",
         views: "3,120",
         likes: "189",
-      }
+      },
     ];
 
     for (const video of sampleVideos) {
@@ -85,12 +94,14 @@ async function createLocalVideosTable() {
     console.log(`📊 Total local videos in database: ${videoCount[0].count}`);
 
     // Show the videos
-    const videos = await sql`SELECT title, duration, views, likes FROM local_videos ORDER BY created_at DESC`;
+    const videos =
+      await sql`SELECT title, duration, views, likes FROM local_videos ORDER BY created_at DESC`;
     console.log("\n📹 Local Videos:");
     videos.forEach((video) => {
-      console.log(`   - ${video.title} (${video.duration}) - ${video.views} views, ${video.likes} likes`);
+      console.log(
+        `   - ${video.title} (${video.duration}) - ${video.views} views, ${video.likes} likes`
+      );
     });
-
   } catch (error) {
     console.error("❌ Migration failed:", error);
     process.exit(1);
