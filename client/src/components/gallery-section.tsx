@@ -14,19 +14,9 @@ export default function GallerySection() {
     queryKey: ["api", "dishes"],
   });
 
-  // Debug logging
-  console.log("Gallery Section - dishes:", dishes);
-  console.log("Gallery Section - isLoading:", isLoading);
-  console.log("Gallery Section - error:", error);
-
   // Compute dishes early so hooks below can depend on them
   const visibleDishes = (dishes || []).slice(0, 10);
   const loopDishes = [...visibleDishes, ...visibleDishes];
-  
-  // Debug rendering
-  console.log("Gallery Section - visibleDishes:", visibleDishes);
-  console.log("Gallery Section - loopDishes:", loopDishes);
-  console.log("Gallery Section - loopDishes.length:", loopDishes.length);
 
   useEffect(() => {
     const observerOptions = {
@@ -90,35 +80,30 @@ export default function GallerySection() {
     requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
-  console.log("Gallery Section - About to render, isLoading:", isLoading, "dishes:", dishes?.length);
-
-  // Temporarily disable loading state to test main content rendering
-  // if (isLoading) {
-  //   console.log("Gallery Section - Rendering loading state");
-  //   return (
-  //     <section className="py-20 bg-background">
-  //       <div className="container mx-auto px-4">
-  //         <div className="text-center mb-16">
-  //           <Skeleton className="h-12 w-96 mx-auto mb-6" />
-  //           <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
-  //         </div>
-  //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-  //           {Array.from({ length: 8 }).map((_, i) => (
-  //             <Card key={i}>
-  //               <Skeleton className="h-64 w-full" />
-  //               <CardContent className="p-6">
-  //                 <Skeleton className="h-6 w-3/4 mb-2" />
-  //                 <Skeleton className="h-4 w-full" />
-  //               </CardContent>
-  //             </Card>
-  //           ))}
-  //         </div>
-  //       </div>
-  //     </section>
-  //   );
-  // }
-
-  console.log("Gallery Section - Rendering main content");
+  // Show loading state only if we don't have dishes yet
+  if (isLoading && !dishes) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Skeleton className="h-12 w-96 mx-auto mb-6" />
+            <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Card key={i}>
+                <Skeleton className="h-64 w-full" />
+                <CardContent className="p-6">
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
@@ -152,15 +137,17 @@ export default function GallerySection() {
                 className="scroll-reveal group"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <Card className="bg-red-500 border-4 border-blue-500 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-96 min-w-[14rem] sm:min-w-[16rem] md:min-w-[18rem] flex-shrink-0 flex flex-col">
+                <Card className="bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-96 min-w-[14rem] sm:min-w-[16rem] md:min-w-[18rem] flex-shrink-0 flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
-                    <img
+                    <ResponsiveImage
                       src={dish.imageUrl}
                       alt={dish.title}
                       className="w-full h-48 object-cover image-hover"
-                      data-testid={`dish-image-${dish.id}`}
+                      dataTestId={`dish-image-${dish.id}`}
                       width={288}
                       height={192}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      quality={75}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="absolute bottom-4 left-4 text-white">
@@ -172,9 +159,6 @@ export default function GallerySection() {
                     </div>
                   </div>
                   <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="bg-yellow-300 p-2 mb-2">
-                      <strong>DEBUG: Card {index + 1}</strong>
-                    </div>
                     <h3
                       className="font-serif text-xl font-semibold mb-2"
                       data-testid={`dish-title-${dish.id}`}
