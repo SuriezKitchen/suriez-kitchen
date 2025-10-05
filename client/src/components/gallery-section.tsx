@@ -80,33 +80,8 @@ export default function GallerySection() {
     requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
-  // More robust loading logic - only show loading if we truly have no data
-  // and we're still loading for the first time
-  const shouldShowLoading = isLoading && !dishes && !error;
-  
-  if (shouldShowLoading) {
-    return (
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Skeleton className="h-12 w-96 mx-auto mb-6" />
-            <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i}>
-                <Skeleton className="h-64 w-full" />
-                <CardContent className="p-6">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
+  // Simplified approach - always render the section, show loading inside if needed
+  console.log("Gallery Section - isLoading:", isLoading, "dishes:", dishes?.length, "error:", error);
 
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
@@ -126,6 +101,21 @@ export default function GallerySection() {
             Explore the artistry behind every plate.
           </p>
         </div>
+
+        {/* Show loading state */}
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Card key={i}>
+                <Skeleton className="h-64 w-full" />
+                <CardContent className="p-6">
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Show message if no dishes are available */}
         {(!dishes || dishes.length === 0) && !isLoading && (
