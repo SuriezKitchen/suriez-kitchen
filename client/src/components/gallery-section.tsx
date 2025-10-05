@@ -80,12 +80,11 @@ export default function GallerySection() {
     requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
-  // Debug logging
-  console.log("Gallery Section - isLoading:", isLoading, "dishes:", dishes?.length, "error:", error);
-
-  // Show loading state only if we don't have dishes yet
-  if (isLoading && !dishes) {
-    console.log("Gallery Section - Showing loading state");
+  // More robust loading logic - only show loading if we truly have no data
+  // and we're still loading for the first time
+  const shouldShowLoading = isLoading && !dishes && !error;
+  
+  if (shouldShowLoading) {
     return (
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
@@ -109,13 +108,6 @@ export default function GallerySection() {
     );
   }
 
-  // If we have dishes, always show the content regardless of loading state
-  if (dishes && dishes.length > 0) {
-    console.log("Gallery Section - Showing content with", dishes.length, "dishes");
-  } else {
-    console.log("Gallery Section - No dishes available, showing empty state");
-  }
-
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
       <div className="container mx-auto px-4">
@@ -135,14 +127,24 @@ export default function GallerySection() {
           </p>
         </div>
 
-        {/* Horizontal scroll row */}
-        <div
-          ref={rowRef}
-          className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
-          style={{ WebkitOverflowScrolling: "touch" }}
-        >
-          <div className="flex gap-6 pr-6 [&::-webkit-scrollbar]:hidden">
-            {loopDishes.map((dish, index) => (
+        {/* Show message if no dishes are available */}
+        {(!dishes || dishes.length === 0) && !isLoading && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              No dishes available at the moment. Please check back later.
+            </p>
+          </div>
+        )}
+
+        {/* Horizontal scroll row - only show if we have dishes */}
+        {dishes && dishes.length > 0 && (
+          <div
+            ref={rowRef}
+            className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
+            <div className="flex gap-6 pr-6 [&::-webkit-scrollbar]:hidden">
+              {loopDishes.map((dish, index) => (
               <div
                 key={`${dish.id}-${index}`}
                 className="scroll-reveal group"
@@ -188,6 +190,7 @@ export default function GallerySection() {
             ))}
           </div>
         </div>
+        )}
 
         <div className="text-center mt-12">
           <Link href="/gallery">
