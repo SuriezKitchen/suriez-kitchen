@@ -80,8 +80,12 @@ export default function GallerySection() {
     requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
+  // Debug logging
+  console.log("Gallery Section - isLoading:", isLoading, "dishes:", dishes?.length, "error:", error);
+
   // Show loading state only if we don't have dishes yet
   if (isLoading && !dishes) {
+    console.log("Gallery Section - Showing loading state");
     return (
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
@@ -103,6 +107,13 @@ export default function GallerySection() {
         </div>
       </section>
     );
+  }
+
+  // If we have dishes, always show the content regardless of loading state
+  if (dishes && dishes.length > 0) {
+    console.log("Gallery Section - Showing content with", dishes.length, "dishes");
+  } else {
+    console.log("Gallery Section - No dishes available, showing empty state");
   }
 
   return (
