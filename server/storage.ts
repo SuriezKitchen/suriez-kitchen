@@ -20,7 +20,7 @@ import {
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/neon-serverless";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { neon } from "@neondatabase/serverless";
 // Local SQLite (for Express dev server)
 import Database from "better-sqlite3";
@@ -601,6 +601,39 @@ export class NeonStorage implements IStorage {
 
     const sql = neon(connectionString);
     this.db = drizzle(sql);
+    
+    // Initialize tables if they don't exist
+    this.initializeTables();
+  }
+
+  private async initializeTables() {
+    try {
+      // Create social_links table if it doesn't exist
+      await this.db.execute(sql`
+        CREATE TABLE IF NOT EXISTS social_links (
+          id TEXT PRIMARY KEY,
+          platform TEXT NOT NULL,
+          url TEXT NOT NULL,
+          username TEXT NOT NULL,
+          is_active BOOLEAN NOT NULL DEFAULT true,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Insert default social links if table is empty
+      const existingLinks = await this.db.execute(sql`SELECT COUNT(*) as count FROM social_links`);
+      const count = existingLinks.rows[0]?.count || 0;
+      
+      if (count === 0) {
+        await this.db.execute(sql`
+          INSERT INTO social_links (id, platform, url, username, is_active) VALUES
+          ('default-youtube', 'youtube', 'https://youtube.com/@SuriezKitchen', '@SuriezKitchen', true),
+          ('default-instagram', 'instagram', 'https://instagram.com/suriezkitchen', '@suriezkitchen', true)
+        `);
+      }
+    } catch (error) {
+      console.error("Error initializing tables:", error);
+    }
   }
 
   async getDishes(): Promise<Dish[]> {
