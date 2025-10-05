@@ -4,21 +4,15 @@ import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// Select components removed - no longer needed
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ResponsiveImage from "@/components/responsive-image";
-import type { Dish, Category } from "@shared/schema";
+import type { Dish } from "@shared/schema";
 
 export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  // Category filtering removed
 
   // Ensure page scrolls to top when component mounts
   useEffect(() => {
@@ -34,14 +28,7 @@ export default function Gallery() {
     queryKey: ["api", "dishes"],
   });
 
-  const { data: categories } = useQuery<Category[]>({
-    queryKey: ["api", "categories"],
-    queryFn: async () => {
-      const response = await fetch("/api/categories");
-      if (!response.ok) throw new Error("Failed to fetch categories");
-      return response.json();
-    },
-  });
+  // Categories removed - not needed
 
   // Pagination state
   const INITIAL_PAGE = 20; // show 20 first (5 rows of 4), then load more with button
@@ -77,28 +64,13 @@ export default function Gallery() {
     return () => observer.disconnect();
   }, []);
 
-  const availableCategories = categories
-    ? [
-        { name: "all", displayName: "All" },
-        ...categories.map((cat) => ({
-          name: cat.name.toLowerCase(),
-          displayName: cat.name,
-        })),
-      ]
-    : [{ name: "all", displayName: "All" }];
-  const filteredDishes = (dishes ?? []).filter(
-    (dish) =>
-      selectedCategory === "all" ||
-      dish.category.toLowerCase() === selectedCategory
-  );
+  // No category filtering - show all dishes
+  const filteredDishes = dishes ?? [];
 
   // Calculate visible dishes
   const visibleDishes = filteredDishes.slice(0, safeVisibleCount);
 
-  // Reset visible count when category filter changes
-  useEffect(() => {
-    setVisibleCount(INITIAL_PAGE);
-  }, [selectedCategory]);
+  // No category filtering, so no need to reset visible count
 
   // Disabled automatic infinite scroll - using manual "Load More" button instead
 
@@ -201,26 +173,7 @@ export default function Gallery() {
             </Link>
           </div>
 
-          {/* Category Filter */}
-          <div className="flex justify-center mb-12">
-            <div className="w-full max-w-xs">
-              <Select
-                value={selectedCategory}
-                onValueChange={setSelectedCategory}
-              >
-                <SelectTrigger className="w-full" aria-label="Filter dishes by category">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableCategories.map((category) => (
-                    <SelectItem key={category.name} value={category.name}>
-                      <span className="capitalize">{category.displayName}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          {/* Category filter removed */}
 
           {/* Gallery Grid (paginated) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

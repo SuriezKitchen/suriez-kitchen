@@ -57,15 +57,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Social links are now hardcoded in the frontend - no API needed
 
-  // Get all categories
-  app.get("/api/categories", async (req, res) => {
-    try {
-      const categories = await storage.getCategories();
-      res.json(categories);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch categories" });
-    }
-  });
+  // Categories API removed - not needed
 
   // YouTube API integration endpoint
   app.get("/api/youtube/videos", async (req, res) => {

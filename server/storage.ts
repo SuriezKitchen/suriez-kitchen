@@ -603,7 +603,7 @@ export class NeonStorage implements IStorage {
     this.db = drizzle(sql);
   }
 
-  private async ensureSocialLinksTable() {
+  private async ensureTables() {
     try {
       // Create social_links table if it doesn't exist
       await this.db.execute(sql`
@@ -617,19 +617,48 @@ export class NeonStorage implements IStorage {
         )
       `);
 
+      // Create categories table if it doesn't exist
+      await this.db.execute(sql`
+        CREATE TABLE IF NOT EXISTS categories (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT,
+          color TEXT NOT NULL,
+          is_active BOOLEAN NOT NULL DEFAULT true,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
       // Insert default social links if table is empty
-      const existingLinks = await this.db.execute(sql`SELECT COUNT(*) as count FROM social_links`);
-      const count = existingLinks.rows[0]?.count || 0;
-      
-      if (count === 0) {
+      const existingLinks = await this.db.execute(
+        sql`SELECT COUNT(*) as count FROM social_links`
+      );
+      const linksCount = existingLinks.rows[0]?.count || 0;
+
+      if (linksCount === 0) {
         await this.db.execute(sql`
           INSERT INTO social_links (id, platform, url, username, is_active) VALUES
           ('default-youtube', 'youtube', 'https://youtube.com/@SuriezKitchen', '@SuriezKitchen', true),
           ('default-instagram', 'instagram', 'https://instagram.com/suriezkitchen', '@suriezkitchen', true)
         `);
       }
+
+      // Insert default categories if table is empty
+      const existingCategories = await this.db.execute(
+        sql`SELECT COUNT(*) as count FROM categories`
+      );
+      const categoriesCount = existingCategories.rows[0]?.count || 0;
+
+      if (categoriesCount === 0) {
+        await this.db.execute(sql`
+          INSERT INTO categories (id, name, description, color, is_active) VALUES
+          ('default-rice', 'Rice', 'Rice-based dishes and meals', '#22c55e', true),
+          ('default-pasta', 'Pasta', 'Pasta dishes and noodles', '#3b82f6', true),
+          ('default-dinner', 'Dinner', 'Main dinner dishes', '#8b5cf6', true)
+        `);
+      }
     } catch (error) {
-      console.error("Error ensuring social_links table:", error);
+      console.error("Error ensuring tables:", error);
     }
   }
 
@@ -697,8 +726,8 @@ export class NeonStorage implements IStorage {
   async getSocialLinks(): Promise<SocialLink[]> {
     try {
       // Ensure table exists before querying
-      await this.ensureSocialLinksTable();
-      
+      await this.ensureTables();
+
       return await this.db
         .select()
         .from(socialLinks)
@@ -722,7 +751,16 @@ export class NeonStorage implements IStorage {
 
   // Category methods
   async getCategories(): Promise<Category[]> {
-    return await this.db.select().from(categories).orderBy(categories.name);
+    try {
+      // Ensure table exists before querying
+      await this.ensureTables();
+
+      return await this.db.select().from(categories).orderBy(categories.name);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      // Return empty array if there's an error
+      return [];
+    }
   }
 
   async getCategory(id: string): Promise<Category | undefined> {
