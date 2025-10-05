@@ -30,47 +30,8 @@ export default defineConfig({
     cssCodeSplit: true,
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Vendor chunks
-          if (id.includes("node_modules")) {
-            if (id.includes("react") || id.includes("react-dom")) {
-              return "react-vendor";
-            }
-            if (id.includes("@tanstack")) {
-              return "query-vendor";
-            }
-            if (id.includes("wouter")) {
-              return "router-vendor";
-            }
-            if (id.includes("@vercel")) {
-              return "analytics-vendor";
-            }
-            if (id.includes("lucide-react") || id.includes("@radix-ui")) {
-              return "ui-vendor";
-            }
-            return "vendor";
-          }
-
-          // Page chunks
-          if (id.includes("/pages/")) {
-            const pageName = id.split("/pages/")[1].split("/")[0];
-            return `page-${pageName}`;
-          }
-
-          // Component chunks
-          if (id.includes("/components/")) {
-            return "components";
-          }
-        },
-        chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId
-            ? chunkInfo.facadeModuleId
-                .split("/")
-                .pop()
-                ?.replace(".tsx", "")
-                .replace(".ts", "")
-            : "chunk";
-          return `assets/[name]-[hash].js`;
+        manualChunks: {
+          vendor: ["react", "react-dom"],
         },
       },
     },

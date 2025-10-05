@@ -5,11 +5,7 @@ import SQLiteStore from "connect-sqlite3";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { sessionConfig } from "./auth";
-import {
-  applyPerformanceOptimizations,
-  addResponseTimeOptimization,
-  optimizeDatabaseConnection,
-} from "./optimizations";
+// Removed optimizations imports
 
 const SQLiteStoreSession = SQLiteStore(session);
 
