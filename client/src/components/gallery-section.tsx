@@ -81,7 +81,6 @@ export default function GallerySection() {
   }, [loopDishes.length]);
 
   // Simplified approach - always render the section, show loading inside if needed
-  console.log("Gallery Section - isLoading:", isLoading, "dishes:", dishes?.length, "error:", error);
 
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
