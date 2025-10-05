@@ -242,8 +242,9 @@ export default function Gallery() {
                       <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                         <div className="flex items-center justify-end">
                           <button 
-                            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+                            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-colors"
                             aria-label={`Like ${dish.title}`}
+                            style={{ minWidth: '44px', minHeight: '44px' }}
                           >
                             <i
                               className="fas fa-heart text-lg"

@@ -288,19 +288,20 @@ export default function VideosSection() {
 
               {/* Video indicators */}
               {videos.length > 1 && (
-                <div className="flex justify-center mt-8 gap-2">
+                <div className="flex justify-center mt-8 gap-3">
                   {videos.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => goToVideo(index)}
                       disabled={isTransitioning}
-                      className={`w-3 h-3 rounded-full transition-all ${
+                      className={`w-4 h-4 rounded-full transition-all p-2 ${
                         index === currentVideoIndex
                           ? "bg-primary"
                           : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       }`}
                       aria-label={`Go to video ${index + 1} of ${videos.length}`}
                       aria-current={index === currentVideoIndex ? "true" : "false"}
+                      style={{ minWidth: '44px', minHeight: '44px' }}
                     />
                   ))}
                 </div>

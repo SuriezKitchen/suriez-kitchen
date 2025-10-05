@@ -140,13 +140,14 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             className={cn(
-              "md:hidden transition-colors",
+              "md:hidden transition-colors p-3",
               isMobileMenuOpen || isScrolled ? "text-primary" : "text-white"
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="mobile-menu-button"
             aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             aria-expanded={isMobileMenuOpen}
+            style={{ minWidth: '44px', minHeight: '44px' }}
           >
             <i className="fas fa-bars text-xl" aria-hidden="true"></i>
           </button>
