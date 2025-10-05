@@ -258,7 +258,7 @@ ${formData.message}`;
                           }
                           required
                         >
-                          <SelectTrigger className="mt-1">
+                          <SelectTrigger className="mt-1" aria-label="Select inquiry type">
                             <SelectValue placeholder="Select an option" />
                           </SelectTrigger>
                           <SelectContent>
@@ -333,12 +333,12 @@ ${formData.message}`;
                       >
                         {isSubmitting ? (
                           <>
-                            <i className="fas fa-spinner fa-spin mr-2"></i>
+                            <i className="fas fa-spinner fa-spin mr-2" aria-hidden="true"></i>
                             Sending Message...
                           </>
                         ) : (
                           <>
-                            <i className="fas fa-paper-plane mr-2"></i>
+                            <i className="fas fa-paper-plane mr-2" aria-hidden="true"></i>
                             Send Message
                           </>
                         )}
