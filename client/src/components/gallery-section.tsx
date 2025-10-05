@@ -43,26 +43,40 @@ export default function GallerySection() {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-scroll the horizontal row continuously using a timer (more reliable across tabs)
+  // Auto-scroll the horizontal row continuously using requestAnimationFrame to avoid forced reflows
   useEffect(() => {
     const row = rowRef.current;
     if (!row) return;
 
     row.scrollLeft = 0;
     const speedPxPerSec = 60; // tune speed here
-    const stepPx = speedPxPerSec / 60; // ~60fps
+    let lastTime = 0;
+    let half = 0;
 
-    const id = window.setInterval(() => {
-      // re-evaluate because images may change width after load
-      const half = Math.max(1, Math.floor(row.scrollWidth / 2));
-      row.scrollLeft += stepPx;
-      if (row.scrollLeft >= half) {
-        // jump instantly to create seamless loop
-        row.scrollLeft -= half;
+    const animate = (currentTime: number) => {
+      if (currentTime - lastTime >= 16) {
+        // ~60fps
+        // Cache scrollWidth to avoid forced reflow
+        if (half === 0) {
+          half = Math.max(1, Math.floor(row.scrollWidth / 2));
+        }
+
+        const deltaTime = (currentTime - lastTime) / 1000;
+        const stepPx = speedPxPerSec * deltaTime;
+
+        row.scrollLeft += stepPx;
+        if (row.scrollLeft >= half) {
+          // jump instantly to create seamless loop
+          row.scrollLeft -= half;
+        }
+
+        lastTime = currentTime;
       }
-    }, 16);
 
-    return () => window.clearInterval(id);
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
   if (isLoading) {
