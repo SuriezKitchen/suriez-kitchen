@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://suriez-kitchen.vercel.app/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/*

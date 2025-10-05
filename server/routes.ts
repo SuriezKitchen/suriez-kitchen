@@ -484,6 +484,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve robots.txt
+  app.get("/robots.txt", (req, res) => {
+    res.type("text/plain");
+    res.send(`User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://suriez-kitchen.vercel.app/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/*`);
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
