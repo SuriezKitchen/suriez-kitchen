@@ -33,12 +33,12 @@ const dishImages = [
   },
   {
     filename: "IMG_3805.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3805.webp",
     title: "Chicken Curry",
   },
   {
     filename: "IMG_3804.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3804.webp",
     title: "Jollof Rice",
   },
   {
@@ -48,7 +48,7 @@ const dishImages = [
   },
   {
     filename: "IMG_3802.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3802.webp",
     title: "Chicken Pasta",
   },
   {

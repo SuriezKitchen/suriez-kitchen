@@ -45,7 +45,7 @@ async function createLocalVideosTable() {
         description:
           "Learn the secret to making the most delicious Nigerian jollof rice with this step-by-step tutorial. From choosing the right rice to achieving that perfect smoky flavor.",
         thumbnailUrl:
-          "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
+          "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3804.webp",
         videoUrl:
           "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
         duration: "8:45",
@@ -57,7 +57,7 @@ async function createLocalVideosTable() {
         description:
           "Discover the art of making aromatic and flavorful chicken curry that will transport you to the streets of India. Perfect blend of spices and techniques.",
         thumbnailUrl:
-          "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
+          "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3805.webp",
         videoUrl:
           "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
         duration: "12:30",
@@ -69,7 +69,7 @@ async function createLocalVideosTable() {
         description:
           "From flour to fork - learn how to make fresh pasta that will impress your family and friends. Complete guide to traditional Italian pasta techniques.",
         thumbnailUrl:
-          "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
+          "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3802.webp",
         videoUrl:
           "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
         duration: "15:20",

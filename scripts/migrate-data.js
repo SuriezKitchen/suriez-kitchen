@@ -31,7 +31,7 @@ const sampleDishes = [
     description:
       "Fragrant chicken curry paired with fluffy rice and warm, soft naan bread for a hearty, flavorful meal.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3805.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3805.webp",
     category: "Dinner",
     created_at: new Date("2025-09-13T19:46:19.945Z"),
   },
@@ -40,7 +40,7 @@ const sampleDishes = [
     description:
       "Smoky Nigerian jollof rice served with juicy chicken and sweet, golden fried plantain.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3804.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3804.webp",
     category: "Rice",
     created_at: new Date("2025-09-13T19:44:49.586Z"),
   },
@@ -58,7 +58,7 @@ const sampleDishes = [
     description:
       "Creamy chicken pasta tossed with tender pieces of chicken and flavorful herbs for a comforting meal.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3802.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3802.webp",
     category: "Pasta",
     created_at: new Date("2025-09-13T19:40:00.001Z"),
   },
