@@ -28,7 +28,7 @@ const sql = neon(connectionString);
 const dishImages = [
   {
     filename: "IMG_3806.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3806.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3806.webp",
     title: "Fried Rice & Salad",
   },
   {
@@ -43,7 +43,7 @@ const dishImages = [
   },
   {
     filename: "IMG_3803.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3803.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3803.webp",
     title: "Fried & Jollof Rice",
   },
   {
@@ -53,12 +53,12 @@ const dishImages = [
   },
   {
     filename: "IMG_3801.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3801.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3801.webp",
     title: "Rice and Sauce",
   },
   {
     filename: "IMG_3800.webp",
-    url: "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3800.webp",
+    url: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3800.webp",
     title: "Stir Fried Spaghetti",
   },
 ];

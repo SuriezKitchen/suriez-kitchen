@@ -22,7 +22,7 @@ const sampleDishes = [
     description:
       "Colorful fried rice served with a crisp, refreshing salad for a balanced and tasty meal.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3806.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3806.webp",
     category: "Dinner",
     created_at: new Date("2025-09-13T19:48:43.316Z"),
   },
@@ -49,7 +49,7 @@ const sampleDishes = [
     description:
       "A flavorful combo of smoky Nigerian jollof rice and savory fried rice, served with juicy chicken and sweet fried plantain.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3803.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3803.webp",
     category: "Rice",
     created_at: new Date("2025-09-13T19:43:00.185Z"),
   },
@@ -67,7 +67,7 @@ const sampleDishes = [
     description:
       "Tender beef in savory sauce, served with golden turmeric rice and a fresh avocado salad.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3801.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3801.webp",
     category: "Rice",
     created_at: new Date("2025-09-13T19:38:38.358Z"),
   },
@@ -76,7 +76,7 @@ const sampleDishes = [
     description:
       "Spaghetti stir-fried to perfection with rich seasonings and a delicious mix of flavors.",
     image_url:
-      "https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/IMG_3800.webp",
+      "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/dishes/IMG_3800.webp",
     category: "Pasta",
     created_at: new Date("2025-09-13T19:33:55.233Z"),
   },
