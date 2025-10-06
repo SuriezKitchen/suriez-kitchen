@@ -192,6 +192,7 @@ export default function Videos() {
               >
                 <VideoCard
                   video={video}
+                  priority={index === 0}
                   isPlaying={playingVideo === video.id}
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}

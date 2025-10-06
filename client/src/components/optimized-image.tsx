@@ -8,6 +8,10 @@ interface OptimizedImageProps {
   width?: number;
   height?: number;
   loading?: "lazy" | "eager";
+  // Hint browser to prioritize critical images
+  fetchPriority?: "high" | "low" | "auto";
+  // Responsive sizes attribute for better selection
+  sizes?: string;
   referrerPolicy?:
     | "no-referrer"
     | "no-referrer-when-downgrade"
@@ -28,6 +32,8 @@ export default function OptimizedImage({
   width,
   height,
   loading = "lazy",
+  fetchPriority,
+  sizes,
   referrerPolicy,
   dataTestId,
   fallbackSrc,
@@ -102,6 +108,8 @@ export default function OptimizedImage({
       width={width}
       height={height}
       loading={loading}
+      fetchpriority={fetchPriority}
+      sizes={sizes}
       referrerPolicy={referrerPolicy}
       data-testid={dataTestId}
       onError={handleImageError}

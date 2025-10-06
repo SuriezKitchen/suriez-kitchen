@@ -20,6 +20,8 @@ interface VideoCardProps {
   onPause: () => void;
   onYouTubeClick?: (url: string) => void;
   className?: string;
+  // Mark this card as highest priority for LCP (first visible card)
+  priority?: boolean;
 }
 
 export default function VideoCard({
@@ -29,6 +31,7 @@ export default function VideoCard({
   onPause,
   onYouTubeClick,
   className = "",
+  priority = false,
 }: VideoCardProps) {
   const getCardClasses = () => {
     return "bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500";
@@ -73,8 +76,11 @@ export default function VideoCard({
                   alt={video.title}
                   className={getThumbnailClasses()}
                   dataTestId={`video-thumbnail-${video.id}`}
-                  width={320}
-                  height={180}
+                  width={800}
+                  height={500}
+                  loading={priority ? "eager" : "lazy"}
+                  fetchPriority={priority ? "high" : "auto"}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   fallbackSrc={video.thumbnailUrl}
                 />
 
@@ -111,8 +117,11 @@ export default function VideoCard({
               alt={video.title}
               className={getThumbnailClasses()}
               dataTestId={`video-thumbnail-${video.id}`}
-              width={320}
-              height={180}
+              width={800}
+              height={500}
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : "auto"}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               fallbackSrc={video.thumbnailUrl}
             />
 
