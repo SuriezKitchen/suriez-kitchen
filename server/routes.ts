@@ -63,8 +63,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/youtube/videos", async (req, res) => {
     try {
       // Prioritize environment variables over database settings
-      let API_KEY = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY || "";
-      let CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID || "";
+      let API_KEY =
+        process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY || "";
+      let CHANNEL_ID =
+        process.env.YOUTUBE_CHANNEL_ID ||
+        process.env.VITE_YOUTUBE_CHANNEL_ID ||
+        "";
 
       // Fallback to database settings if env vars not set
       if (!API_KEY || !CHANNEL_ID) {
@@ -73,7 +77,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const channelIdSetting = settings.find(
           (s) => s.key === "youtube_channel_id"
         );
-        
+
         if (!API_KEY && apiKeySetting?.value) {
           API_KEY = apiKeySetting.value;
         }
@@ -124,8 +128,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/youtube/channel", async (req, res) => {
     try {
       // Prioritize environment variables over database settings
-      let API_KEY = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY || "";
-      let CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID || "";
+      let API_KEY =
+        process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY || "";
+      let CHANNEL_ID =
+        process.env.YOUTUBE_CHANNEL_ID ||
+        process.env.VITE_YOUTUBE_CHANNEL_ID ||
+        "";
 
       // Fallback to database settings if env vars not set
       if (!API_KEY || !CHANNEL_ID) {
@@ -134,7 +142,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const channelIdSetting = settings.find(
           (s) => s.key === "youtube_channel_id"
         );
-        
+
         if (!API_KEY && apiKeySetting?.value) {
           API_KEY = apiKeySetting.value;
         }
