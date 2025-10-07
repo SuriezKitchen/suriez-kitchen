@@ -62,22 +62,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // YouTube API integration endpoint
   app.get("/api/youtube/videos", async (req, res) => {
     try {
-      // Get settings from database
-      const settings = await storage.getSettings();
-      const apiKeySetting = settings.find((s) => s.key === "youtube_api_key");
-      const channelIdSetting = settings.find(
-        (s) => s.key === "youtube_channel_id"
-      );
+      // Prioritize environment variables over database settings
+      let API_KEY = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY || "";
+      let CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID || "";
 
-      // Fallback to environment variables if not in database
-      const API_KEY =
-        apiKeySetting?.value ||
-        process.env.YOUTUBE_API_KEY ||
-        process.env.VITE_YOUTUBE_API_KEY;
-      const CHANNEL_ID =
-        channelIdSetting?.value ||
-        process.env.YOUTUBE_CHANNEL_ID ||
-        process.env.VITE_YOUTUBE_CHANNEL_ID;
+      // Fallback to database settings if env vars not set
+      if (!API_KEY || !CHANNEL_ID) {
+        const settings = await storage.getSettings();
+        const apiKeySetting = settings.find((s) => s.key === "youtube_api_key");
+        const channelIdSetting = settings.find(
+          (s) => s.key === "youtube_channel_id"
+        );
+        
+        if (!API_KEY && apiKeySetting?.value) {
+          API_KEY = apiKeySetting.value;
+        }
+        if (!CHANNEL_ID && channelIdSetting?.value) {
+          CHANNEL_ID = channelIdSetting.value;
+        }
+      }
 
       if (!API_KEY || !CHANNEL_ID) {
         return res.status(500).json({
@@ -120,22 +123,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // YouTube channel statistics endpoint
   app.get("/api/youtube/channel", async (req, res) => {
     try {
-      // Get settings from database
-      const settings = await storage.getSettings();
-      const apiKeySetting = settings.find((s) => s.key === "youtube_api_key");
-      const channelIdSetting = settings.find(
-        (s) => s.key === "youtube_channel_id"
-      );
+      // Prioritize environment variables over database settings
+      let API_KEY = process.env.YOUTUBE_API_KEY || process.env.VITE_YOUTUBE_API_KEY || "";
+      let CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.VITE_YOUTUBE_CHANNEL_ID || "";
 
-      // Fallback to environment variables if not in database
-      const API_KEY =
-        apiKeySetting?.value ||
-        process.env.YOUTUBE_API_KEY ||
-        process.env.VITE_YOUTUBE_API_KEY;
-      const CHANNEL_ID =
-        channelIdSetting?.value ||
-        process.env.YOUTUBE_CHANNEL_ID ||
-        process.env.VITE_YOUTUBE_CHANNEL_ID;
+      // Fallback to database settings if env vars not set
+      if (!API_KEY || !CHANNEL_ID) {
+        const settings = await storage.getSettings();
+        const apiKeySetting = settings.find((s) => s.key === "youtube_api_key");
+        const channelIdSetting = settings.find(
+          (s) => s.key === "youtube_channel_id"
+        );
+        
+        if (!API_KEY && apiKeySetting?.value) {
+          API_KEY = apiKeySetting.value;
+        }
+        if (!CHANNEL_ID && channelIdSetting?.value) {
+          CHANNEL_ID = channelIdSetting.value;
+        }
+      }
 
       if (!API_KEY || !CHANNEL_ID) {
         return res.status(500).json({
