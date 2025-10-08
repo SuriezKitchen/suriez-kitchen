@@ -20,7 +20,7 @@ export default function Footer() {
               Suriez Kitchen
             </h3>
             <p
-              className="text-muted-foreground leading-relaxed"
+              className="text-background/90 leading-relaxed"
               data-testid="footer-description"
             >
               Crafting culinary experiences that celebrate flavor, technique,
@@ -34,7 +34,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => scrollToSection("gallery")}
-                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                  className="text-background/80 hover:text-primary transition-colors text-left"
                   data-testid="footer-link-gallery"
                 >
                   Gallery
@@ -43,7 +43,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => scrollToSection("videos")}
-                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                  className="text-background/80 hover:text-primary transition-colors text-left"
                   data-testid="footer-link-videos"
                 >
                   Videos
@@ -52,7 +52,7 @@ export default function Footer() {
               <li>
                 <a
                   href="/contact"
-                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                  className="text-background/80 hover:text-primary transition-colors text-left"
                   data-testid="footer-link-contact"
                 >
                   Contact
@@ -63,7 +63,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-semibold text-lg mb-4">Stay Connected</h4>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-background/90 mb-4">
               Subscribe for the latest recipes and cooking tips!
             </p>
             <div className="flex space-x-3">
@@ -71,7 +71,7 @@ export default function Footer() {
                 href="https://youtube.com/@Sureiyahsaid"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-background/80 hover:text-primary transition-colors"
                 data-testid="footer-social-youtube"
                 aria-label="Visit our YouTube channel"
               >
@@ -81,7 +81,7 @@ export default function Footer() {
                 href="https://instagram.com/suriez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-background/80 hover:text-primary transition-colors"
                 data-testid="footer-social-instagram"
                 aria-label="Follow us on Instagram"
               >
@@ -89,7 +89,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-background/80 hover:text-primary transition-colors"
                 data-testid="footer-social-tiktok"
                 aria-label="Follow us on TikTok (coming soon)"
               >
@@ -100,12 +100,12 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-          <p className="text-muted-foreground" data-testid="footer-copyright">
+          <p className="text-background/90" data-testid="footer-copyright">
             © 2024 Suriez Kitchen. Made with{" "}
             <i className="fas fa-heart text-primary"></i> for the love of
             cooking.
           </p>
-          <p className="text-muted-foreground text-sm mt-2">
+          <p className="text-background/80 text-sm mt-2">
             Website crafted by{" "}
             <a
               href="https://nextcone.com"
