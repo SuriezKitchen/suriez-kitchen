@@ -23,11 +23,6 @@ export default function HeroSection() {
       alt: "Kitchen setup image 2"
     },
     {
-      type: "image",
-      src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
-      alt: "Beautiful dish presentation"
-    },
-    {
       type: "image", 
       src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
       alt: "Gourmet cooking scene"
