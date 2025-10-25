@@ -19,7 +19,7 @@ export default function HeroSection() {
     },
     {
       type: "image", 
-      src: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
+      src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
       alt: "Gourmet cooking scene"
     },
     {
