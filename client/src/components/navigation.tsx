@@ -110,6 +110,19 @@ export default function Navigation() {
                 Videos
               </span>
             </Link>
+            <Link href="/menu">
+              <span
+                className={cn(
+                  "hover:text-primary transition-colors cursor-pointer",
+                  isScrolled
+                    ? "text-muted-foreground"
+                    : "text-white/90 hover:text-white"
+                )}
+                data-testid="nav-menu"
+              >
+                Menu
+              </span>
+            </Link>
             <Link href="/contact">
               <span
                 className={cn(
@@ -200,6 +213,20 @@ export default function Navigation() {
                   data-testid="mobile-nav-videos"
                 >
                   Videos
+                </span>
+              </Link>
+              <Link href="/menu">
+                <span
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "hover:text-primary transition-colors text-left cursor-pointer block",
+                    isMobileMenuOpen || isScrolled
+                      ? "text-muted-foreground"
+                      : "text-white/90 hover:text-white"
+                  )}
+                  data-testid="mobile-nav-menu"
+                >
+                  Menu
                 </span>
               </Link>
               <Link href="/contact">

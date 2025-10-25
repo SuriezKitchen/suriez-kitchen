@@ -10,7 +10,11 @@ export default function VideosSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   // Fetch local videos from database
-  const { data: localVideos, isLoading, error } = useQuery({
+  const {
+    data: localVideos,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["api", "local-videos"],
     queryFn: async () => {
       const response = await fetch("/api/local-videos");
@@ -86,11 +90,8 @@ export default function VideosSection() {
   };
 
   const openVideo = (videoId: string) => {
-    // For local videos, we'll handle this differently - maybe open in a modal or new tab
-    const video = videos.find(v => v.id === videoId);
-    if (video && video.videoUrl) {
-      window.open(video.videoUrl, "_blank");
-    }
+    // Navigate to videos page instead of opening video directly
+    window.location.href = "/videos";
   };
 
   // Touch handlers for mobile swipe
@@ -248,7 +249,10 @@ export default function VideosSection() {
                                 data-testid={`video-play-${video.id}`}
                                 aria-label={`Play video: ${video.title}`}
                               >
-                                <i className="fas fa-play text-2xl ml-1" aria-hidden="true"></i>
+                                <i
+                                  className="fas fa-play text-2xl ml-1"
+                                  aria-hidden="true"
+                                ></i>
                               </button>
                             </div>
                           </div>
@@ -272,17 +276,13 @@ export default function VideosSection() {
                             <div className="flex items-center text-sm text-muted-foreground gap-6">
                               <span className="flex items-center">
                                 <i className="far fa-eye mr-2"></i>
-                                <span
-                                  data-testid={`video-views-${video.id}`}
-                                >
+                                <span data-testid={`video-views-${video.id}`}>
                                   {video.views || "0"} views
                                 </span>
                               </span>
                               <span className="flex items-center">
                                 <i className="far fa-heart mr-2"></i>
-                                <span
-                                  data-testid={`video-likes-${video.id}`}
-                                >
+                                <span data-testid={`video-likes-${video.id}`}>
                                   {video.likes || "0"} likes
                                 </span>
                               </span>
@@ -308,9 +308,13 @@ export default function VideosSection() {
                           ? "bg-primary"
                           : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       }`}
-                      aria-label={`Go to video ${index + 1} of ${videos.length}`}
-                      aria-current={index === currentVideoIndex ? "true" : "false"}
-                      style={{ minWidth: '22px', minHeight: '22px' }}
+                      aria-label={`Go to video ${index + 1} of ${
+                        videos.length
+                      }`}
+                      aria-current={
+                        index === currentVideoIndex ? "true" : "false"
+                      }
+                      style={{ minWidth: "22px", minHeight: "22px" }}
                     />
                   ))}
                 </div>

@@ -229,6 +229,54 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
+          {/* Menu Management */}
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle>Menu Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                onClick={() => setLocation("/admin/menu")}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <i className="fas fa-utensils text-primary text-xl"></i>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      Menu Items
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Manage your restaurant menu - add dishes, set prices, and control availability
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-primary">→</div>
+                    <div className="text-sm text-muted-foreground">
+                      Manage Menu
+                    </div>
+                  </div>
+                  <svg
+                    className="h-5 w-5 text-muted-foreground"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
     </SessionManager>
