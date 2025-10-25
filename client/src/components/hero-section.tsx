@@ -34,11 +34,6 @@ export default function HeroSection() {
     },
     {
       type: "image",
-      src: "https://images.unsplash.com/photo-1574484284002-952d92456975?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
-      alt: "Chef in action"
-    },
-    {
-      type: "image",
       src: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
       alt: "Fresh ingredients"
     }
