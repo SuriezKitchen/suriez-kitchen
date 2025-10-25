@@ -5,14 +5,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import { useYouTube, useYouTubeChannelStats } from "@/hooks/use-youtube";
+// Removed YouTube integration - using only local videos
 import { useQuery } from "@tanstack/react-query";
 import VideoCard from "@/components/video-card";
 
 export default function Videos() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { videos: youtubeVideos, isLoading, error } = useYouTube();
-  const { channelStats } = useYouTubeChannelStats();
+  // Removed YouTube integration
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   // Fetch local videos from database
@@ -56,19 +55,6 @@ export default function Videos() {
     return () => observer.disconnect();
   }, []);
 
-  // Transform YouTube videos to match our format
-  const formattedYouTubeVideos = youtubeVideos.map((video) => ({
-    id: video.youtubeId,
-    platform: "youtube",
-    title: video.title,
-    description: video.description,
-    thumbnailUrl: video.thumbnailUrl,
-    url: `https://www.youtube.com/watch?v=${video.youtubeId}`,
-    duration: "Watch on YouTube",
-    views: video.viewCount ? `${video.viewCount.toLocaleString()}` : "N/A",
-    likes: video.likeCount ? `${video.likeCount.toLocaleString()}` : "N/A",
-  }));
-
   // Transform local videos to match our format
   const formattedLocalVideos = (localVideos || []).map((video: any) => ({
     id: video.id,
@@ -82,7 +68,7 @@ export default function Videos() {
     likes: video.likes,
   }));
 
-  const allVideos = [...formattedLocalVideos, ...formattedYouTubeVideos];
+  const allVideos = formattedLocalVideos;
 
   const openVideo = (url: string) => {
     window.open(url, "_blank");
@@ -96,7 +82,7 @@ export default function Videos() {
     setPlayingVideo(null);
   };
 
-  if (isLoading || isLoadingLocalVideos) {
+  if (isLoadingLocalVideos) {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
@@ -149,8 +135,7 @@ export default function Videos() {
               data-testid="videos-page-description"
             >
               Follow my culinary journey through engaging videos, cooking
-              tutorials, and behind-the-scenes content across YouTube and
-              Instagram.
+              tutorials, and behind-the-scenes content.
             </p>
 
             {/* Back to Home Link */}
@@ -166,21 +151,7 @@ export default function Videos() {
             </Link>
           </div>
 
-          {/* Error State for YouTube */}
-          {error && (
-            <div className="mb-8">
-              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-2xl mx-auto text-center">
-                <i className="fab fa-youtube text-4xl text-destructive mb-3"></i>
-                <p className="text-destructive font-medium mb-2">
-                  YouTube API Configuration Missing
-                </p>
-                <p className="text-muted-foreground text-sm">
-                  Unable to load YouTube videos. Please configure the YouTube
-                  API keys to see the latest content.
-                </p>
-              </div>
-            </div>
-          )}
+          {/* Removed YouTube error state */}
 
           {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -203,7 +174,7 @@ export default function Videos() {
           </div>
 
           {/* Empty State */}
-          {allVideos.length === 0 && !isLoading && (
+          {allVideos.length === 0 && !isLoadingLocalVideos && (
             <div className="text-center py-20">
               <div className="bg-card rounded-xl p-12 max-w-md mx-auto">
                 <i className="fas fa-video text-6xl text-muted-foreground mb-6"></i>
@@ -265,23 +236,15 @@ export default function Videos() {
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-primary mb-2">
-                    {`${channelStats?.formattedSubscribers || "0"}+`}
+                    {allVideos.reduce((total, video) => total + parseInt(video.views || "0"), 0).toLocaleString()}
                   </div>
-                  <div className="text-muted-foreground">
-                    YouTube Subscribers
-                  </div>
+                  <div className="text-muted-foreground">Total Views</div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-primary mb-2">
-                    {channelStats?.viewCount
-                      ? channelStats.viewCount >= 1000000
-                        ? `${(channelStats.viewCount / 1000000).toFixed(1)}M+`
-                        : channelStats.viewCount >= 1000
-                        ? `${(channelStats.viewCount / 1000).toFixed(0)}K+`
-                        : `${channelStats.viewCount}+`
-                      : "0+"}
+                    {allVideos.reduce((total, video) => total + parseInt(video.likes || "0"), 0).toLocaleString()}
                   </div>
-                  <div className="text-muted-foreground">Total Views</div>
+                  <div className="text-muted-foreground">Total Likes</div>
                 </div>
               </div>
             </div>

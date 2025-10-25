@@ -3,13 +3,23 @@ import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { useYouTube } from "@/hooks/use-youtube";
+import { useQuery } from "@tanstack/react-query";
 import OptimizedImage from "./optimized-image";
 
 export default function VideosSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const { videos, isLoading, error } = useYouTube();
+  // Fetch local videos from database
+  const { data: localVideos, isLoading, error } = useQuery({
+    queryKey: ["api", "local-videos"],
+    queryFn: async () => {
+      const response = await fetch("/api/local-videos");
+      if (!response.ok) throw new Error("Failed to fetch local videos");
+      return response.json();
+    },
+  });
+
+  const videos = localVideos || [];
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -75,8 +85,12 @@ export default function VideosSection() {
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
-  const openVideo = (youtubeId: string) => {
-    window.open(`https://www.youtube.com/watch?v=${youtubeId}`, "_blank");
+  const openVideo = (videoId: string) => {
+    // For local videos, we'll handle this differently - maybe open in a modal or new tab
+    const video = videos.find(v => v.id === videoId);
+    if (video && video.videoUrl) {
+      window.open(video.videoUrl, "_blank");
+    }
   };
 
   // Touch handlers for mobile swipe
@@ -114,11 +128,10 @@ export default function VideosSection() {
             </h2>
             <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-2xl mx-auto">
               <p className="text-destructive font-medium mb-2">
-                Unable to Load YouTube Videos
+                Unable to Load Videos
               </p>
               <p className="text-muted-foreground text-sm">
-                Please check that the YouTube API is properly configured with
-                valid API keys.
+                There was an error loading the videos. Please try again later.
               </p>
             </div>
           </div>
@@ -169,7 +182,7 @@ export default function VideosSection() {
             data-testid="videos-description"
           >
             Follow along as I share cooking tips, techniques, and the stories
-            behind my favorite recipes through my YouTube vlogs.
+            behind my favorite recipes through my video content.
           </p>
         </div>
 
@@ -213,26 +226,26 @@ export default function VideosSection() {
                   onTouchEnd={handleTouchEnd}
                 >
                   {videos.map((video, index) => (
-                    <div key={video.youtubeId} className="w-full flex-shrink-0">
+                    <div key={video.id} className="w-full flex-shrink-0">
                       <div className="flex justify-center px-4">
                         <Card className="bg-card overflow-hidden shadow-lg w-full max-w-4xl">
                           <div
                             className="relative cursor-pointer group"
-                            onClick={() => openVideo(video.youtubeId)}
+                            onClick={() => openVideo(video.id)}
                           >
                             <OptimizedImage
                               src={video.thumbnailUrl}
                               alt={video.title}
                               className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                              dataTestId={`video-thumbnail-${video.youtubeId}`}
+                              dataTestId={`video-thumbnail-${video.id}`}
                               width={400}
                               height={320}
                               fallbackSrc={video.thumbnailUrl}
                             />
                             <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
                               <button
-                                className="bg-red-600 text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-red-700 transition-all transform group-hover:scale-110"
-                                data-testid={`video-play-${video.youtubeId}`}
+                                className="bg-primary text-white rounded-full w-20 h-20 flex items-center justify-center hover:bg-primary/80 transition-all transform group-hover:scale-110"
+                                data-testid={`video-play-${video.id}`}
                                 aria-label={`Play video: ${video.title}`}
                               >
                                 <i className="fas fa-play text-2xl ml-1" aria-hidden="true"></i>
@@ -242,7 +255,7 @@ export default function VideosSection() {
                           <CardContent className="p-8">
                             <h3
                               className="font-serif text-2xl font-semibold mb-4"
-                              data-testid={`video-title-${video.youtubeId}`}
+                              data-testid={`video-title-${video.id}`}
                             >
                               {video.title.length > 80
                                 ? `${video.title.substring(0, 80)}...`
@@ -250,7 +263,7 @@ export default function VideosSection() {
                             </h3>
                             <p
                               className="text-muted-foreground mb-6 text-lg leading-relaxed"
-                              data-testid={`video-description-${video.youtubeId}`}
+                              data-testid={`video-description-${video.id}`}
                             >
                               {video.description.length > 150
                                 ? `${video.description.substring(0, 150)}...`
@@ -260,21 +273,17 @@ export default function VideosSection() {
                               <span className="flex items-center">
                                 <i className="far fa-eye mr-2"></i>
                                 <span
-                                  data-testid={`video-views-${video.youtubeId}`}
+                                  data-testid={`video-views-${video.id}`}
                                 >
-                                  {video.viewCount
-                                    ? `${video.viewCount.toLocaleString()} views`
-                                    : "Views unavailable"}
+                                  {video.views || "0"} views
                                 </span>
                               </span>
                               <span className="flex items-center">
                                 <i className="far fa-heart mr-2"></i>
                                 <span
-                                  data-testid={`video-likes-${video.youtubeId}`}
+                                  data-testid={`video-likes-${video.id}`}
                                 >
-                                  {video.likeCount
-                                    ? `${video.likeCount.toLocaleString()} likes`
-                                    : "Likes unavailable"}
+                                  {video.likes || "0"} likes
                                 </span>
                               </span>
                             </div>
@@ -311,13 +320,12 @@ export default function VideosSection() {
             // Fallback content when no videos are available
             <div className="text-center py-12">
               <div className="bg-card rounded-xl p-8 max-w-md mx-auto">
-                <i className="fab fa-youtube text-6xl text-primary mb-4"></i>
+                <i className="fas fa-video text-6xl text-primary mb-4"></i>
                 <h3 className="font-serif text-xl font-semibold mb-2">
                   No Videos Available
                 </h3>
                 <p className="text-muted-foreground">
-                  YouTube videos will appear here once the API is configured
-                  properly.
+                  Videos will appear here once they are uploaded.
                 </p>
               </div>
             </div>
@@ -338,12 +346,12 @@ export default function VideosSection() {
             <button
               className="bg-primary hover:bg-accent text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium transition-colors w-fit"
               onClick={() =>
-                window.open("https://youtube.com/@Sureiyahsaid", "_blank")
+                window.open("https://instagram.com/suriez_kitchen", "_blank")
               }
-              data-testid="button-subscribe-youtube"
+              data-testid="button-follow-instagram"
             >
-              <i className="fab fa-youtube mr-2"></i>
-              Subscribe to My Channel
+              <i className="fab fa-instagram mr-2"></i>
+              Follow on Instagram
             </button>
           </div>
         </div>

@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { useYouTubeChannelStats } from "@/hooks/use-youtube";
+// Removed YouTube integration
 import ResponsiveImage from "@/components/responsive-image";
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { channelStats, isLoading: statsLoading } = useYouTubeChannelStats();
+  // Removed YouTube channel stats
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -73,7 +73,7 @@ export default function AboutSection() {
                   sharing food that speaks to the soul.
                 </p>
                 <p>
-                  Through my YouTube channel, I invite you into my kitchen to
+                  Through my video content, I invite you into my kitchen to
                   explore the stories, flavors, and techniques that shape my
                   cooking. Whether you're an aspiring chef or someone who simply
                   loves good food, there's always something new and exciting to
@@ -86,14 +86,10 @@ export default function AboutSection() {
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">
-                  {statsLoading ? (
-                    <div className="animate-pulse bg-green-200 h-8 w-16 mx-auto rounded"></div>
-                  ) : (
-                    `${channelStats?.subscriberCount || 0}+`
-                  )}
+                  100+
                 </div>
                 <div className="text-sm text-green-700 font-medium">
-                  YouTube subscribers
+                  Recipes shared
                 </div>
               </div>
               <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
