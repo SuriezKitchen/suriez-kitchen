@@ -167,7 +167,6 @@ export default function Videos() {
                   isPlaying={playingVideo === video.id}
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}
-                  onYouTubeClick={openVideo}
                 />
               </div>
             ))}
@@ -195,20 +194,6 @@ export default function Videos() {
               Follow My Journey
             </h2>
             <div className="flex justify-center gap-6">
-              <a
-                href="https://youtube.com/@Sureiyahsaid"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group"
-              >
-                <div className="bg-red-600 hover:bg-red-700 text-white p-6 rounded-xl transition-all duration-300 transform group-hover:-translate-y-2 w-48 h-32 flex flex-col items-center justify-center text-center">
-                  <i className="fab fa-youtube text-3xl mb-3"></i>
-                  <h3 className="font-semibold">YouTube Channel</h3>
-                  <p className="text-red-100 text-sm">
-                    Subscribe for tutorials
-                  </p>
-                </div>
-              </a>
               <a
                 href="https://instagram.com/suriez_kitchen"
                 target="_blank"

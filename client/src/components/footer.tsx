@@ -68,16 +68,6 @@ export default function Footer() {
             </p>
             <div className="flex space-x-3">
               <a
-                href="https://youtube.com/@Sureiyahsaid"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-background/80 hover:text-primary transition-colors"
-                data-testid="footer-social-youtube"
-                aria-label="Visit our YouTube channel"
-              >
-                <i className="fab fa-youtube text-xl" aria-hidden="true"></i>
-              </a>
-              <a
                 href="https://instagram.com/suriez_kitchen"
                 target="_blank"
                 rel="noopener noreferrer"

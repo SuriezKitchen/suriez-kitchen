@@ -9,7 +9,7 @@ interface VideoCardProps {
     description: string;
     thumbnailUrl: string;
     videoUrl?: string;
-    platform: "local" | "youtube";
+    platform: "local";
     url?: string;
     duration?: string;
     views?: string;
@@ -18,7 +18,6 @@ interface VideoCardProps {
   isPlaying: boolean;
   onPlay: (id: string) => void;
   onPause: () => void;
-  onYouTubeClick?: (url: string) => void;
   className?: string;
   // Mark this card as highest priority for LCP (first visible card)
   priority?: boolean;
@@ -29,7 +28,6 @@ export default function VideoCard({
   isPlaying,
   onPlay,
   onPause,
-  onYouTubeClick,
   className = "",
   priority = false,
 }: VideoCardProps) {
@@ -107,10 +105,10 @@ export default function VideoCard({
             )}
           </div>
         ) : (
-          // YouTube video
+          // Local video
           <div
             className="relative cursor-pointer group"
-            onClick={() => onYouTubeClick?.(video.url!)}
+            onClick={() => window.open(video.videoUrl, "_blank")}
           >
             <OptimizedImage
               src={video.thumbnailUrl}
@@ -128,7 +126,7 @@ export default function VideoCard({
             {/* Play Button Overlay */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <button
-                className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-red-600 hover:bg-red-700"
+                className="rounded-full w-16 h-16 flex items-center justify-center text-white transition-all transform scale-75 group-hover:scale-100 bg-primary hover:bg-primary/80"
                 data-testid={`video-play-${video.id}`}
                 aria-label={`Play video: ${video.title}`}
               >

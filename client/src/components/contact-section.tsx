@@ -35,7 +35,6 @@ export default function ContactSection() {
 
   const getSocialIcon = (platform: string) => {
     const icons: Record<string, string> = {
-      youtube: "fab fa-youtube",
       instagram: "fab fa-instagram",
       tiktok: "fab fa-tiktok",
       facebook: "fab fa-facebook",
@@ -116,24 +115,6 @@ export default function ContactSection() {
             {/* Default third card if no social links */}
             {(!socialLinks || socialLinks.length === 0) && (
               <>
-                <div
-                  className="scroll-reveal text-center max-w-xs mx-auto md:max-w-none"
-                  style={{ animationDelay: "0.1s" }}
-                >
-                  <Card className="bg-card p-6 shadow-lg w-80 h-40 mx-auto md:w-72 lg:w-80">
-                    <CardContent className="p-0">
-                      <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i className="fab fa-youtube text-lg text-primary"></i>
-                      </div>
-                      <h3 className="font-serif text-lg font-semibold mb-2">
-                        YouTube
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        @Sureiyahsaid
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
 
                 <div
                   className="scroll-reveal text-center max-w-xs mx-auto md:max-w-none"
@@ -159,16 +140,6 @@ export default function ContactSection() {
 
           <div className="scroll-reveal">
             <div className="flex flex-wrap justify-center gap-4">
-              <a
-                href="https://youtube.com/@Sureiyahsaid"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary hover:bg-accent text-white p-4 rounded-full transition-colors"
-                data-testid="social-link-youtube"
-                aria-label="Visit our YouTube channel"
-              >
-                <i className="fab fa-youtube text-xl" aria-hidden="true"></i>
-              </a>
               <a
                 href="https://instagram.com/suriez_kitchen"
                 target="_blank"

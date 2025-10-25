@@ -57,10 +57,9 @@ export default function OptimizedImage({
 
   // Generate WebP URL for supported sources
   const getWebPUrl = (originalSrc: string): string => {
-    // For YouTube thumbnails, keep original JPG format to avoid 404s
-    // YouTube doesn't always have WebP versions available
+    // For external thumbnails, keep original format to avoid 404s
     if (originalSrc.includes("i.ytimg.com")) {
-      return originalSrc; // Use original JPG format
+      return originalSrc; // Use original JPG format for external sources
     }
 
     // For our R2 assets, try to use WebP version

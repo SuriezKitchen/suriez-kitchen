@@ -39,12 +39,6 @@ export default function Contact() {
   // Hardcoded social links - no API needed
   const socialLinks: SocialLink[] = [
     {
-      id: "youtube",
-      platform: "youtube",
-      username: "@Sureiyahsaid",
-      url: "https://youtube.com/@Sureiyahsaid",
-    },
-    {
       id: "instagram",
       platform: "instagram",
       username: "@suriezkitchen",
@@ -161,7 +155,6 @@ ${formData.message}`;
 
   const getSocialIcon = (platform: string) => {
     const icons: Record<string, string> = {
-      youtube: "fab fa-youtube",
       instagram: "fab fa-instagram",
       tiktok: "fab fa-tiktok",
       facebook: "fab fa-facebook",

@@ -101,9 +101,6 @@
 }
 
 /* Brand Icons */
-.fab.fa-youtube:before {
-  content: "\f167";
-}
 .fab.fa-instagram:before {
   content: "\f16d";
 }
