@@ -14,6 +14,16 @@ export default function HeroSection() {
     },
     {
       type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Set%20up%20image%20001.webp",
+      alt: "Kitchen setup image 1"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/set%20up%20002.webp",
+      alt: "Kitchen setup image 2"
+    },
+    {
+      type: "image",
       src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
       alt: "Beautiful dish presentation"
     },
