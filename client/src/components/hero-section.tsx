@@ -8,14 +8,14 @@ export default function HeroSection() {
   // Media carousel data - mix of videos and images
   const mediaItems = [
     {
-      type: "video",
-      src: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
-      alt: "Cooking preparation video"
-    },
-    {
       type: "image",
       src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Set%20up%20image%20001.webp",
       alt: "Kitchen setup image 1"
+    },
+    {
+      type: "video",
+      src: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
+      alt: "Cooking preparation video"
     },
     {
       type: "image",
