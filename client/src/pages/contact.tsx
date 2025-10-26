@@ -115,7 +115,7 @@ ${formData.message}`;
       const encodedEmailBody = encodeURIComponent(emailBody);
 
       // Your WhatsApp number (replace with your actual number)
-      const whatsappNumber = "1234567890"; // Replace with your WhatsApp number
+      const whatsappNumber = "255789779995"; // Replace with your WhatsApp number
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedWhatsappMessage}`;
 
       // Your email (replace with your actual email)
