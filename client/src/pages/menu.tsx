@@ -132,21 +132,21 @@ export default function Menu() {
       return;
     }
 
-    let message = `🍽️ *New Order from Suriez Kitchen Website*\n\n`;
-    message += `👤 *Customer Details:*\n`;
+    let message = `*New Order from Suriez Kitchen Website*\n\n`;
+    message += `*Customer Details:*\n`;
     message += `Name: ${customerInfo.name}\n`;
     message += `Phone: ${customerInfo.phone}\n`;
     message += `Address: ${customerInfo.address || 'Not provided'}\n`;
     if (customerInfo.notes) {
       message += `Notes: ${customerInfo.notes}\n`;
     }
-    message += `\n📋 *Order Items:*\n`;
+    message += `\n*Order Items:*\n`;
     
     orderItems.forEach(item => {
-      message += `• ${item.name} x${item.quantity} - ${item.price}\n`;
+      message += `- ${item.name} x${item.quantity} - ${item.price}\n`;
     });
     
-    message += `\n💰 *Total: $${getTotalPrice().toFixed(2)}*\n\n`;
+    message += `\n*Total: $${getTotalPrice().toFixed(2)}*\n\n`;
     message += `Please confirm this order and provide delivery details.`;
 
     const whatsappUrl = `https://wa.me/255789779995?text=${encodeURIComponent(message)}`;
