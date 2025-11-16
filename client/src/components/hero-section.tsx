@@ -28,14 +28,14 @@ export default function HeroSection() {
       alt: "Pink set up"
     },
     {
-      type: "video",
-      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/videos/White%20clean%20set%20up.mp4",
-      alt: "White clean set up"
-    },
-    {
       type: "image", 
       src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
       alt: "Gourmet cooking scene"
+    },
+    {
+      type: "video",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/videos/White%20clean%20set%20up.mp4",
+      alt: "White clean set up"
     },
     {
       type: "image",
