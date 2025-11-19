@@ -49,7 +49,8 @@ export default function AdminCategories() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/admin/me", {
+        const response = await fetch("/api/admin/login", {
+          method: "GET",
           credentials: "include",
         });
         if (!response.ok) {
@@ -140,9 +141,13 @@ export default function AdminCategories() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ operation: "logout" }),
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -236,7 +241,7 @@ export default function AdminCategories() {
                 <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
                   <CardTitle className="flex items-center justify-between">
                     Add New Category
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-muted-foreground">
                       {isAddCategoryOpen ? "▼" : "▶"}
                     </span>
                   </CardTitle>

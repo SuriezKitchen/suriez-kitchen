@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -37,9 +36,15 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const { data: socialLinks } = useQuery<SocialLink[]>({
-    queryKey: ["api", "social-links"],
-  });
+  // Hardcoded social links - no API needed
+  const socialLinks: SocialLink[] = [
+    {
+      id: "instagram",
+      platform: "instagram",
+      username: "@suriezkitchen",
+      url: "https://instagram.com/suriezkitchen",
+    },
+  ];
 
   // Ensure page scrolls to top when component mounts
   useEffect(() => {
@@ -110,7 +115,7 @@ ${formData.message}`;
       const encodedEmailBody = encodeURIComponent(emailBody);
 
       // Your WhatsApp number (replace with your actual number)
-      const whatsappNumber = "1234567890"; // Replace with your WhatsApp number
+      const whatsappNumber = "255789779995"; // Replace with your WhatsApp number
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedWhatsappMessage}`;
 
       // Your email (replace with your actual email)
@@ -150,7 +155,6 @@ ${formData.message}`;
 
   const getSocialIcon = (platform: string) => {
     const icons: Record<string, string> = {
-      youtube: "fab fa-youtube",
       instagram: "fab fa-instagram",
       tiktok: "fab fa-tiktok",
       facebook: "fab fa-facebook",
@@ -168,7 +172,7 @@ ${formData.message}`;
           {/* Page Header */}
           <div className="text-center mb-16 mt-8">
             <h1
-              className="font-serif text-4xl md:text-5xl font-bold text-gray-600 mb-6"
+              className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
               data-testid="contact-page-title"
             >
               Get In Touch
@@ -247,7 +251,7 @@ ${formData.message}`;
                           }
                           required
                         >
-                          <SelectTrigger className="mt-1">
+                          <SelectTrigger className="mt-1" aria-label="Select inquiry type">
                             <SelectValue placeholder="Select an option" />
                           </SelectTrigger>
                           <SelectContent>
@@ -322,12 +326,12 @@ ${formData.message}`;
                       >
                         {isSubmitting ? (
                           <>
-                            <i className="fas fa-spinner fa-spin mr-2"></i>
+                            <i className="fas fa-spinner fa-spin mr-2" aria-hidden="true"></i>
                             Sending Message...
                           </>
                         ) : (
                           <>
-                            <i className="fas fa-paper-plane mr-2"></i>
+                            <i className="fas fa-paper-plane mr-2" aria-hidden="true"></i>
                             Send Message
                           </>
                         )}
@@ -409,51 +413,26 @@ ${formData.message}`;
                       </h3>
 
                       <div className="grid grid-cols-2 gap-4">
-                        {socialLinks && socialLinks.length > 0 ? (
-                          socialLinks.map((link) => (
-                            <a
-                              key={link.id}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <i
-                                className={`${getSocialIcon(
-                                  link.platform
-                                )} text-primary text-lg`}
-                              ></i>
-                              <span className="text-sm font-medium capitalize">
-                                {link.platform}
-                              </span>
-                            </a>
-                          ))
-                        ) : (
-                          <>
-                            <a
-                              href="https://youtube.com/@Sureiyahsaid"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <i className="fab fa-youtube text-primary text-lg"></i>
-                              <span className="text-sm font-medium">
-                                YouTube
-                              </span>
-                            </a>
-                            <a
-                              href="https://instagram.com/sureiyah__"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <i className="fab fa-instagram text-primary text-lg"></i>
-                              <span className="text-sm font-medium">
-                                Instagram
-                              </span>
-                            </a>
-                          </>
-                        )}
+                        {socialLinks.map((link) => (
+                          <a
+                            key={link.id}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted transition-colors"
+                            aria-label={`Visit our ${link.platform} page`}
+                          >
+                            <i
+                              className={`${getSocialIcon(
+                                link.platform
+                              )} text-primary text-lg`}
+                              aria-hidden="true"
+                            ></i>
+                            <span className="text-sm font-medium capitalize">
+                              {link.platform}
+                            </span>
+                          </a>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>

@@ -16,8 +16,8 @@ export function useInactivity({
 }: UseInactivityOptions) {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [isWarning, setIsWarning] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const warningTimeoutRef = useRef<number | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
   const [, setLocation] = useLocation();
 
@@ -69,9 +69,7 @@ export function useInactivity({
     events.forEach((event) => {
       // Use passive listeners for touch and scroll events to avoid interfering with scrolling
       if (event === "touchstart" || event === "scroll") {
-        document.addEventListener(event, handleActivity, {
-          passive: true,
-        } as AddEventListenerOptions);
+        document.addEventListener(event, handleActivity, { passive: true });
       } else {
         document.addEventListener(event, handleActivity, { capture: true });
       }
@@ -86,7 +84,7 @@ export function useInactivity({
         if (event === "touchstart" || event === "scroll") {
           document.removeEventListener(event, handleActivity, {
             passive: true,
-          } as AddEventListenerOptions);
+          });
         } else {
           document.removeEventListener(event, handleActivity, {
             capture: true,

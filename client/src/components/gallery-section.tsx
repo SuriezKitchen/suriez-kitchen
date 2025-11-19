@@ -3,13 +3,14 @@ import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import ResponsiveImage from "@/components/responsive-image";
 import type { Dish } from "@shared/schema";
 
 export default function GallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
 
-  const { data: dishes, isLoading } = useQuery<Dish[]>({
+  const { data: dishes, isLoading, error } = useQuery<Dish[]>({
     queryKey: ["api", "dishes"],
   });
 
@@ -43,51 +44,43 @@ export default function GallerySection() {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-scroll the horizontal row continuously using a timer (more reliable across tabs)
+  // Auto-scroll the horizontal row continuously using requestAnimationFrame to avoid forced reflows
   useEffect(() => {
     const row = rowRef.current;
     if (!row) return;
 
     row.scrollLeft = 0;
     const speedPxPerSec = 60; // tune speed here
-    const stepPx = speedPxPerSec / 60; // ~60fps
+    let lastTime = 0;
+    let half = 0;
 
-    const id = window.setInterval(() => {
-      // re-evaluate because images may change width after load
-      const half = Math.max(1, Math.floor(row.scrollWidth / 2));
-      row.scrollLeft += stepPx;
-      if (row.scrollLeft >= half) {
-        // jump instantly to create seamless loop
-        row.scrollLeft -= half;
+    const animate = (currentTime: number) => {
+      if (currentTime - lastTime >= 16) {
+        // ~60fps
+        // Cache scrollWidth to avoid forced reflow
+        if (half === 0) {
+          half = Math.max(1, Math.floor(row.scrollWidth / 2));
+        }
+
+        const deltaTime = (currentTime - lastTime) / 1000;
+        const stepPx = speedPxPerSec * deltaTime;
+
+        row.scrollLeft += stepPx;
+        if (row.scrollLeft >= half) {
+          // jump instantly to create seamless loop
+          row.scrollLeft -= half;
+        }
+
+        lastTime = currentTime;
       }
-    }, 16);
 
-    return () => window.clearInterval(id);
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
   }, [loopDishes.length]);
 
-  if (isLoading) {
-    return (
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Skeleton className="h-12 w-96 mx-auto mb-6" />
-            <Skeleton className="h-6 w-full max-w-3xl mx-auto" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i}>
-                <Skeleton className="h-64 w-full" />
-                <CardContent className="p-6">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
+  // Simplified approach - always render the section, show loading inside if needed
 
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
@@ -108,14 +101,39 @@ export default function GallerySection() {
           </p>
         </div>
 
-        {/* Horizontal scroll row */}
-        <div
-          ref={rowRef}
-          className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
-          style={{ WebkitOverflowScrolling: "touch" }}
-        >
-          <div className="flex gap-6 pr-6 [&::-webkit-scrollbar]:hidden">
-            {loopDishes.map((dish, index) => (
+        {/* Show loading state */}
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Card key={i}>
+                <Skeleton className="h-64 w-full" />
+                <CardContent className="p-6">
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Show message if no dishes are available */}
+        {(!dishes || dishes.length === 0) && !isLoading && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              No dishes available at the moment. Please check back later.
+            </p>
+          </div>
+        )}
+
+        {/* Horizontal scroll row - only show if we have dishes */}
+        {dishes && dishes.length > 0 && (
+          <div
+            ref={rowRef}
+            className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
+            <div className="flex gap-6 pr-6 [&::-webkit-scrollbar]:hidden">
+              {loopDishes.map((dish, index) => (
               <div
                 key={`${dish.id}-${index}`}
                 className="scroll-reveal group"
@@ -123,11 +141,16 @@ export default function GallerySection() {
               >
                 <Card className="bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-96 min-w-[14rem] sm:min-w-[16rem] md:min-w-[18rem] flex-shrink-0 flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
-                    <img
+                    <ResponsiveImage
                       src={dish.imageUrl}
                       alt={dish.title}
                       className="w-full h-48 object-cover image-hover"
-                      data-testid={`dish-image-${dish.id}`}
+                      dataTestId={`dish-image-${dish.id}`}
+                      width={288}
+                      height={192}
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                      quality={65}
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="absolute bottom-4 left-4 text-white">
@@ -157,6 +180,7 @@ export default function GallerySection() {
             ))}
           </div>
         </div>
+        )}
 
         <div className="text-center mt-12">
           <Link href="/gallery">

@@ -10,34 +10,31 @@ import Footer from "@/components/footer";
 
 export default function Home() {
   useEffect(() => {
-    // Scroll reveal animation handler
-    const revealElements = () => {
-      const reveals = document.querySelectorAll(
-        ".scroll-reveal:not(.revealed)"
-      );
+    // Use Intersection Observer instead of scroll events to avoid forced reflows
+    const reveals = document.querySelectorAll(".scroll-reveal:not(.revealed)");
 
-      reveals.forEach((element) => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
+    if (reveals.length === 0) return;
 
-        if (elementTop < window.innerHeight - elementVisible) {
-          element.classList.add("revealed");
-        }
-      });
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
+      }
+    );
 
-    // Add scroll event listener
-    const handleScroll = () => {
-      revealElements();
-    };
+    reveals.forEach((reveal) => {
+      observer.observe(reveal);
+    });
 
-    window.addEventListener("scroll", handleScroll);
-
-    // Run on page load
-    revealElements();
-
-    // Cleanup
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => observer.disconnect();
   }, []);
 
   return (

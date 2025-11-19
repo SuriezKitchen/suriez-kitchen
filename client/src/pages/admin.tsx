@@ -12,7 +12,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/admin/me", {
+        const response = await fetch("/api/admin/login", {
+          method: "GET",
           credentials: "include",
         });
         if (!response.ok) {
@@ -27,9 +28,13 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        body: JSON.stringify({ operation: "logout" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -166,15 +171,15 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* Categories Management */}
+          {/* Video Management */}
           <Card className="mt-8">
             <CardHeader>
-              <CardTitle>Categories Management</CardTitle>
+              <CardTitle>Video Management</CardTitle>
             </CardHeader>
             <CardContent>
               <div
                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                onClick={() => setLocation("/admin/categories")}
+                onClick={() => setLocation("/admin/videos")}
               >
                 <div className="flex items-center space-x-4">
                   <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -188,15 +193,14 @@ export default function AdminDashboard() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
                       />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">Manage Categories</h3>
+                    <h3 className="font-semibold text-lg">Manage Local Videos</h3>
                     <p className="text-sm text-muted-foreground">
-                      Organize your dishes with custom categories - add, edit,
-                      and delete categories
+                      Add, edit, and delete your custom local videos - showcase your cooking tutorials
                     </p>
                   </div>
                 </div>
@@ -204,7 +208,7 @@ export default function AdminDashboard() {
                   <div className="text-right">
                     <div className="text-2xl font-bold text-primary">→</div>
                     <div className="text-sm text-muted-foreground">
-                      Manage Categories
+                      Manage Videos
                     </div>
                   </div>
                   <svg
@@ -225,45 +229,26 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* YouTube Settings */}
+          {/* Menu Management */}
           <Card className="mt-8">
             <CardHeader>
-              <CardTitle>YouTube Settings</CardTitle>
+              <CardTitle>Menu Management</CardTitle>
             </CardHeader>
             <CardContent>
               <div
                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                onClick={() => setLocation("/admin/settings")}
+                onClick={() => setLocation("/admin/menu")}
               >
                 <div className="flex items-center space-x-4">
                   <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="h-6 w-6 text-primary"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                    <i className="fas fa-utensils text-primary text-xl"></i>
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">
-                      YouTube Configuration
+                      Menu Items
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      Manage your YouTube API key and channel ID for automatic
-                      data fetching
+                      Manage your restaurant menu - add dishes, set prices, and control availability
                     </p>
                   </div>
                 </div>
@@ -271,7 +256,7 @@ export default function AdminDashboard() {
                   <div className="text-right">
                     <div className="text-2xl font-bold text-primary">→</div>
                     <div className="text-sm text-muted-foreground">
-                      Configure
+                      Manage Menu
                     </div>
                   </div>
                   <svg
@@ -291,6 +276,7 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+
         </div>
       </div>
     </SessionManager>

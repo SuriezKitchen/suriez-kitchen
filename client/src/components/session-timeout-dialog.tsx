@@ -36,9 +36,13 @@ export default function SessionTimeoutDialog({
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ operation: "logout" }),
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -90,7 +94,7 @@ export default function SessionTimeoutDialog({
             <Button
               variant="outline"
               onClick={handleLogout}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-muted-foreground hover:text-foreground"
             >
               <i className="fas fa-sign-out-alt mr-2"></i>
               Logout Now

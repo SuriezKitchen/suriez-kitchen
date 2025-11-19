@@ -3,10 +3,61 @@ import { Link } from "wouter";
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+
+  // Media carousel data - mix of videos and images
+  const mediaItems = [
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Set%20up%20image%20001.webp",
+      alt: "Kitchen setup image 1"
+    },
+    {
+      type: "video",
+      src: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
+      alt: "Cooking preparation video"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/set%20up%20002.webp",
+      alt: "Kitchen setup image 2"
+    },
+    {
+      type: "video",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/videos/Pink%20set%20up.mp4",
+      alt: "Pink set up"
+    },
+    {
+      type: "image", 
+      src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
+      alt: "Gourmet cooking scene"
+    },
+    {
+      type: "video",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/videos/White%20clean%20set%20up.mp4",
+      alt: "White clean set up"
+    },
+    {
+      type: "image",
+      src: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
+      alt: "Fresh ingredients"
+    }
+  ];
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  // Auto-rotate media every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMediaIndex((prevIndex) => 
+        (prevIndex + 1) % mediaItems.length
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [mediaItems.length]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -20,23 +71,37 @@ export default function HeroSection() {
       id="home"
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Hero Background Video */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      >
-        {/* Carrot video - Primary source */}
-        <source
-          src="https://pub-51f3a9919deb45cfbc4c98a1b2aec929.r2.dev/sureiz-kitchen-assets/61678-500316021_tiny.mp4"
-          type="video/mp4"
-        />
-        {/* Fallback message */}
-        Your browser does not support the video tag.
-      </video>
+      {/* Hero Background Media Carousel */}
+      <div className="absolute inset-0 w-full h-full">
+        {mediaItems.map((item, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
+              index === currentMediaIndex ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {item.type === "video" ? (
+              <video
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              >
+                <source src={item.src} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
+        ))}
+      </div>
 
       {/* Overlay */}
       <div className="hero-overlay absolute inset-0"></div>
@@ -55,8 +120,12 @@ export default function HeroSection() {
           <span className="block text-secondary">Meets Passion</span>
         </h1>
         <p
-          className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed"
+          className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-sans"
           data-testid="hero-description"
+          style={{
+            fontFamily:
+              'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          }}
         >
           Join Suriez Kitchen on a journey through flavors, techniques, and the
           stories behind every dish. From gourmet creations to behind-the-scenes
@@ -84,6 +153,43 @@ export default function HeroSection() {
           </Link>
         </div>
       </div>
+
+      {/* Carousel Navigation */}
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {mediaItems.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentMediaIndex(index)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentMediaIndex
+                ? "bg-white scale-125"
+                : "bg-white/50 hover:bg-white/75"
+            }`}
+            aria-label={`Go to media ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={() => setCurrentMediaIndex((prev) => 
+          prev === 0 ? mediaItems.length - 1 : prev - 1
+        )}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+        aria-label="Previous media"
+      >
+        <i className="fas fa-chevron-left"></i>
+      </button>
+      
+      <button
+        onClick={() => setCurrentMediaIndex((prev) => 
+          (prev + 1) % mediaItems.length
+        )}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+        aria-label="Next media"
+      >
+        <i className="fas fa-chevron-right"></i>
+      </button>
 
       {/* Scroll Indicator */}
       <div

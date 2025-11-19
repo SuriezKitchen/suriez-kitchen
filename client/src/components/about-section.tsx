@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { useYouTubeChannelStats } from "@/hooks/use-youtube";
+// Removed YouTube integration
+import ResponsiveImage from "@/components/responsive-image";
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { channelStats, isLoading: statsLoading } = useYouTubeChannelStats();
+  // Removed YouTube channel stats
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -33,10 +34,14 @@ export default function AboutSection() {
           {/* Left Column - Image */}
           <div className="scroll-reveal">
             <div className="relative max-w-2xl">
-              <img
-                src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=500&h=600&fit=crop"
+              <ResponsiveImage
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=600&q=80"
                 alt="Suriez Kitchen"
                 className="w-full h-[400px] lg:h-[600px] object-cover rounded-2xl shadow-2xl"
+                width={500}
+                height={600}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={85}
               />
               {/* Experience Badge */}
               <div className="absolute -bottom-4 -right-4 bg-green-600 text-white px-4 py-3 rounded-lg text-center">
@@ -54,17 +59,25 @@ export default function AboutSection() {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  From a small-town kitchen to culinary school and beyond, my
-                  journey has been fueled by an insatiable passion for creating
-                  memorable dining experiences. Each dish I craft tells a story
-                  of tradition, innovation, and the pure joy of sharing
-                  exceptional food.
+                  From the heart of Tanzania to the world, my journey began far
+                  from a professional kitchen. Though I studied Business
+                  Administration, my true calling was discovered in the
+                  comforting aromas and vibrant flavors that filled my home
+                  growing up. What started as a simple curiosity soon blossomed
+                  into a deep passion for creating dishes that connect people,
+                  cultures, and memories.
                 </p>
                 <p>
-                  Through my YouTube channel, I love sharing the techniques,
-                  stories, and inspirations behind my cooking. Whether you're a
-                  fellow chef or a home cooking enthusiast, there's always
-                  something new to discover in the kitchen together.
+                  Every meal I prepare is a reflection of where I come from — a
+                  blend of African tradition, modern inspiration, and the joy of
+                  sharing food that speaks to the soul.
+                </p>
+                <p>
+                  Through my video content, I invite you into my kitchen to
+                  explore the stories, flavors, and techniques that shape my
+                  cooking. Whether you're an aspiring chef or someone who simply
+                  loves good food, there's always something new and exciting to
+                  discover together.
                 </p>
               </div>
             </div>
@@ -73,14 +86,10 @@ export default function AboutSection() {
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">
-                  {statsLoading ? (
-                    <div className="animate-pulse bg-green-200 h-8 w-16 mx-auto rounded"></div>
-                  ) : (
-                    `${channelStats?.formattedSubscribers || "0"}+`
-                  )}
+                  100+
                 </div>
                 <div className="text-sm text-green-700 font-medium">
-                  YouTube Subscribers
+                  Recipes shared
                 </div>
               </div>
               <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
@@ -103,7 +112,7 @@ export default function AboutSection() {
               </Link>
               <Button
                 variant="outline"
-                className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 px-6 py-2 rounded-xl font-medium w-auto"
+                className="border-2 border-border hover:border-primary text-foreground px-6 py-2 rounded-xl font-medium w-auto"
                 onClick={() => {
                   // You can add resume download functionality here
                   window.open("#", "_blank");

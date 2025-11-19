@@ -13,24 +13,21 @@ const testimonials: Testimonial[] = [
     role: "Food Blogger",
     quote:
       "Suriez Kitchen elevates familiar flavors with incredible finesse. Every plate feels thoughtful and balanced.",
-    avatar:
-      "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop",
+    avatar: null, // Will use CSS-generated avatar
   },
   {
     name: "Daniel K.",
     role: "Culinary Enthusiast",
     quote:
       "The textures and aromas are unforgettable. You can taste the precision and love in each bite.",
-    avatar:
-      "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop",
+    avatar: null, // Will use CSS-generated avatar
   },
   {
     name: "Lola A.",
     role: "Event Planner",
     quote:
       "Elegant presentation, calm and natural palette, and remarkable consistency. Guests were delighted!",
-    avatar:
-      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&fit=crop",
+    avatar: null, // Will use CSS-generated avatar
   },
 ];
 
@@ -81,11 +78,24 @@ export default function TestimonialsSection() {
               style={{ animationDelay: `${idx * 0.08}s` }}
             >
               <div className="flex items-center gap-3 mb-3">
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
+                {t.avatar ? (
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                    width={40}
+                    height={40}
+                  />
+                ) : (
+                  <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm"
+                    style={{ 
+                      backgroundColor: `hsl(${(t.name.charCodeAt(0) * 137.5) % 360}, 70%, 50%)` 
+                    }}
+                  >
+                    {t.name.charAt(0)}
+                  </div>
+                )}
                 <div>
                   <div className="font-semibold text-foreground text-sm">
                     {t.name}

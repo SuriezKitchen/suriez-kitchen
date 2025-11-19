@@ -14,11 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -38,7 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import SessionManager from "@/components/session-manager";
-import type { Dish, Category } from "@shared/schema";
+import type { Dish } from "@shared/schema";
 
 export default function AdminDishes() {
   const [, setLocation] = useLocation();
@@ -50,14 +45,14 @@ export default function AdminDishes() {
     title: "",
     description: "",
     imageUrl: "",
-    category: "",
   });
 
   // Check authentication
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/admin/me", {
+        const response = await fetch("/api/admin/login", {
+          method: "GET",
           credentials: "include",
         });
         if (!response.ok) {
@@ -85,16 +80,6 @@ export default function AdminDishes() {
     },
   });
 
-  // Fetch categories
-  const { data: categories } = useQuery<Category[]>({
-    queryKey: ["api", "categories"],
-    queryFn: async () => {
-      const response = await fetch("/api/categories");
-      if (!response.ok) throw new Error("Failed to fetch categories");
-      return response.json();
-    },
-  });
-
   // Delete dish mutation
   const deleteDishMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -113,6 +98,7 @@ export default function AdminDishes() {
   // Create dish mutation
   const createDishMutation = useMutation({
     mutationFn: async (dishData: Omit<Dish, "id" | "createdAt">) => {
+      console.log("Creating dish with data:", dishData);
       const response = await fetch("/api/admin/dishes", {
         method: "POST",
         headers: {
@@ -121,12 +107,23 @@ export default function AdminDishes() {
         credentials: "include",
         body: JSON.stringify(dishData),
       });
-      if (!response.ok) throw new Error("Failed to create dish");
-      return response.json();
+      console.log("Response status:", response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to create dish:", errorText);
+        throw new Error("Failed to create dish");
+      }
+      const result = await response.json();
+      console.log("Dish created successfully:", result);
+      return result;
     },
     onSuccess: () => {
+      console.log("Dish creation successful, invalidating queries");
       queryClient.invalidateQueries({ queryKey: ["api", "dishes"] });
-      resetForm();
+      resetDishForm();
+    },
+    onError: (error) => {
+      console.error("Dish creation failed:", error);
     },
   });
 
@@ -146,20 +143,9 @@ export default function AdminDishes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["api", "dishes"] });
-      setIsEditing(false);
-      setEditingDish(null);
+      resetDishForm();
     },
   });
-
-  const resetForm = () => {
-    setDishForm({
-      title: "",
-      description: "",
-      imageUrl: "",
-      category: "",
-    });
-    setIsAddDishOpen(false);
-  };
 
   const handleEdit = (dish: Dish) => {
     setEditingDish(dish);
@@ -167,25 +153,49 @@ export default function AdminDishes() {
       title: dish.title,
       description: dish.description,
       imageUrl: dish.imageUrl,
-      category: dish.category,
     });
     setIsEditing(true);
   };
 
+  const resetDishForm = () => {
+    setDishForm({
+      title: "",
+      description: "",
+      imageUrl: "",
+    });
+    setIsAddDishOpen(false);
+    setIsEditing(false);
+    setEditingDish(null);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(
+      "Form submitted:",
+      dishForm,
+      "isEditing:",
+      isEditing,
+      "editingDish:",
+      editingDish
+    );
     if (isEditing && editingDish) {
+      console.log("Updating dish");
       updateDishMutation.mutate(dishForm);
     } else {
+      console.log("Creating dish");
       createDishMutation.mutate(dishForm);
     }
   };
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/logout", {
+      await fetch("/api/admin/login", {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ operation: "logout" }),
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -257,100 +267,27 @@ export default function AdminDishes() {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          {/* Add New Dish */}
-          <Collapsible open={isAddDishOpen} onOpenChange={setIsAddDishOpen}>
-            <Card className="mb-8">
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
-                  <CardTitle className="flex items-center justify-between">
-                    Add New Dish
-                    <span className="text-sm text-gray-500">
-                      {isAddDishOpen ? "▼" : "▶"}
-                    </span>
-                  </CardTitle>
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent>
-                  <form
-                    onSubmit={handleSubmit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        id="title"
-                        value={dishForm.title}
-                        onChange={(e) =>
-                          setDishForm({ ...dishForm, title: e.target.value })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Category</Label>
-                      <Select
-                        value={dishForm.category}
-                        onValueChange={(value) =>
-                          setDishForm({ ...dishForm, category: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories?.map((category) => (
-                            <SelectItem
-                              key={category.name}
-                              value={category.name}
-                            >
-                              {category.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={dishForm.description}
-                        onChange={(e) =>
-                          setDishForm({
-                            ...dishForm,
-                            description: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="imageUrl">Image URL</Label>
-                      <Input
-                        id="imageUrl"
-                        value={dishForm.imageUrl}
-                        onChange={(e) =>
-                          setDishForm({ ...dishForm, imageUrl: e.target.value })
-                        }
-                        required
-                        placeholder="https://example.com/image.jpg"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Button
-                        type="submit"
-                        disabled={createDishMutation.isPending}
-                      >
-                        {createDishMutation.isPending
-                          ? "Adding..."
-                          : "Add Dish"}
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </CollapsibleContent>
-            </Card>
-          </Collapsible>
+          {/* Add Dish Button */}
+          <div className="mb-8">
+            <Button
+              onClick={() => {
+                console.log("Add New Dish button clicked");
+                setDishForm({
+                  title: "",
+                  description: "",
+                  imageUrl: "",
+                });
+                setIsEditing(false);
+                setEditingDish(null);
+                setIsAddDishOpen(true);
+                console.log("Set isAddDishOpen to true");
+              }}
+              className="flex items-center gap-2"
+            >
+              <i className="fas fa-plus"></i>
+              Add New Dish
+            </Button>
+          </div>
 
           {/* Dishes List */}
           <div className="space-y-4">
@@ -381,6 +318,8 @@ export default function AdminDishes() {
                         src={dish.imageUrl}
                         alt={dish.title}
                         className="w-full h-full object-cover"
+                        width={64}
+                        height={64}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -390,9 +329,6 @@ export default function AdminDishes() {
                       <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                         {dish.description}
                       </p>
-                      <span className="inline-block text-xs bg-secondary px-2 py-1 rounded">
-                        {dish.category}
-                      </span>
                     </div>
                     <div className="flex gap-2 flex-shrink-0">
                       <Button
@@ -432,45 +368,40 @@ export default function AdminDishes() {
                 ))}
           </div>
 
-          {/* Edit Dialog */}
-          <Dialog open={isEditing} onOpenChange={setIsEditing}>
+          {/* Add/Edit Dialog */}
+          <Dialog
+            open={isAddDishOpen || isEditing}
+            onOpenChange={(open) => {
+              console.log(
+                "Dialog onOpenChange:",
+                open,
+                "isAddDishOpen:",
+                isAddDishOpen,
+                "isEditing:",
+                isEditing
+              );
+              if (!open) {
+                resetDishForm();
+              }
+            }}
+          >
             <DialogContent className="rounded-lg w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:w-auto sm:max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Edit Dish</DialogTitle>
+                <DialogTitle>
+                  {isEditing ? "Edit Dish" : "Add New Dish"}
+                </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-title">Title</Label>
-                    <Input
-                      id="edit-title"
-                      value={dishForm.title}
-                      onChange={(e) =>
-                        setDishForm({ ...dishForm, title: e.target.value })
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-category">Category</Label>
-                    <Select
-                      value={dishForm.category}
-                      onValueChange={(value) =>
-                        setDishForm({ ...dishForm, category: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories?.map((category) => (
-                          <SelectItem key={category.name} value={category.name}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-title">Title</Label>
+                  <Input
+                    id="edit-title"
+                    value={dishForm.title}
+                    onChange={(e) =>
+                      setDishForm({ ...dishForm, title: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="edit-description">Description</Label>
@@ -501,14 +432,24 @@ export default function AdminDishes() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setIsEditing(false)}
+                    onClick={resetDishForm}
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={updateDishMutation.isPending}>
-                    {updateDishMutation.isPending
-                      ? "Updating..."
-                      : "Update Dish"}
+                  <Button
+                    type="submit"
+                    disabled={
+                      createDishMutation.isPending ||
+                      updateDishMutation.isPending
+                    }
+                  >
+                    {isEditing
+                      ? updateDishMutation.isPending
+                        ? "Updating..."
+                        : "Update Dish"
+                      : createDishMutation.isPending
+                      ? "Adding..."
+                      : "Add Dish"}
                   </Button>
                 </div>
               </form>

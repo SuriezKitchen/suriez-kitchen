@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,7 +15,7 @@
   --secondary: hsl(120, 30%, 90%);
   --secondary-foreground: hsl(120, 15%, 20%);
   --muted: hsl(120, 20%, 92%);
-  --muted-foreground: hsl(120, 10%, 45%);
+  --muted-foreground: hsl(120, 10%, 35%);
   --accent: hsl(160, 40%, 35%);
   --accent-foreground: hsl(0, 0%, 98%);
   --destructive: hsl(356.3033, 90.5579%, 54.3137%);
@@ -38,9 +36,11 @@
   --sidebar-accent-foreground: hsl(120, 15%, 20%);
   --sidebar-border: hsl(120, 20%, 88%);
   --sidebar-ring: hsl(142, 45%, 45%);
-  --font-sans: "Open Sans", sans-serif;
-  --font-serif: Playfair Display, serif;
-  --font-mono: Menlo, monospace;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", Times, serif;
+  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+    "Courier New", monospace;
   --radius: 0.75rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(142, 45%, 45% / 0);
   --shadow-xs: 0px 2px 0px 0px hsl(142, 45%, 45% / 0);
@@ -72,7 +72,7 @@
   --secondary: hsl(120, 20%, 20%);
   --secondary-foreground: hsl(120, 10%, 85%);
   --muted: hsl(120, 15%, 18%);
-  --muted-foreground: hsl(120, 10%, 65%);
+  --muted-foreground: hsl(120, 10%, 75%);
   --accent: hsl(160, 45%, 40%);
   --accent-foreground: hsl(0, 0%, 98%);
   --destructive: hsl(356.3033, 90.5579%, 54.3137%);

@@ -9,11 +9,19 @@ export default function Navigation() {
   const [location] = useLocation();
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 100);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -102,6 +110,19 @@ export default function Navigation() {
                 Videos
               </span>
             </Link>
+            <Link href="/menu">
+              <span
+                className={cn(
+                  "hover:text-primary transition-colors cursor-pointer",
+                  isScrolled
+                    ? "text-muted-foreground"
+                    : "text-white/90 hover:text-white"
+                )}
+                data-testid="nav-menu"
+              >
+                Menu
+              </span>
+            </Link>
             <Link href="/contact">
               <span
                 className={cn(
@@ -132,13 +153,16 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             className={cn(
-              "md:hidden transition-colors",
+              "md:hidden transition-colors p-3",
               isMobileMenuOpen || isScrolled ? "text-primary" : "text-white"
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="mobile-menu-button"
+            aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
+            aria-expanded={isMobileMenuOpen}
+            style={{ minWidth: '44px', minHeight: '44px' }}
           >
-            <i className="fas fa-bars text-xl"></i>
+            <i className="fas fa-bars text-xl" aria-hidden="true"></i>
           </button>
         </div>
 
@@ -189,6 +213,20 @@ export default function Navigation() {
                   data-testid="mobile-nav-videos"
                 >
                   Videos
+                </span>
+              </Link>
+              <Link href="/menu">
+                <span
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "hover:text-primary transition-colors text-left cursor-pointer block",
+                    isMobileMenuOpen || isScrolled
+                      ? "text-muted-foreground"
+                      : "text-white/90 hover:text-white"
+                  )}
+                  data-testid="mobile-nav-menu"
+                >
+                  Menu
                 </span>
               </Link>
               <Link href="/contact">

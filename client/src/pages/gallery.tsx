@@ -4,20 +4,15 @@ import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// Select components removed - no longer needed
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import type { Dish, Category } from "@shared/schema";
+import ResponsiveImage from "@/components/responsive-image";
+import type { Dish } from "@shared/schema";
 
 export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  // Category filtering removed
 
   // Ensure page scrolls to top when component mounts
   useEffect(() => {
@@ -33,14 +28,7 @@ export default function Gallery() {
     queryKey: ["api", "dishes"],
   });
 
-  const { data: categories } = useQuery<Category[]>({
-    queryKey: ["api", "categories"],
-    queryFn: async () => {
-      const response = await fetch("/api/categories");
-      if (!response.ok) throw new Error("Failed to fetch categories");
-      return response.json();
-    },
-  });
+  // Categories removed - not needed
 
   // Pagination state
   const INITIAL_PAGE = 20; // show 20 first (5 rows of 4), then load more with button
@@ -76,28 +64,13 @@ export default function Gallery() {
     return () => observer.disconnect();
   }, []);
 
-  const availableCategories = categories
-    ? [
-        { name: "all", displayName: "All" },
-        ...categories.map((cat) => ({
-          name: cat.name.toLowerCase(),
-          displayName: cat.name,
-        })),
-      ]
-    : [{ name: "all", displayName: "All" }];
-  const filteredDishes = (dishes ?? []).filter(
-    (dish) =>
-      selectedCategory === "all" ||
-      dish.category.toLowerCase() === selectedCategory
-  );
+  // No category filtering - show all dishes
+  const filteredDishes = dishes ?? [];
 
   // Calculate visible dishes
   const visibleDishes = filteredDishes.slice(0, safeVisibleCount);
 
-  // Reset visible count when category filter changes
-  useEffect(() => {
-    setVisibleCount(INITIAL_PAGE);
-  }, [selectedCategory]);
+  // No category filtering, so no need to reset visible count
 
   // Disabled automatic infinite scroll - using manual "Load More" button instead
 
@@ -173,7 +146,7 @@ export default function Gallery() {
           {/* Header */}
           <div className="text-center mb-[35px] mt-8">
             <h1
-              className="font-serif text-4xl md:text-5xl font-bold text-gray-600 mb-6"
+              className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
               data-testid="gallery-page-title"
             >
               Culinary Gallery
@@ -200,26 +173,7 @@ export default function Gallery() {
             </Link>
           </div>
 
-          {/* Category Filter */}
-          <div className="flex justify-center mb-12">
-            <div className="w-full max-w-xs">
-              <Select
-                value={selectedCategory}
-                onValueChange={setSelectedCategory}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableCategories.map((category) => (
-                    <SelectItem key={category.name} value={category.name}>
-                      <span className="capitalize">{category.displayName}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          {/* Category filter removed */}
 
           {/* Gallery Grid (paginated) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -227,22 +181,29 @@ export default function Gallery() {
               <div key={dish.id} className="group">
                 <Card className="bg-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 h-[500px] flex flex-col">
                   <div className="relative overflow-hidden flex-shrink-0">
-                    <img
+                    <ResponsiveImage
                       src={dish.imageUrl}
                       alt={dish.title}
                       className="w-full h-56 object-cover image-hover"
-                      data-testid={`gallery-dish-image-${dish.id}`}
+                      dataTestId={`gallery-dish-image-${dish.id}`}
+                      width={350}
+                      height={224}
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                      quality={65}
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <div className="flex items-center justify-between">
-                          <span className="bg-primary/80 px-3 py-1 rounded-full text-sm font-medium">
-                            {dish.category}
-                          </span>
-                          <button className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-colors">
+                        <div className="flex items-center justify-end">
+                          <button 
+                            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center transition-colors"
+                            aria-label={`Like ${dish.title}`}
+                            style={{ minWidth: '44px', minHeight: '44px' }}
+                          >
                             <i
                               className="fas fa-heart text-lg"
                               data-testid={`gallery-dish-heart-${dish.id}`}
+                              aria-hidden="true"
                             ></i>
                           </button>
                         </div>
@@ -250,12 +211,12 @@ export default function Gallery() {
                     </div>
                   </div>
                   <CardContent className="p-6 flex-1 flex flex-col">
-                    <h3
+                    <h2
                       className="font-serif text-xl font-semibold mb-3"
                       data-testid={`gallery-dish-title-${dish.id}`}
                     >
                       {dish.title}
-                    </h3>
+                    </h2>
                     <p
                       className="text-muted-foreground leading-relaxed flex-1"
                       data-testid={`gallery-dish-description-${dish.id}`}
@@ -266,7 +227,7 @@ export default function Gallery() {
                       <div className="flex items-center justify-between text-sm text-muted-foreground">
                         <span className="flex items-center">
                           <i className="fas fa-utensils mr-2"></i>
-                          {dish.category}
+                          Dish
                         </span>
                         <span className="flex items-center">
                           <i className="fas fa-calendar mr-2"></i>
@@ -315,19 +276,13 @@ export default function Gallery() {
           {/* Stats */}
           {dishes && dishes.length > 0 && (
             <div className="mt-20 text-center">
-              <div className="bg-card rounded-xl p-8 max-w-2xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-card rounded-xl p-8 max-w-lg mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <div className="text-3xl font-bold text-primary mb-2">
                       {dishes.length}
                     </div>
                     <div className="text-muted-foreground">Total Creations</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-primary mb-2">
-                      {categories?.length || 0}
-                    </div>
-                    <div className="text-muted-foreground">Categories</div>
                   </div>
                   <div>
                     <div className="text-3xl font-bold text-primary mb-2">
