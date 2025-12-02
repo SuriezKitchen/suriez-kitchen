@@ -446,38 +446,38 @@ export default function Menu() {
                               {dayItems.map((item, index) => (
                                 <Card 
                                   key={item.id} 
-                                  className="group overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl"
+                                  className="group overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl flex flex-col h-full"
                                 >
                                   <div className="relative overflow-hidden">
-                      <OptimizedImage
-                        src={item.imageUrl}
-                        alt={item.name}
+                                    <OptimizedImage
+                                      src={item.imageUrl}
+                                      alt={item.name}
                                       className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                        width={300}
+                                      width={300}
                                       height={224}
-                        fallbackSrc={item.imageUrl}
-                      />
+                                      fallbackSrc={item.imageUrl}
+                                    />
                                     <div className="absolute top-4 right-4 z-20">
                                       <div className="bg-green-600 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                                         {item.price}
                                       </div>
                                     </div>
-                    </div>
-                    <CardContent className="p-6">
+                                  </div>
+                                  <CardContent className="p-6 flex flex-col flex-1">
                                     <h3 className="font-serif text-2xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
                                       {item.name}
                                     </h3>
-                                    <p className="text-muted-foreground mb-6 text-sm leading-relaxed line-clamp-2">
+                                    <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-2 flex-1">
                                       {item.description}
                                     </p>
-                        <Button
-                          onClick={() => addToOrder(item)}
-                                      className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                                    <Button
+                                      onClick={() => addToOrder(item)}
+                                      className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 mt-auto"
                                       size="lg"
-                        >
+                                    >
                                       <i className="fas fa-shopping-cart mr-2"></i>
-                          Add to Order
-                        </Button>
+                                      Add to Order
+                                    </Button>
                                   </CardContent>
                                 </Card>
                               ))}
@@ -528,7 +528,7 @@ export default function Menu() {
                           {filteredItemsByDay['Regular'].map((item, index) => (
                             <Card 
                               key={item.id} 
-                              className="group overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl"
+                              className="group overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl flex flex-col h-full"
                             >
                               <div className="relative overflow-hidden">
                                 <OptimizedImage
@@ -540,28 +540,28 @@ export default function Menu() {
                                   fallbackSrc={item.imageUrl}
                                 />
                                 <div className="absolute top-4 right-4 z-20">
-                                  <div className="bg-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                                  <div className="bg-green-600 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                                     {item.price}
                                   </div>
                                 </div>
-                      </div>
-                              <CardContent className="p-6">
+                              </div>
+                              <CardContent className="p-6 flex flex-col flex-1">
                                 <h3 className="font-serif text-2xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
                                   {item.name}
                                 </h3>
-                                <p className="text-muted-foreground mb-6 text-sm leading-relaxed line-clamp-2">
+                                <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-2 flex-1">
                                   {item.description}
                                 </p>
                                 <Button
                                   onClick={() => addToOrder(item)}
-                                  className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                                  className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 mt-auto"
                                   size="lg"
                                 >
                                   <i className="fas fa-shopping-cart mr-2"></i>
                                   Add to Order
                                 </Button>
-                    </CardContent>
-                  </Card>
+                              </CardContent>
+                            </Card>
                 ))}
                         </div>
                       </AccordionContent>
