@@ -18,6 +18,7 @@ import {
   settings,
   adminUsers,
 } from "@shared/schema";
+import * as schema from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { eq, sql } from "drizzle-orm";
@@ -44,6 +45,12 @@ export interface IStorage {
   getVideos(): Promise<Video[]>;
   getVideo(id: string): Promise<Video | undefined>;
   createVideo(video: InsertVideo): Promise<Video>;
+
+  // Local videos methods
+  getLocalVideos(): Promise<any[]>;
+
+  // Menu items methods
+  getMenuItems(): Promise<any[]>;
 
   getSocialLinks(): Promise<SocialLink[]>;
   createSocialLink(link: InsertSocialLink): Promise<SocialLink>;
@@ -589,6 +596,7 @@ export class MemStorage implements IStorage {
 
 export class NeonStorage implements IStorage {
   private db: ReturnType<typeof drizzle>;
+  private sql: ReturnType<typeof neon>;
 
   constructor() {
     // For Vercel with Neon, we'll use the Neon serverless driver
@@ -599,63 +607,125 @@ export class NeonStorage implements IStorage {
       );
     }
 
-    const sql = neon(connectionString);
-    this.db = drizzle(sql);
+    this.sql = neon(connectionString);
+    this.db = drizzle(this.sql, { schema });
   }
 
   private async ensureTables() {
     try {
-      // Create social_links table if it doesn't exist
-      await this.db.execute(sql`
-        CREATE TABLE IF NOT EXISTS social_links (
-          id TEXT PRIMARY KEY,
-          platform TEXT NOT NULL,
-          url TEXT NOT NULL,
-          username TEXT NOT NULL,
-          is_active BOOLEAN NOT NULL DEFAULT true,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      // Create dishes table if it doesn't exist
+      await this.sql`
+        CREATE TABLE IF NOT EXISTS dishes (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          image_url TEXT NOT NULL,
+          category TEXT,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
-      `);
+      `;
+
+      // Create videos table if it doesn't exist
+      await this.sql`
+        CREATE TABLE IF NOT EXISTS videos (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          youtube_id TEXT NOT NULL UNIQUE,
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          thumbnail_url TEXT NOT NULL,
+          view_count INTEGER DEFAULT 0,
+          like_count INTEGER DEFAULT 0,
+          published_at TIMESTAMP NOT NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+      `;
 
       // Create categories table if it doesn't exist
-      await this.db.execute(sql`
+      await this.sql`
         CREATE TABLE IF NOT EXISTS categories (
-          id TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          name TEXT NOT NULL UNIQUE,
           description TEXT,
-          color TEXT NOT NULL,
-          is_active BOOLEAN NOT NULL DEFAULT true,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          color TEXT DEFAULT '#3B82F6',
+          is_active BOOLEAN DEFAULT true,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
-      `);
+      `;
+
+      // Create social_links table if it doesn't exist
+      await this.sql`
+        CREATE TABLE IF NOT EXISTS social_links (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          platform TEXT NOT NULL,
+          url TEXT NOT NULL,
+          username TEXT,
+          is_active BOOLEAN DEFAULT true
+        )
+      `;
+
+      // Create local_videos table if it doesn't exist
+      await this.sql`
+        CREATE TABLE IF NOT EXISTS local_videos (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          thumbnail_url TEXT NOT NULL,
+          video_url TEXT NOT NULL,
+          duration TEXT NOT NULL,
+          views TEXT DEFAULT '0',
+          likes TEXT DEFAULT '0',
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+      `;
+
+      // Create menu_items table if it doesn't exist
+      await this.sql`
+        CREATE TABLE IF NOT EXISTS menu_items (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          name TEXT NOT NULL,
+          description TEXT NOT NULL,
+          price TEXT NOT NULL,
+          image_url TEXT NOT NULL,
+          category TEXT NOT NULL,
+          day_of_week TEXT,
+          is_available BOOLEAN DEFAULT true,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+      `;
+      
+      // Add day_of_week column if it doesn't exist (for existing tables)
+      await this.sql`
+        ALTER TABLE menu_items 
+        ADD COLUMN IF NOT EXISTS day_of_week TEXT
+      `;
 
       // Insert default social links if table is empty
-      const existingLinks = await this.db.execute(
-        sql`SELECT COUNT(*) as count FROM social_links`
-      );
-      const linksCount = existingLinks.rows[0]?.count || 0;
+      const existingLinks = await this.sql`
+        SELECT COUNT(*) as count FROM social_links
+      `;
+      const linksCount = Number(existingLinks[0]?.count || 0);
 
       if (linksCount === 0) {
-        await this.db.execute(sql`
+        await this.sql`
           INSERT INTO social_links (id, platform, url, username, is_active) VALUES
           ('default-youtube', 'youtube', 'https://youtube.com/@SuriezKitchen', '@SuriezKitchen', true),
           ('default-instagram', 'instagram', 'https://instagram.com/suriezkitchen', '@suriezkitchen', true)
-        `);
+        `;
       }
 
       // Insert default categories if table is empty
-      const existingCategories = await this.db.execute(
-        sql`SELECT COUNT(*) as count FROM categories`
-      );
-      const categoriesCount = existingCategories.rows[0]?.count || 0;
+      const existingCategories = await this.sql`
+        SELECT COUNT(*) as count FROM categories
+      `;
+      const categoriesCount = Number(existingCategories[0]?.count || 0);
 
       if (categoriesCount === 0) {
-        await this.db.execute(sql`
+        await this.sql`
           INSERT INTO categories (id, name, description, color, is_active) VALUES
           ('default-rice', 'Rice', 'Rice-based dishes and meals', '#22c55e', true),
           ('default-pasta', 'Pasta', 'Pasta dishes and noodles', '#3b82f6', true),
           ('default-dinner', 'Dinner', 'Main dinner dishes', '#8b5cf6', true)
-        `);
+        `;
       }
     } catch (error) {
       console.error("Error ensuring tables:", error);
@@ -663,7 +733,17 @@ export class NeonStorage implements IStorage {
   }
 
   async getDishes(): Promise<Dish[]> {
-    return await this.db.select().from(dishes).orderBy(dishes.createdAt);
+    await this.ensureTables();
+    // Use raw SQL since drizzle queries are having issues with Neon serverless
+    const result = await this.sql`
+      SELECT id, title, description, image_url as "imageUrl", category, created_at as "createdAt"
+      FROM dishes
+      ORDER BY created_at DESC
+    `;
+    return result.map((row: any) => ({
+      ...row,
+      createdAt: new Date(row.createdAt),
+    }));
   }
 
   async getDish(id: string): Promise<Dish | undefined> {
@@ -706,7 +786,66 @@ export class NeonStorage implements IStorage {
   }
 
   async getVideos(): Promise<Video[]> {
-    return await this.db.select().from(videos).orderBy(videos.publishedAt);
+    await this.ensureTables();
+    // Use raw SQL since drizzle queries are having issues with Neon serverless
+    const result = await this.sql`
+      SELECT id, youtube_id as "youtubeId", title, description, thumbnail_url as "thumbnailUrl",
+             view_count as "viewCount", like_count as "likeCount", 
+             published_at as "publishedAt", created_at as "createdAt"
+      FROM videos
+      ORDER BY published_at DESC
+    `;
+    return result.map((row: any) => ({
+      ...row,
+      publishedAt: new Date(row.publishedAt),
+      createdAt: new Date(row.createdAt),
+      viewCount: row.viewCount || 0,
+      likeCount: row.likeCount || 0,
+    }));
+  }
+
+  async getLocalVideos(): Promise<any[]> {
+    await this.ensureTables();
+    // Use raw SQL to fetch local videos
+    const result = await this.sql`
+      SELECT id, title, description, thumbnail_url as "thumbnailUrl",
+             video_url as "videoUrl", duration, views, likes,
+             created_at as "createdAt"
+      FROM local_videos
+      ORDER BY created_at DESC
+    `;
+    return result.map((row: any) => ({
+      ...row,
+      createdAt: new Date(row.createdAt),
+    }));
+  }
+
+  async getMenuItems(): Promise<any[]> {
+    await this.ensureTables();
+    // Use raw SQL to fetch menu items
+    const result = await this.sql`
+      SELECT id, name, description, price, image_url as "imageUrl",
+             category, day_of_week as "dayOfWeek", is_available as "isAvailable",
+             created_at as "createdAt"
+      FROM menu_items
+      WHERE is_available = true
+      ORDER BY 
+        CASE day_of_week
+          WHEN 'Monday' THEN 1
+          WHEN 'Tuesday' THEN 2
+          WHEN 'Wednesday' THEN 3
+          WHEN 'Thursday' THEN 4
+          WHEN 'Friday' THEN 5
+          WHEN 'Saturday' THEN 6
+          WHEN 'Sunday' THEN 7
+          ELSE 8
+        END,
+        created_at DESC
+    `;
+    return result.map((row: any) => ({
+      ...row,
+      createdAt: new Date(row.createdAt),
+    }));
   }
 
   async getVideo(id: string): Promise<Video | undefined> {

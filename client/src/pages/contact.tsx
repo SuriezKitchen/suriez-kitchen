@@ -255,24 +255,18 @@ ${formData.message}`;
                             <SelectValue placeholder="Select an option" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="collaboration">
-                              Collaboration
+                            <SelectItem value="dine-in-reservation">
+                              Dine in Reservation
                             </SelectItem>
-                            <SelectItem value="private-chef">
-                              Private Chef Services
+                            <SelectItem value="takeaway-order">
+                              Takeaway Order
                             </SelectItem>
-                            <SelectItem value="cooking-classes">
-                              Cooking Classes
+                            <SelectItem value="event-catering">
+                              Event Catering
                             </SelectItem>
-                            <SelectItem value="catering">Catering</SelectItem>
-                            <SelectItem value="recipe-inquiry">
-                              Recipe Inquiry
-                            </SelectItem>
-                            <SelectItem value="business-inquiry">
-                              Business Inquiry
-                            </SelectItem>
-                            <SelectItem value="media-inquiry">
-                              Media Inquiry
+                            <SelectItem value="meal-prep">Meal Prep</SelectItem>
+                            <SelectItem value="corporate-catering">
+                              Corporate Catering
                             </SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                           </SelectContent>

@@ -24,6 +24,7 @@ export default async function handler(req, res) {
           price,
           image_url as "imageUrl",
           category,
+          day_of_week as "dayOfWeek",
           is_available as "isAvailable",
           created_at as "createdAt"
         FROM menu_items 
@@ -31,15 +32,15 @@ export default async function handler(req, res) {
       `;
       res.status(200).json(menuItems);
     } else if (req.method === "POST") {
-      const { name, description, price, imageUrl, category, isAvailable } = req.body;
+      const { name, description, price, imageUrl, category, dayOfWeek, isAvailable } = req.body;
 
       if (!name || !description || !price || !imageUrl || !category) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
       const newMenuItem = await sql`
-        INSERT INTO menu_items (name, description, price, image_url, category, is_available)
-        VALUES (${name}, ${description}, ${price}, ${imageUrl}, ${category}, ${isAvailable || true})
+        INSERT INTO menu_items (name, description, price, image_url, category, day_of_week, is_available)
+        VALUES (${name}, ${description}, ${price}, ${imageUrl}, ${category}, ${dayOfWeek || null}, ${isAvailable || true})
         RETURNING 
           id,
           name,
@@ -47,6 +48,7 @@ export default async function handler(req, res) {
           price,
           image_url as "imageUrl",
           category,
+          day_of_week as "dayOfWeek",
           is_available as "isAvailable",
           created_at as "createdAt"
       `;

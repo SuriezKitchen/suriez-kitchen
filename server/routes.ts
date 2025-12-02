@@ -55,6 +55,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all local videos
+  app.get("/api/local-videos", async (req, res) => {
+    try {
+      const localVideos = await storage.getLocalVideos();
+      res.json(localVideos);
+    } catch (error) {
+      console.error("Error fetching local videos:", error);
+      res.status(500).json({ message: "Failed to fetch local videos" });
+    }
+  });
+
+  // Get all menu items
+  app.get("/api/menu-items", async (req, res) => {
+    try {
+      const menuItems = await storage.getMenuItems();
+      res.json(menuItems);
+    } catch (error) {
+      console.error("Error fetching menu items:", error);
+      res.status(500).json({ message: "Failed to fetch menu items" });
+    }
+  });
+
   // Social links are now hardcoded in the frontend - no API needed
 
   // Categories API removed - not needed

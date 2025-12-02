@@ -7,6 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import SessionManager from "@/components/session-manager";
 import type { MenuItem, InsertMenuItem } from "@shared/schema";
@@ -17,6 +24,7 @@ interface MenuForm {
   price: string;
   imageUrl: string;
   category: string;
+  dayOfWeek?: string | null;
   isAvailable: boolean;
 }
 
@@ -33,6 +41,7 @@ export default function AdminMenu() {
     price: "",
     imageUrl: "",
     category: "",
+    dayOfWeek: null,
     isAvailable: true,
   });
 
@@ -212,6 +221,7 @@ export default function AdminMenu() {
       price: menuItem.price,
       imageUrl: menuItem.imageUrl,
       category: menuItem.category,
+      dayOfWeek: menuItem.dayOfWeek || null,
       isAvailable: menuItem.isAvailable,
     });
     setIsEditingMenuItem(true);
@@ -428,6 +438,27 @@ export default function AdminMenu() {
                         required
                         placeholder="e.g., Appetizers, Main Course"
                       />
+                    </div>
+                    <div>
+                      <Label htmlFor="dayOfWeek">Day of Week (Optional)</Label>
+                      <Select
+                        value={menuForm.dayOfWeek || ""}
+                        onValueChange={(value) => handleInputChange("dayOfWeek", value === "none" ? null : value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a day or leave as regular item" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">Regular Item (No specific day)</SelectItem>
+                          <SelectItem value="Monday">Monday</SelectItem>
+                          <SelectItem value="Tuesday">Tuesday</SelectItem>
+                          <SelectItem value="Wednesday">Wednesday</SelectItem>
+                          <SelectItem value="Thursday">Thursday</SelectItem>
+                          <SelectItem value="Friday">Friday</SelectItem>
+                          <SelectItem value="Saturday">Saturday</SelectItem>
+                          <SelectItem value="Sunday">Sunday</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 

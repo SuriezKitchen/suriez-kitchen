@@ -26,6 +26,7 @@ export default async function handler(req, res) {
           price,
           image_url as "imageUrl",
           category,
+          day_of_week as "dayOfWeek",
           is_available as "isAvailable",
           created_at as "createdAt"
         FROM menu_items 
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
 
       res.status(200).json(menuItem[0]);
     } else if (req.method === "PUT") {
-      const { name, description, price, imageUrl, category, isAvailable } = req.body;
+      const { name, description, price, imageUrl, category, dayOfWeek, isAvailable } = req.body;
 
       if (!name || !description || !price || !imageUrl || !category) {
         return res.status(400).json({ message: "Missing required fields" });
@@ -52,6 +53,7 @@ export default async function handler(req, res) {
           price = ${price},
           image_url = ${imageUrl},
           category = ${category},
+          day_of_week = ${dayOfWeek || null},
           is_available = ${isAvailable}
         WHERE id = ${id}
         RETURNING 
@@ -61,6 +63,7 @@ export default async function handler(req, res) {
           price,
           image_url as "imageUrl",
           category,
+          day_of_week as "dayOfWeek",
           is_available as "isAvailable",
           created_at as "createdAt"
       `;

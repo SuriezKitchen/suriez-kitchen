@@ -106,6 +106,7 @@ export const menuItems = pgTable("menu_items", {
   price: text("price").notNull(),
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull(),
+  dayOfWeek: text("day_of_week"), // Monday, Tuesday, Wednesday, etc. or null for regular items
   isAvailable: boolean("is_available").default(true),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
