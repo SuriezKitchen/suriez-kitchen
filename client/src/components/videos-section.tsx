@@ -237,7 +237,7 @@ export default function VideosSection() {
                             <OptimizedImage
                               src={video.thumbnailUrl}
                               alt={video.title}
-                              className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+                              className="w-full h-80 object-contain md:object-cover transition-transform duration-300 group-hover:scale-105"
                               dataTestId={`video-thumbnail-${video.id}`}
                               width={400}
                               height={320}

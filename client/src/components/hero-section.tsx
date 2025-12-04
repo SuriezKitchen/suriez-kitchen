@@ -70,9 +70,10 @@ export default function HeroSection() {
     <section
       id="home"
       className="relative h-screen flex items-center justify-center overflow-hidden"
+      style={{ minHeight: '100vh' }}
     >
       {/* Hero Background Media Carousel */}
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
         {mediaItems.map((item, index) => (
           <div
             key={index}
@@ -82,7 +83,7 @@ export default function HeroSection() {
           >
             {item.type === "video" ? (
               <video
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
                 autoPlay
                 muted
                 loop
@@ -96,7 +97,7 @@ export default function HeroSection() {
               <img
                 src={item.src}
                 alt={item.alt}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
               />
             )}
           </div>
@@ -133,13 +134,13 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/videos">
+          <Link href="/menu">
             <button
               className="btn-primary px-8 py-4 text-white font-medium rounded-lg"
-              data-testid="button-watch-vlogs"
+              data-testid="button-order-now"
             >
-              <i className="fas fa-play mr-2"></i>
-              Watch Latest Vlogs
+              <i className="fas fa-shopping-cart mr-2"></i>
+              Order Now
             </button>
           </Link>
           <Link href="/gallery">

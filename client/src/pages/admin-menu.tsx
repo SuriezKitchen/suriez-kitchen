@@ -311,7 +311,7 @@ export default function AdminMenu() {
           {/* Menu Items Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {menuItems?.map((menuItem) => (
-              <Card key={menuItem.id} className="overflow-hidden">
+              <Card key={menuItem.id} className="overflow-hidden flex flex-col h-full">
                 <div className="relative">
                   <img
                     src={menuItem.imageUrl}
@@ -326,13 +326,13 @@ export default function AdminMenu() {
                     </div>
                   )}
                 </div>
-                <CardContent className="p-6">
+                <CardContent className="p-6 flex flex-col flex-1">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-serif text-xl font-semibold">{menuItem.name}</h3>
                     <span className="text-2xl font-bold text-primary">{menuItem.price}</span>
                   </div>
-                  <p className="text-muted-foreground text-sm mb-4">{menuItem.description}</p>
-                  <div className="flex items-center justify-between">
+                  <p className="text-muted-foreground text-sm mb-4 flex-1">{menuItem.description}</p>
+                  <div className="flex items-center justify-between mt-auto">
                     <span className="text-sm bg-muted px-2 py-1 rounded-full">
                       {menuItem.category}
                     </span>
