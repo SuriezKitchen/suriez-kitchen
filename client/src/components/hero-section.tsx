@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
+// Hero section component with media carousel
+
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
