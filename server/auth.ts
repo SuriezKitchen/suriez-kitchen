@@ -94,6 +94,16 @@ export const login = async (
   user: any
 ): Promise<void> => {
   try {
+    // Check if session is available
+    if (!req.session) {
+      console.error("Session not available in login function");
+      res.status(500).json({
+        message: "Session not initialized",
+        code: "SESSION_NOT_INITIALIZED",
+      });
+      return;
+    }
+
     // Verify password
     const isValidPassword = await comparePassword(password, user.passwordHash);
     if (!isValidPassword) {
@@ -127,28 +137,36 @@ export const login = async (
     req.session.save((err: any) => {
       if (err) {
         console.error("Session save error:", err);
-        res.status(500).json({
-          message: "Failed to create session",
-          code: "SESSION_ERROR",
-        });
+        console.error("Session save error stack:", err.stack);
+        if (!res.headersSent) {
+          res.status(500).json({
+            message: "Failed to create session",
+            code: "SESSION_ERROR",
+          });
+        }
         return;
       }
 
-      res.json({
-        message: "Login successful",
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-        },
-      });
+      if (!res.headersSent) {
+        res.json({
+          message: "Login successful",
+          user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+          },
+        });
+      }
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({
-      message: "Internal server error",
-      code: "INTERNAL_ERROR",
-    });
+    console.error("Login error stack:", error instanceof Error ? error.stack : "No stack trace");
+    if (!res.headersSent) {
+      res.status(500).json({
+        message: "Internal server error",
+        code: "INTERNAL_ERROR",
+      });
+    }
   }
 };
 

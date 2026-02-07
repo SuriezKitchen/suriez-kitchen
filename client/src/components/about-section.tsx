@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-// Removed YouTube integration
-import ResponsiveImage from "@/components/responsive-image";
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -30,29 +28,9 @@ export default function AboutSection() {
   return (
     <section id="about" className="py-20 bg-background" ref={sectionRef}>
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-0 lg:space-x-[60px]">
-          {/* Left Column - Image */}
-          <div className="scroll-reveal">
-            <div className="relative max-w-2xl">
-              <ResponsiveImage
-                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=600&q=80"
-                alt="Suriez Kitchen"
-                className="w-full h-[400px] lg:h-[600px] object-cover rounded-2xl shadow-2xl"
-                width={500}
-                height={600}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                quality={85}
-              />
-              {/* Experience Badge */}
-              <div className="absolute -bottom-4 -right-4 bg-green-600 text-white px-4 py-3 rounded-lg text-center">
-                <div className="text-2xl font-bold">5+</div>
-                <div className="text-xs font-medium">Years Experience</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Content */}
-          <div className="scroll-reveal space-y-8 max-w-lg">
+        <div className="flex flex-col items-center justify-center">
+          {/* Content */}
+          <div className="scroll-reveal space-y-8 max-w-3xl">
             <div>
               <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
                 Meet Suriez Kitchen

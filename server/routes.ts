@@ -224,6 +224,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin login check endpoint (GET)
+  app.get("/api/admin/login", async (req, res) => {
+    try {
+      const user = getCurrentUser(req);
+      if (!user) {
+        return res.status(401).json({
+          message: "Not authenticated",
+          code: "NOT_AUTHENTICATED",
+        });
+      }
+      res.json({ authenticated: true, user });
+    } catch (error) {
+      console.error("Auth check error:", error);
+      res.status(500).json({
+        message: "Internal server error",
+        code: "INTERNAL_ERROR",
+      });
+    }
+  });
+
   // Admin login endpoint
   app.post("/api/admin/login", async (req, res) => {
     try {
@@ -246,7 +266,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get user from database
-      const user = await storage.getAdminUserByUsername(username);
+      let user;
+      try {
+        console.log("Attempting to fetch user:", username);
+        user = await storage.getAdminUserByUsername(username);
+        console.log("User fetched:", user ? "User found" : "User not found");
+      } catch (dbError) {
+        console.error("Database error fetching user:", dbError);
+        console.error("Database error type:", typeof dbError);
+        console.error("Database error message:", dbError instanceof Error ? dbError.message : String(dbError));
+        console.error("Database error stack:", dbError instanceof Error ? dbError.stack : "No stack");
+        return res.status(500).json({
+          message: "Database error: " + (dbError instanceof Error ? dbError.message : String(dbError)),
+          code: "DATABASE_ERROR",
+        });
+      }
+
       if (!user) {
         return res.status(401).json({
           message: "Invalid credentials",
@@ -257,16 +292,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Perform login
       await login(req, res, username, password, user);
 
-      // Update last login time
+      // Update last login time (don't await to avoid blocking response)
       if (res.statusCode === 200) {
-        await storage.updateAdminUserLastLogin(user.id);
+        storage.updateAdminUserLastLogin(user.id).catch((err) => {
+          console.error("Error updating last login:", err);
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
-      res.status(500).json({
-        message: "Internal server error",
-        code: "INTERNAL_ERROR",
-      });
+      console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
+      if (!res.headersSent) {
+        res.status(500).json({
+          message: "Internal server error",
+          code: "INTERNAL_ERROR",
+        });
+      }
     }
   });
 

@@ -64,6 +64,19 @@ export default function Menu() {
     },
   });
 
+  // Fetch restaurant closed status
+  const { data: settings } = useQuery({
+    queryKey: ["settings"],
+    queryFn: async () => {
+      const response = await fetch("/api/settings");
+      if (!response.ok) throw new Error("Failed to fetch settings");
+      return response.json();
+    },
+  });
+
+  const closedSetting = settings?.find((s: any) => s.key === "restaurant_closed");
+  const isClosed = closedSetting?.value === "true";
+
   // Get unique categories
   const categories = menuItems ? Array.from(new Set(menuItems.map(item => item.category))) : [];
   
@@ -243,6 +256,7 @@ export default function Menu() {
                     size="sm"
                     variant="outline"
                     onClick={() => removeFromOrder(item.id)}
+                    disabled={isClosed}
                   >
                     -
                   </Button>
@@ -251,6 +265,7 @@ export default function Menu() {
                     size="sm"
                     variant="outline"
                     onClick={() => addToOrder({ id: item.id, name: item.name, price: item.price, description: '', imageUrl: '', category: '', isAvailable: true } as MenuItem)}
+                    disabled={isClosed}
                   >
                     +
                   </Button>
@@ -316,6 +331,7 @@ export default function Menu() {
             }}
             className="w-full bg-green-600 hover:bg-green-700"
             size="lg"
+            disabled={isClosed}
           >
             <i className="fab fa-whatsapp mr-2"></i>
             Order via WhatsApp
@@ -366,6 +382,20 @@ export default function Menu() {
               Discover our delicious dishes crafted with love and passion. 
               Place your order and we'll deliver it fresh to your door.
             </p>
+            {/* Closed Notice */}
+            {isClosed && (
+              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 max-w-2xl mx-auto mb-8">
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <i className="fas fa-exclamation-circle text-red-600 text-2xl"></i>
+                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-red-600">
+                    We are currently closed
+                  </h2>
+                </div>
+                <p className="text-red-700 text-sm md:text-base">
+                  Orders are temporarily unavailable. Please check back later.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Category Filter */}
@@ -474,6 +504,7 @@ export default function Menu() {
                                       onClick={() => addToOrder(item)}
                                       className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 mt-auto"
                                       size="lg"
+                                      disabled={isClosed}
                                     >
                                       <i className="fas fa-shopping-cart mr-2"></i>
                                       Add to Order
@@ -556,6 +587,7 @@ export default function Menu() {
                                   onClick={() => addToOrder(item)}
                                   className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 mt-auto"
                                   size="lg"
+                                  disabled={isClosed}
                                 >
                                   <i className="fas fa-shopping-cart mr-2"></i>
                                   Add to Order

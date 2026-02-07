@@ -11,6 +11,9 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/migrate-neon.js",
+    "db:export": "node scripts/export-data.js",
+    "db:import": "node scripts/import-data.js",
+    "db:sync-menu": "node scripts/sync-menu-items-from-production.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {

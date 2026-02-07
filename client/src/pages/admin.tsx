@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import ChangePasswordDialog from "@/components/change-password-dialog";
 import SessionManager from "@/components/session-manager";
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
 
   // Check authentication
   useEffect(() => {
@@ -25,6 +29,45 @@ export default function AdminDashboard() {
     };
     checkAuth();
   }, [setLocation]);
+
+  // Fetch restaurant closed status
+  const { data: settings } = useQuery({
+    queryKey: ["settings"],
+    queryFn: async () => {
+      const response = await fetch("/api/settings");
+      if (!response.ok) throw new Error("Failed to fetch settings");
+      return response.json();
+    },
+  });
+
+  const closedSetting = settings?.find((s: any) => s.key === "restaurant_closed");
+  const isClosed = closedSetting?.value === "true";
+
+  // Update restaurant closed status
+  const updateClosedStatus = useMutation({
+    mutationFn: async (closed: boolean) => {
+      const response = await fetch("/api/settings/restaurant_closed", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          value: closed ? "true" : "false",
+          description: "Controls whether the restaurant is currently closed for orders",
+        }),
+      });
+      if (!response.ok) throw new Error("Failed to update setting");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+  });
+
+  const handleToggleClosed = (checked: boolean) => {
+    updateClosedStatus.mutate(checked);
+  };
 
   const handleLogout = async () => {
     try {
@@ -64,6 +107,48 @@ export default function AdminDashboard() {
         </div>
 
         <div className="container mx-auto px-4 py-8">
+          {/* Restaurant Status */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Restaurant Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
+                <div className="flex items-center space-x-4">
+                  <div className={`h-12 w-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                    isClosed ? "bg-red-100" : "bg-green-100"
+                  }`}>
+                    <i className={`fas ${isClosed ? "fa-lock text-red-600" : "fa-check-circle text-green-600"} text-xl`}></i>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-semibold text-lg">
+                      {isClosed ? "Restaurant is Closed" : "Restaurant is Open"}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {isClosed 
+                        ? "Orders are currently disabled on the menu page"
+                        : "Orders are currently enabled on the menu page"
+                      }
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Label htmlFor="restaurant-status" className="text-sm font-medium">
+                      {isClosed ? "Closed" : "Open"}
+                    </Label>
+                    <Switch
+                      id="restaurant-status"
+                      checked={isClosed}
+                      onCheckedChange={handleToggleClosed}
+                      disabled={updateClosedStatus.isPending}
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Account Management */}
           <Card className="mb-8">
             <CardHeader>

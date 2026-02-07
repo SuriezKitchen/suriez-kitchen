@@ -23,6 +23,7 @@ import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { eq, sql } from "drizzle-orm";
 import { neon } from "@neondatabase/serverless";
+import path from "path";
 // Local SQLite (for Express dev server)
 import Database from "better-sqlite3";
 
@@ -1035,8 +1036,11 @@ export class NeonStorage implements IStorage {
 export class SqliteStorage implements IStorage {
   private db: Database.Database;
 
-  constructor(filePath: string = "./local.db") {
-    this.db = new Database(filePath);
+  constructor(filePath?: string) {
+    // Use absolute path to avoid working directory issues
+    const dbPath = filePath || path.resolve(process.cwd(), "local.db");
+    console.log("Initializing SQLite database at:", dbPath);
+    this.db = new Database(dbPath);
     this.db.pragma("journal_mode = WAL");
     // Create tables if not exist
     this.db
@@ -1088,6 +1092,48 @@ export class SqliteStorage implements IStorage {
           published_at INTEGER,
           view_count INTEGER,
           like_count INTEGER
+        )`
+      )
+      .run();
+
+    this.db
+      .prepare(
+        `CREATE TABLE IF NOT EXISTS admin_users (
+          id TEXT PRIMARY KEY,
+          username TEXT NOT NULL UNIQUE,
+          password_hash TEXT NOT NULL,
+          email TEXT,
+          is_active INTEGER DEFAULT 1,
+          last_login_at INTEGER,
+          created_at INTEGER NOT NULL
+        )`
+      )
+      .run();
+
+    this.db
+      .prepare(
+        `CREATE TABLE IF NOT EXISTS settings (
+          id TEXT PRIMARY KEY,
+          key TEXT NOT NULL UNIQUE,
+          value TEXT NOT NULL,
+          description TEXT,
+          updated_at TEXT NOT NULL
+        )`
+      )
+      .run();
+
+    this.db
+      .prepare(
+        `CREATE TABLE IF NOT EXISTS menu_items (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT NOT NULL,
+          price TEXT NOT NULL,
+          image_url TEXT NOT NULL,
+          category TEXT NOT NULL,
+          day_of_week TEXT,
+          is_available INTEGER DEFAULT 1,
+          created_at INTEGER NOT NULL
         )`
       )
       .run();
@@ -1516,6 +1562,59 @@ export class SqliteStorage implements IStorage {
     return { ...(video as any), id: randomUUID(), createdAt: new Date() };
   }
 
+  // Local videos methods
+  async getLocalVideos(): Promise<any[]> {
+    // Local videos not implemented for SQLite yet
+    return [];
+  }
+
+  // Menu items methods
+  async getMenuItems(): Promise<any[]> {
+    const rows = this.db
+      .prepare(
+        `SELECT id, name, description, price, image_url as imageUrl,
+                category, day_of_week as dayOfWeek, is_available as isAvailable,
+                created_at as createdAt
+         FROM menu_items
+         WHERE is_available = 1
+         ORDER BY 
+           CASE day_of_week
+             WHEN 'Monday' THEN 1
+             WHEN 'Tuesday' THEN 2
+             WHEN 'Wednesday' THEN 3
+             WHEN 'Thursday' THEN 4
+             WHEN 'Friday' THEN 5
+             WHEN 'Saturday' THEN 6
+             WHEN 'Sunday' THEN 7
+             ELSE 8
+           END,
+           created_at DESC`
+      )
+      .all() as Array<{
+      id: string;
+      name: string;
+      description: string;
+      price: string;
+      imageUrl: string;
+      category: string;
+      dayOfWeek: string | null;
+      isAvailable: number;
+      createdAt: number;
+    }>;
+
+    return rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      price: row.price,
+      imageUrl: row.imageUrl,
+      category: row.category,
+      dayOfWeek: row.dayOfWeek,
+      isAvailable: Boolean(row.isAvailable),
+      createdAt: new Date(row.createdAt),
+    }));
+  }
+
   async getSocialLinks(): Promise<SocialLink[]> {
     const rows = this.db
       .prepare(
@@ -1721,22 +1820,65 @@ export class SqliteStorage implements IStorage {
 
   // Admin user methods
   async getAdminUserByUsername(username: string): Promise<AdminUser | null> {
-    const stmt = this.db.prepare(
-      "SELECT * FROM admin_users WHERE username = ?"
-    );
-    const row = stmt.get(username) as any;
+    try {
+      if (!this.db) {
+        console.error("Database connection not initialized");
+        throw new Error("Database connection not initialized");
+      }
+      
+      const stmt = this.db.prepare(
+        "SELECT id, username, password_hash, email, is_active, last_login_at, created_at FROM admin_users WHERE username = ?"
+      );
+      
+      const row = stmt.get(username) as any;
 
-    if (!row) return null;
+      if (!row) {
+        return null;
+      }
 
-    return {
-      id: row.id,
-      username: row.username,
-      passwordHash: row.password_hash,
-      email: row.email,
-      isActive: Boolean(row.is_active),
-      lastLoginAt: row.last_login_at ? new Date(row.last_login_at) : null,
-      createdAt: new Date(row.created_at),
-    };
+      // Handle both INTEGER (Unix timestamp) and TEXT (ISO string) formats
+      const parseTimestamp = (value: any): Date | null => {
+        if (value === null || value === undefined) return null;
+        
+        // If it's already a number (INTEGER column)
+        if (typeof value === 'number') {
+          return new Date(value);
+        }
+        
+        // If it's a string (TEXT column with ISO string or number string)
+        if (typeof value === 'string') {
+          // Try parsing as ISO string first
+          const date = new Date(value);
+          if (!isNaN(date.getTime())) {
+            return date;
+          }
+          // If that fails, try as Unix timestamp string
+          const timestamp = parseInt(value, 10);
+          if (!isNaN(timestamp)) {
+            return new Date(timestamp);
+          }
+        }
+        
+        return null;
+      };
+
+      const result: AdminUser = {
+        id: String(row.id),
+        username: String(row.username),
+        passwordHash: String(row.password_hash),
+        email: row.email ? String(row.email) : null,
+        isActive: Boolean(row.is_active),
+        lastLoginAt: parseTimestamp(row.last_login_at),
+        createdAt: parseTimestamp(row.created_at) || new Date(),
+      };
+
+      return result;
+    } catch (error) {
+      console.error("Error in getAdminUserByUsername:", error);
+      console.error("Error message:", error instanceof Error ? error.message : String(error));
+      console.error("Error stack:", error instanceof Error ? error.stack : "No stack");
+      throw error;
+    }
   }
 
   async createAdminUser(user: InsertAdminUser): Promise<AdminUser> {
@@ -1750,7 +1892,7 @@ export class SqliteStorage implements IStorage {
       user.passwordHash,
       user.email || null,
       user.isActive ? 1 : 0,
-      new Date().toISOString()
+      Date.now()
     );
 
     return {
@@ -1768,7 +1910,7 @@ export class SqliteStorage implements IStorage {
     const stmt = this.db.prepare(
       "UPDATE admin_users SET last_login_at = ? WHERE id = ?"
     );
-    stmt.run(new Date().toISOString(), id);
+    stmt.run(Date.now(), id);
   }
 
   async updateAdminUserPassword(
@@ -1783,8 +1925,11 @@ export class SqliteStorage implements IStorage {
 }
 
 // Choose storage based on environment
-export const storage = process.env.DATABASE_URL
-  ? new NeonStorage()
-  : process.env.NODE_ENV === "development"
-  ? new SqliteStorage()
-  : new MemStorage();
+// For local development, always use SQLite unless explicitly using DATABASE_URL
+// In production, use Neon (PostgreSQL) if DATABASE_URL is set
+export const storage = 
+  process.env.NODE_ENV === "development" && !process.env.FORCE_NEON_DB
+    ? new SqliteStorage()
+    : process.env.DATABASE_URL
+    ? new NeonStorage()
+    : new MemStorage();

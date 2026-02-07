@@ -18,6 +18,10 @@ server/public/
 *.db-wal
 sessions.db
 
+# Database exports (may contain sensitive data)
+data-export.json
+*-export.json
+
 # Logs
 *.log
 logs/

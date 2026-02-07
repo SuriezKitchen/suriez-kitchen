@@ -119,8 +119,7 @@ export default function HeroSection() {
           className="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
           data-testid="hero-title"
         >
-          Culinary Artistry
-          <span className="block text-secondary">Meets Passion</span>
+          An Elevated Standard of Catering
         </h1>
         <p
           className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-sans"
@@ -130,9 +129,7 @@ export default function HeroSection() {
               'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           }}
         >
-          Join Suriez Kitchen on a journey through flavors, techniques, and the
-          stories behind every dish. From gourmet creations to behind-the-scenes
-          vlogs.
+          At Suriez Kitchen, we create beautiful food experiences for corporate and high-end events, where every meal reflects quality, elegance and genuine hospitality.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
