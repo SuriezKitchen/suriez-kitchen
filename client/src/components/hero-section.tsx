@@ -7,7 +7,7 @@ export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
-  // Media carousel data - mix of videos and images
+  // Media carousel data - images only
   const mediaItems = [
     {
       type: "image",
@@ -15,19 +15,9 @@ export default function HeroSection() {
       alt: "Kitchen setup image 1"
     },
     {
-      type: "video",
-      src: "https://v5igaday0pxfwtzb.public.blob.vercel-storage.com/videos/sureiz-kitchen-assets_61678-500316021_tiny.mp4",
-      alt: "Cooking preparation video"
-    },
-    {
       type: "image",
       src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/set%20up%20002.webp",
       alt: "Kitchen setup image 2"
-    },
-    {
-      type: "video",
-      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/videos/Pink%20set%20up.mp4",
-      alt: "Pink set up"
     },
     {
       type: "image", 
@@ -35,14 +25,39 @@ export default function HeroSection() {
       alt: "Gourmet cooking scene"
     },
     {
-      type: "video",
-      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/videos/White%20clean%20set%20up.mp4",
-      alt: "White clean set up"
-    },
-    {
       type: "image",
       src: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080",
       alt: "Fresh ingredients"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Galentines-set-up.webp",
+      alt: "Galentines set up"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Annivesary-set-up.webp",
+      alt: "Anniversary set up"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Indoor-2-set-up.webp",
+      alt: "Indoor 2 set up"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Garden-set-up.webp",
+      alt: "Garden set up"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Red-Set-up.webp",
+      alt: "Red set up"
+    },
+    {
+      type: "image",
+      src: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Indoor-set-up.webp",
+      alt: "Indoor set up"
     }
   ];
 
@@ -139,7 +154,7 @@ export default function HeroSection() {
               data-testid="button-order-now"
             >
               <i className="fas fa-shopping-cart mr-2"></i>
-              Order Now
+              Get Catering Quote
             </button>
           </Link>
           <Link href="/gallery">

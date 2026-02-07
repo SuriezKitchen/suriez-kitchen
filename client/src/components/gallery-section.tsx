@@ -101,6 +101,34 @@ export default function GallerySection() {
           </p>
         </div>
 
+        {/* Services Section */}
+        <div className="mb-16 scroll-reveal">
+          <h3 className="text-2xl md:text-3xl font-serif font-semibold text-center mb-8 text-foreground">
+            Our Services
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-6xl mx-auto">
+            {[
+              "Luxe Catering Service",
+              "Corporate Catering",
+              "Catering Drop-off (delivery)",
+              "Meal Prep Service",
+              "Food bowl"
+            ].map((service, index) => (
+              <Card
+                key={index}
+                className="bg-card hover:shadow-lg transition-all duration-300 text-center p-6"
+              >
+                <div className="mb-4">
+                  <i className="fas fa-utensils text-3xl text-secondary"></i>
+                </div>
+                <h4 className="font-semibold text-foreground text-lg">
+                  {service}
+                </h4>
+              </Card>
+            ))}
+          </div>
+        </div>
+
         {/* Show loading state */}
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
