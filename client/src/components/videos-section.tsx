@@ -125,7 +125,7 @@ export default function VideosSection() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Behind the Scenes
+              Explore Suriez Kitchen
             </h2>
             <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-2xl mx-auto">
               <p className="text-destructive font-medium mb-2">
@@ -176,14 +176,13 @@ export default function VideosSection() {
             className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
             data-testid="videos-title"
           >
-            Behind the Scenes
+            Explore Suriez Kitchen
           </h2>
           <p
             className="text-xl text-muted-foreground max-w-3xl mx-auto"
             data-testid="videos-description"
           >
-            Follow along as I share cooking tips, techniques, and the stories
-            behind my favorite recipes through my video content.
+            Step inside our world and experience the artistry, innovation, and heart behind every culinary creation we bring to your table.
           </p>
         </div>
 

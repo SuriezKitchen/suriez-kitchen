@@ -32,31 +32,50 @@ export default function AboutSection() {
           {/* Content */}
           <div className="scroll-reveal space-y-8 max-w-3xl">
             <div>
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Meet Suriez Kitchen
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-8">
+                Why Choose Us
               </h2>
-              <div className="space-y-4 text-muted-foreground leading-relaxed">
-                <p>
-                  From the heart of Tanzania to the world, my journey began far
-                  from a professional kitchen. Though I studied Business
-                  Administration, my true calling was discovered in the
-                  comforting aromas and vibrant flavors that filled my home
-                  growing up. What started as a simple curiosity soon blossomed
-                  into a deep passion for creating dishes that connect people,
-                  cultures, and memories.
-                </p>
-                <p>
-                  Every meal I prepare is a reflection of where I come from — a
-                  blend of African tradition, modern inspiration, and the joy of
-                  sharing food that speaks to the soul.
-                </p>
-                <p>
-                  Through my video content, I invite you into my kitchen to
-                  explore the stories, flavors, and techniques that shape my
-                  cooking. Whether you're an aspiring chef or someone who simply
-                  loves good food, there's always something new and exciting to
-                  discover together.
-                </p>
+              <div className="space-y-6">
+                <div className="scroll-reveal">
+                  <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                    Taste Flavors
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    We create dishes that guests remember — balanced, rich in flavor, and beautifully prepared.
+                  </p>
+                </div>
+                <div className="scroll-reveal">
+                  <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                    Thoughtfully Planned Events
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Every event we cater is carefully planned to match your vision, style, and guest experience.
+                  </p>
+                </div>
+                <div className="scroll-reveal">
+                  <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                    Quality Ingredients
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    We prioritize fresh, high-quality ingredients to ensure every dish meets our standards.
+                  </p>
+                </div>
+                <div className="scroll-reveal">
+                  <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                    Reliable & Professional Service
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Our team works with care and attention to detail to deliver a smooth catering experience from start to finish.
+                  </p>
+                </div>
+                <div className="scroll-reveal">
+                  <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                    Menus That Fit Your Guests
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    We offer a range of menu options, including vegetarian and Afro-fusion dishes, so every guest feels included.
+                  </p>
+                </div>
               </div>
             </div>
 

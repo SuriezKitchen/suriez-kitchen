@@ -138,7 +138,7 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/menu">
+          <Link href="/contact">
             <button
               className="btn-primary px-8 py-4 text-white font-medium rounded-lg"
               data-testid="button-order-now"

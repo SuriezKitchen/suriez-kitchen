@@ -85,45 +85,65 @@ export default function GallerySection() {
   return (
     <section id="gallery" className="py-20 bg-background" ref={sectionRef}>
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 scroll-reveal">
-          <h2
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
-            data-testid="gallery-title"
-          >
-            Culinary Creations
-          </h2>
-          <p
-            className="text-xl text-muted-foreground max-w-3xl mx-auto"
-            data-testid="gallery-description"
-          >
-            Each dish tells a story of passion, precision, and creativity.
-            Explore the artistry behind every plate.
-          </p>
-        </div>
-
         {/* Services Section */}
         <div className="mb-16 scroll-reveal">
-          <h3 className="text-2xl md:text-3xl font-serif font-semibold text-center mb-8 text-foreground">
-            Our Services
-          </h3>
+          <div className="text-center mb-12">
+            <h2
+              className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
+              data-testid="services-title"
+            >
+              Our Services
+            </h2>
+            <p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto"
+              data-testid="services-description"
+            >
+              From elegant corporate events to convenient meal prep, we offer a range of catering services tailored to your needs.
+            </p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-6xl mx-auto">
             {[
-              "Luxe Catering Service",
-              "Corporate Catering",
-              "Catering Drop-off (delivery)",
-              "Meal Prep Service",
-              "Food bowl"
+              {
+                name: "Luxe Catering Service",
+                image: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Galentines-set-up.webp"
+              },
+              {
+                name: "Corporate Catering",
+                image: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Corporate.webp"
+              },
+              {
+                name: "Catering Drop-off (delivery)",
+                image: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/DROP-OFF.webp"
+              },
+              {
+                name: "Meal Prep Service",
+                image: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Meal-prep.webp"
+              },
+              {
+                name: "Food bowl",
+                image: "https://iu8smvneefi8l1dw.public.blob.vercel-storage.com/Photos/Recent%20set%20ups/Food-bowls.webp"
+              }
             ].map((service, index) => (
               <Card
                 key={index}
-                className="bg-card hover:shadow-lg transition-all duration-300 text-center p-6"
+                className="relative overflow-hidden hover:shadow-lg transition-all duration-300 h-48 min-h-[12rem]"
               >
-                <div className="mb-4">
-                  <i className="fas fa-utensils text-3xl text-secondary"></i>
+                <div
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(${service.image})`
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-black/40"></div>
                 </div>
-                <h4 className="font-semibold text-foreground text-lg">
-                  {service}
-                </h4>
+                <div className="relative z-10 h-full flex flex-col items-center justify-center text-center p-6">
+                  <div className="mb-3">
+                    <i className="fas fa-utensils text-2xl text-white"></i>
+                  </div>
+                  <h4 className="font-semibold text-white text-lg leading-tight">
+                    {service.name}
+                  </h4>
+                </div>
               </Card>
             ))}
           </div>
